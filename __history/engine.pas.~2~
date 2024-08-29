@@ -1,0 +1,26 @@
+unit engine;
+
+interface
+uses Graphics;
+type
+TMap=array of array of TColor;
+picEngine=class
+  FPicture: TPicture;
+
+  function GetMap(ColCount, RowCount, colorCount: integer): TMap;
+end;
+
+implementation
+
+{ picEngine }
+
+function picEngine.GetMap(ColCount, RowCount, colorCount: integer): TMap;
+var Map: TMap;
+    i,j:integer;
+begin
+  SetLength(Map, ColCount, RowCount);
+  for I := 0 to ColCount-1 do
+
+end;
+
+end.
