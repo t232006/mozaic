@@ -1,0 +1,48 @@
+unit engine;
+
+interface
+uses Windows, Graphics, classes;
+type
+TMap=array of array of TColor;
+
+  function GetMap(FPicture: TBitmap; ColCount, RowCount, colorCount: integer): TMap;
+
+
+implementation
+
+{ picEngine }
+
+function GetMap(FPicture: TBitmap; ColCount, RowCount, colorCount: integer): TMap;
+var Map: TMap;
+    i,j, u, v, sR, sG, sB:integer;
+    WCoef, HCoef: word;
+    MyRect:TBitmap;
+    vRGB: longint;
+begin
+  SetLength(Map, ColCount, RowCount);
+  WCoef:=FPicture.Width div ColCount;
+  HCoef:=FPicture.Height div RowCount;
+  myRect:=TBitmap.Create(WCoef, HCoef);
+  for I := 0 to RowCount-1 do
+  for j := 0 to ColCount-1 do
+    begin
+       myRect.Canvas.CopyRect(Rect(0,0,myRect.Width,myRect.Height),
+                              FPicture.Canvas,
+                              Rect(i*Wcoef,j*Hcoef,(i+1)*Wcoef, (j+1)*Hcoef));
+       sR:=0; sG:=0; sB:=0;
+       for u := 0 to myRect.Height-1 do
+       for v := 0 to Myrect.Width-1 do
+       begin
+          vRGB:=ColorToRGB(MyRect.Canvas.Pixels[v,u]);
+          inc(sR,GetRValue(vRGB));
+          inc(sG,GetGValue(vRGB));
+          inc(sB,GetBValue(vRGB));
+       end;
+       Map[i,j]:=RGB(sr div (u*v), sg div (u*v), sb div (u*v));
+
+
+    end;
+    result:=map;
+end;
+
+end.

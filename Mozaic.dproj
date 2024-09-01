@@ -102,12 +102,17 @@
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\My components\PaintGrid\PaintGrid.pas"/>
         <DCCReference Include="engine.pas"/>
         <DCCReference Include="initunit.pas">
             <Form>initForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="engineThread.pas"/>
+        <DCCReference Include="ColorsUnit.pas">
+            <Form>ColorsForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\My components\PaintGrid\PaintGrid.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

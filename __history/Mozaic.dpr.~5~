@@ -1,0 +1,19 @@
+program Mozaic;
+
+uses
+  Vcl.Forms,
+  Main in 'Main.pas' {Form1},
+  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas',
+  engine in 'engine.pas',
+  initunit in 'initunit.pas' {initForm};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TinitForm, initForm);
+  Application.CreateForm(TForm1, Form1);
+
+  Application.Run;
+end.

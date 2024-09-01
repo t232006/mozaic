@@ -1,0 +1,115 @@
+unit initunit;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, ExtCtrls, ComCtrls,
+  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread;
+
+type
+  TinitForm = class(TForm)
+    UpDown1: TUpDown;
+    UpDown2: TUpDown;
+    ColCount: TLabeledEdit;
+    RowCount: TLabeledEdit;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    ColorCount: TLabeledEdit;
+    UpDown3: TUpDown;
+    Button1: TButton;
+    pictureD: TOpenPictureDialog;
+    progrBar: TProgressBar;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure ColCountKeyPress(Sender: TObject; var Key: Char);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure ColorCountKeyPress(Sender: TObject; var Key: Char);
+    procedure Button1Click(Sender: TObject);
+    procedure progrBarChange(Sender: TObject);
+  private
+    th:TengineTh;
+    FPicture: TBitmap;
+    //ColorCount: byte;
+  public
+    { Public declarations }
+  end;
+
+var
+  initForm: TinitForm;
+  //cl:boolean;
+
+
+implementation
+
+{$R *.dfm}
+
+procedure TinitForm.BitBtn1Click(Sender: TObject);
+begin
+     //cl:=false;
+     form1.pg.ColCount:=strtoint(ColCount.Text);
+     form1.pg.RowCount:=strtoint(RowCount.Text);
+     //form1.ColorCount:=strtoint(ColorCount.Text);
+//     form1.FPicture.LoadFromFile()
+     //form1.Show;
+     //initform.hide;
+     th:=TengineTh.create(fPicture,
+                          strtoint(ColCount.Text),
+                          strtoint(RowCount.Text),
+                          strtoint(ColorCount.Text));
+end;
+
+
+
+
+procedure TinitForm.ColCountKeyPress(Sender: TObject; var Key: Char);
+begin
+     if not((key>'1') and (key<'9')) and (ord(key)<>8) then
+      key:='5';
+end;
+
+procedure TinitForm.ColorCountKeyPress(Sender: TObject; var Key: Char);
+begin
+    if (key<'0') or (key>'9') then key:='1';
+
+end;
+
+procedure TinitForm.progrBarChange(Sender: TObject);
+begin
+  if progrbar.position=progrbar.Max then
+  begin
+     TMap(form1.pg.ColorMap):=th.map;
+     form1.Show;
+     initform.hide;
+
+  end;
+
+end;
+
+procedure TinitForm.BitBtn2Click(Sender: TObject);
+begin
+begin
+        //cl:=true;
+        initform.Close;
+end;
+end;
+
+procedure TinitForm.Button1Click(Sender: TObject);
+var JPEG: TJPEGimage;
+begin
+  if pictureD.execute then
+  begin
+    BitBtn1.Enabled:=true;
+    if extractfileext(pictured.FileName)='.jpg' then
+    begin
+       jpeg:=Tjpegimage.Create;
+       jpeg.LoadFromFile(pictureD.FileName);
+       form1.FPicture.Assign(jpeg);
+       jpeg.Destroy;
+    end else
+
+    form1.fpicture.loadfromfile(pictureD.FileName);
+  end;
+
+end;
+
+end.

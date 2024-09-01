@@ -3,9 +3,11 @@ program Mozaic;
 uses
   Vcl.Forms,
   Main in 'Main.pas' {Form1},
-  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas',
   engine in 'engine.pas',
-  initunit in 'initunit.pas' {initForm};
+  initunit in 'initunit.pas' {initForm},
+  engineThread in 'engineThread.pas',
+  ColorsUnit in 'ColorsUnit.pas' {ColorsForm},
+  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas';
 
 {$R *.res}
 
@@ -14,6 +16,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TinitForm, initForm);
   Application.CreateForm(TForm1, Form1);
-
+  Application.CreateForm(TColorsForm, ColorsForm);
   Application.Run;
 end.
