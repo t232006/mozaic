@@ -113,6 +113,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\My components\PaintGrid\PaintGrid.pas"/>
+        <DCCReference Include="MiniThread.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

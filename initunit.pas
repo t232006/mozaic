@@ -60,8 +60,8 @@ begin
                           strtoint(ColCount.Text),
                           strtoint(RowCount.Text),
                           ColorCount.ItemIndex+2,
-                          progrBar,
-                          PassMap);
+                          progrBar);
+     th.OnFinish:=PassMap;
 end;
 
 
@@ -82,6 +82,7 @@ end;
 procedure TinitForm.FormCreate(Sender: TObject);
 begin
   fpicture:=TBitmap.Create;
+
 end;
 
 procedure TinitForm.FormDestroy(Sender: TObject);
@@ -115,7 +116,7 @@ begin
   if pictureD.execute then
   begin
     BitBtn1.Enabled:=true;
-    if extractfileext(pictured.FileName)='.jpg' then
+    if UpperCase(extractfileext(pictured.FileName))='.JPG' then
     begin
        jpeg:=Tjpegimage.Create;
        jpeg.LoadFromFile(pictureD.FileName);
