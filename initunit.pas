@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Buttons, ExtCtrls, ComCtrls,
-  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread;
+  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread, MINItHREAD;
 
 type
   TinitForm = class(TForm)
@@ -24,6 +24,7 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure ColorCountKeyPress(Sender: TObject; var Key: Char);
     procedure Button1Click(Sender: TObject);
+    procedure IncProgress(var msg: TMessage); message WM_INCPROGR;
     //procedure progrBarChange(Sender: TObject);
     procedure PassMap(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -35,6 +36,7 @@ type
     //ColorCount: byte;
   public
     th: TengineTh;
+    th1: TminiTh;
   end;
 
 var
@@ -56,12 +58,16 @@ begin
      //form1.Show;
      //initform.hide;
      //for var i := 1 to 4 do
-     th:=TengineTh.create(fPicture,
+     progrBar.Max:=form1.pg.rowcount;
+     {th:=TengineTh.create(fPicture,
                           strtoint(ColCount.Text),
                           strtoint(RowCount.Text),
                           ColorCount.ItemIndex+2,
-                          progrBar,
-                          PassMap);
+                          //self.Handle,
+                          progrbar,
+                          PassMap);}
+     th1:=Tminith.create(fpicture,strtoint(ColCount.Text),
+                          strtoint(RowCount.Text),progrbar,1);
 end;
 
 
@@ -94,6 +100,11 @@ begin
   progrbar.Position:=0;
 end;
 
+procedure TinitForm.IncProgress(var msg: TMessage);
+begin
+  progrbar.Position:=progrbar.Position+1;
+end;
+
 procedure TinitForm.PassMap(Sender: TObject);
 begin
     TMap(form1.pg.ColorMap):=th.map;
@@ -115,7 +126,7 @@ begin
   if pictureD.execute then
   begin
     BitBtn1.Enabled:=true;
-    if extractfileext(pictured.FileName)='.jpg' then
+    if UpperCase(extractfileext(pictured.FileName))='.JPG' then
     begin
        jpeg:=Tjpegimage.Create;
        jpeg.LoadFromFile(pictureD.FileName);

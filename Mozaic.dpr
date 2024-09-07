@@ -7,7 +7,8 @@ uses
   initunit in 'initunit.pas' {initForm},
   engineThread in 'engineThread.pas',
   ColorsUnit in 'ColorsUnit.pas' {ColorsForm},
-  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas';
+  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas',
+  MiniThread in 'MiniThread.pas';
 
 {$R *.res}
 
