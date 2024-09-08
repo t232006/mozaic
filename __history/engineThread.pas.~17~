@@ -3,10 +3,9 @@ unit engineThread;
 interface
 
 uses Windows, Graphics, classes, math, dialogs,
-System.Generics.Collections, comctrls, winapi.Messages;
+System.Generics.Collections, comctrls;
 
-const PROC=3;
-const wmaddproc=wm_user+123+$10;
+const PROC=2;
 type
 TMap=array of array of TColor;
 
@@ -20,13 +19,12 @@ TMap=array of array of TColor;
     Fpool: 0..proc;
     FFinish: boolean;
     FOnFinish: TNotifyEvent;
-    fms:hwnd;
     procedure startMap;
     function Quantor(num, min, max, colorcount: integer):integer;
     procedure GetMap(Sender: TObject); //<==starts when thread terminates
   public
     property OnFinish: TNotifyEvent read FOnFinish write FOnFinish;
-    constructor create(ms:hwnd; Picture: TBitmap; ColCount, RowCount,
+    constructor create(Picture: TBitmap; ColCount, RowCount,
     colorCount: integer; var bar: TProgressbar);
     destructor destroy;
     property Map: TMap read fMap;
@@ -59,12 +57,12 @@ end;
 
 begin
   inc(FPool);
-  if FPool<PROC then exit;
+  if FPool<proc then exit;
   SetLength(AMap, fRowCount,fColCount);
-  for k := 2 to 2 do
-    for I := (High(minith[k].map) div PROC)*(k-1) to (High(minith[k].map) div PROC)*k do
+  for k := 1 to PROC do
+    for I := 0 to High(minith[k].map) do
     for j := 0 to High(minith[k].Map[i]) do
-       AMap[i,j]:=Minith[k].map[i,j];
+       AMap[i*k,j]:=Minith[k].map[i,j];
 
 
 
@@ -83,12 +81,20 @@ begin
      if B>Bmax then Bmax:=B;
      if B<Bmin then Bmin:=B;
   end;
-
+       //================
+       //initform.ProgrBar.Position:=k;
+       //inc(k);
+       //================
 
   for I := 0 to fRowCount-1 do
   for j := 0 to fColCount-1 do
   begin
+    {ColorSplit(AMap[i,j]);
+    AMap[i,j]:=RGB(Quantor(R, Rmin, rMax, fcolorcount),
+                  Quantor(G, Gmin, GMax, fcolorcount),
+                  Quantor(B, Bmin, BMax, fcolorcount));   }
     if not(FColcont.Contains(AMap[i,j])) then FColCont.Add(AMap[i,j]);
+
   end;
     fmap:=AMap;
     if assigned(FOnFinish) then FOnFinish(self);
@@ -96,7 +102,7 @@ begin
 
 end;
 
-constructor Tengine.create(ms:hwnd;Picture: TBitmap; ColCount, RowCount,
+constructor Tengine.create(Picture: TBitmap; ColCount, RowCount,
   colorCount: integer; var bar: TProgressBar);
 begin
    //inherited Create(false);
@@ -109,7 +115,6 @@ begin
    fbar:=bar;
    fPool:=0;
    startMap; //<== start
-   fms:=ms;
 end;
 
 destructor Tengine.destroy;
@@ -128,8 +133,7 @@ begin
   fBar.Max:=frowCount;
   //===============
   for k := 1 to PROC do    //threads starts immidiatelly
-    minith[k]:=TMinith.create(fms, Fpicture, fColcount, frowCount, fbar,
-    k, GetMap);
+    minith[k]:=TMinith.create(Fpicture, fColcount, frowCount, fbar, k, GetMap);
 end;
 
 function Tengine.Quantor(num, min, max, colorcount: integer): integer;

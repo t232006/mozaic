@@ -6,7 +6,7 @@ uses Windows, Graphics, classes, math, dialogs,
 System.Generics.Collections, comctrls, winapi.Messages;
 
 const PROC=3;
-const wmaddproc=wm_user+123+$10;
+//nst wmaddproc=wm_user+123+$10;
 type
 TMap=array of array of TColor;
 

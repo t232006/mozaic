@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Buttons, ExtCtrls, ComCtrls,
-  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg;
+  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread;
 
 type
   TinitForm = class(TForm)
@@ -15,19 +15,26 @@ type
     RowCount: TLabeledEdit;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
-    ColorCount: TLabeledEdit;
-    UpDown3: TUpDown;
     Button1: TButton;
     pictureD: TOpenPictureDialog;
+    progrBar: TProgressBar;
+    ColorCount: TComboBox;
     procedure BitBtn1Click(Sender: TObject);
     procedure ColCountKeyPress(Sender: TObject; var Key: Char);
     procedure BitBtn2Click(Sender: TObject);
     procedure ColorCountKeyPress(Sender: TObject; var Key: Char);
     procedure Button1Click(Sender: TObject);
+    //procedure progrBarChange(Sender: TObject);
+    procedure PassMap(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
-    { Private declarations }
+
+    FPicture: TBitmap;
+    //ColorCount: byte;
   public
-    { Public declarations }
+    th: TengineTh;
   end;
 
 var
@@ -44,10 +51,17 @@ begin
      //cl:=false;
      form1.pg.ColCount:=strtoint(ColCount.Text);
      form1.pg.RowCount:=strtoint(RowCount.Text);
-     form1.ColorCount:=strtoint(ColorCount.Text);
+     //form1.ColorCount:=strtoint(ColorCount.Text);
 //     form1.FPicture.LoadFromFile()
-     form1.Show;
-     initform.hide;
+     //form1.Show;
+     //initform.hide;
+     //for var i := 1 to 4 do
+     th:=TengineTh.create(fPicture,
+                          strtoint(ColCount.Text),
+                          strtoint(RowCount.Text),
+                          ColorCount.ItemIndex+2,
+                          progrBar);
+     th.OnFinish:=PassMap;
 end;
 
 
@@ -65,6 +79,29 @@ begin
 
 end;
 
+procedure TinitForm.FormCreate(Sender: TObject);
+begin
+  fpicture:=TBitmap.Create;
+
+end;
+
+procedure TinitForm.FormDestroy(Sender: TObject);
+begin
+  FPicture.Destroy;
+end;
+
+procedure TinitForm.FormShow(Sender: TObject);
+begin
+  progrbar.Position:=0;
+end;
+
+procedure TinitForm.PassMap(Sender: TObject);
+begin
+    TMap(form1.pg.ColorMap):=th.map;
+     form1.Show;
+     initform.hide;
+end;
+
 procedure TinitForm.BitBtn2Click(Sender: TObject);
 begin
 begin
@@ -79,15 +116,15 @@ begin
   if pictureD.execute then
   begin
     BitBtn1.Enabled:=true;
-    if extractfileext(pictured.FileName)='.jpg' then
+    if UpperCase(extractfileext(pictured.FileName))='.JPG' then
     begin
        jpeg:=Tjpegimage.Create;
        jpeg.LoadFromFile(pictureD.FileName);
-       form1.FPicture.Assign(jpeg);
+       FPicture.Assign(jpeg);
        jpeg.Destroy;
     end else
 
-    form1.fpicture.loadfromfile(pictureD.FileName);
+    fpicture.loadfromfile(pictureD.FileName);
   end;
 
 end;

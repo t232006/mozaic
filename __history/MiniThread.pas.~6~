@@ -13,13 +13,12 @@ TminiTh = class(TThread)
      FthNum: byte;
      fComplete: boolean;
      fbar: TProgressBar;
-     fms: hwnd;
      procedure GetMap;
      procedure IncBar;
   public
      property complete: boolean read fComplete;
      property Map: TMap read fMap;
-     constructor create(ms: hwnd; Picture: TBitmap; ColCount, RowCount: integer;
+     constructor create(Picture: TBitmap; ColCount, RowCount: integer;
      var bar: TProgressBar;
      thNum:byte;
      ATermProc: TNotifyEvent);overload;
@@ -31,7 +30,7 @@ TminiTh = class(TThread)
 implementation
 { TminiTh }
 
-constructor TminiTh.create(ms: hwnd; Picture: TBitmap;
+constructor TminiTh.create(Picture: TBitmap;
 ColCount, RowCount:integer; var bar: TprogressBar;
 thnum:byte; ATermProc: TNotifyEvent);
 begin
@@ -47,7 +46,6 @@ begin
   fcomplete:=false;
   fbar:=bar;
   OnTerminate:=ATermProc;
-  fms:= ms;
 end;
 
 procedure TminiTh.Execute;
@@ -83,7 +81,12 @@ begin
             inc(sG,GetGValue(vRGB));
             inc(sB,GetBValue(vRGB));
          end;
+         //u:=Hcoef; v:=Wcoef;
+         //Hcoef:=1; Wcoef:=2;
+        //FMap[i,j]:=
+
         FMap[i,j]:=RGB(sr div (Hcoef*Wcoef), sg div (Hcoef*Wcoef), sb div (Hcoef*Wcoef));
+
       end;
      Synchronize(IncBar);
   end;

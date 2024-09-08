@@ -13,10 +13,8 @@ TminiTh = class(TThread)
      FthNum: byte;
      fComplete: boolean;
      fbar: TProgressBar;
-     ii, jj: word;
      procedure GetMap;
      procedure IncBar;
-     procedure Iter;
   public
      property complete: boolean read fComplete;
      property Map: TMap read fMap;
@@ -52,41 +50,30 @@ begin
 end;
 
 procedure TminiTh.GetMap;
-var i:integer;
+var i,j:integer;
+ MyRect:TBitmap;
+ picCopy: TBitmap;
+  WCoef, HCoef, u, v: word;
+  rowStart, rowFinish: word;
+   sR, sG, sB, vRGB: longint;
 begin
+  //picCopy:=TBitmap.Create()
+  rowStart:=(fRowCount div proc) * (fthnum-1);
+  rowFinish:=(fRowCount div proc) * fthnum;
   SetLength(FMap, fRowCount div PROC,fColCount);
   //FPicture.SaveToFile('pic.bmp');
-
-  for I := 0 to (fRowCount div PROC)*fthnum-1 do
+  WCoef:=FPicture.Width div fColCount;
+  HCoef:=FPicture.Height div fRowCount;
+  myRect:=TBitmap.Create(WCoef, HCoef);
+  for I := RowStart to RowFinish-1 do
   begin
-     ii:=i;
-     Synchronize(Iter);
-     Synchronize(IncBar);
-  end;
-    //fcomplete:=true;
-end;
-
-procedure TminiTh.IncBar;
-begin
-   fbar.Position:=fbar.Position+1;
-end;
-
-procedure TminiTh.Iter;
-var j, u, v, WCoef, HCoef: word;
-    sR, sG, sB, vRGB: longint;
-    MyRect:TBitmap;
-begin
-WCoef:=FPicture.Width div fColCount;
-HCoef:=FPicture.Height div fRowCount;
-myRect:=TBitmap.Create(WCoef, HCoef);
-for j := 0 to fColCount-1 do
+    for j := 0 to fColCount-1 do
       begin
-         jj:=j;
          myRect.Canvas.CopyRect(Rect(0,0,myRect.Width,MyRect.Height),
                                 FPicture.Canvas,
-                                Rect(jj*Wcoef,ii*Hcoef,(jj+1)*Wcoef,(ii+1)*Hcoef  ));
+                                Rect(j*Wcoef,i*Hcoef,(j+1)*Wcoef,(i+1)*Hcoef  ));
          sR:=0; sG:=0; sB:=0;
-         //myRect.SaveToFile('f'+inttostr(i)+inttostr(j)+'.bmp');
+         myRect.SaveToFile('f'+inttostr(i)+inttostr(j)+'.bmp');
          for u := 0 to myRect.Height-1 do
          for v := 0 to Myrect.Width-1 do
          begin
@@ -95,10 +82,17 @@ for j := 0 to fColCount-1 do
             inc(sG,GetGValue(vRGB));
             inc(sB,GetBValue(vRGB));
          end;
-         //FPicture.SaveToFile('pic.bmp');
-        FMap[ii,jj]:=RGB(sr div (u*v), sg div (u*v), sb div (u*v));
+        FMap[i,j]:=RGB(sr div (u*v), sg div (u*v), sb div (u*v));
 
       end;
+     Synchronize(IncBar);
+  end;
+    //fcomplete:=true;
+end;
+
+procedure TminiTh.IncBar;
+begin
+   fbar.Position:=fbar.Position+1;
 end;
 
 end.
