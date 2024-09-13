@@ -5,8 +5,8 @@ interface
 uses Windows, Graphics, classes, math, dialogs,
 System.Generics.Collections, comctrls, winapi.Messages;
 
-const PROC=3;
-const wmaddproc=wm_user+123+$10;
+const PROC=1;
+//nst wmaddproc=wm_user+123+$10;
 type
 TMap=array of array of TColor;
 
@@ -14,19 +14,19 @@ TMap=array of array of TColor;
   private
     fColCount, fRowCount, fColorCount: integer;
     fPicture: TBitmap;
+    fPicImage: array of array of TColor;
     fMap: TMap;
     fbar: TProgressBar;
     FColCont: TList<TColor>;
     Fpool: 0..proc;
     FFinish: boolean;
     FOnFinish: TNotifyEvent;
-    fms:hwnd;
     procedure startMap;
     function Quantor(num, min, max, colorcount: integer):integer;
     procedure GetMap(Sender: TObject); //<==starts when thread terminates
   public
     property OnFinish: TNotifyEvent read FOnFinish write FOnFinish;
-    constructor create(ms:hwnd; Picture: TBitmap; ColCount, RowCount,
+    constructor create(Picture: TBitmap; ColCount, RowCount,
     colorCount: integer; var bar: TProgressbar);
     destructor destroy;
     property Map: TMap read fMap;
@@ -61,7 +61,7 @@ begin
   inc(FPool);
   if FPool<PROC then exit;
   SetLength(AMap, fRowCount,fColCount);
-  for k := 2 to 2 do
+  for k := 1 to proc do
     for I := (High(minith[k].map) div PROC)*(k-1) to (High(minith[k].map) div PROC)*k do
     for j := 0 to High(minith[k].Map[i]) do
        AMap[i,j]:=Minith[k].map[i,j];
@@ -96,7 +96,7 @@ begin
 
 end;
 
-constructor Tengine.create(ms:hwnd;Picture: TBitmap; ColCount, RowCount,
+constructor Tengine.create(Picture: TBitmap; ColCount, RowCount,
   colorCount: integer; var bar: TProgressBar);
 begin
    //inherited Create(false);
@@ -109,7 +109,6 @@ begin
    fbar:=bar;
    fPool:=0;
    startMap; //<== start
-   fms:=ms;
 end;
 
 destructor Tengine.destroy;
@@ -127,8 +126,9 @@ begin
   //===============
   fBar.Max:=frowCount;
   //===============
+
   for k := 1 to PROC do    //threads starts immidiatelly
-    minith[k]:=TMinith.create(fms, Fpicture, fColcount, frowCount, fbar,
+    minith[k]:=TMinith.create(Fpicture, fColcount, frowCount, fbar,
     k, GetMap);
 end;
 

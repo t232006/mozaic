@@ -4,7 +4,7 @@ object initForm: TinitForm
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = #1089#1086#1079#1076#1072#1085#1080#1077' '#1088#1072#1073#1086#1095#1077#1081' '#1086#1073#1083#1072#1089#1090#1080
-  ClientHeight = 275
+  ClientHeight = 196
   ClientWidth = 270
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -92,12 +92,12 @@ object initForm: TinitForm
   end
   object progrBar: TProgressBar
     Left = 0
-    Top = 258
+    Top = 179
     Width = 270
     Height = 17
     Align = alBottom
     TabOrder = 7
-    ExplicitTop = 180
+    ExplicitTop = 178
     ExplicitWidth = 266
   end
   object ColorCount: TComboBox
@@ -115,27 +115,6 @@ object initForm: TinitForm
       '125'
       '216'
       '343')
-  end
-  object ProgressBar1: TProgressBar
-    Left = 0
-    Top = 192
-    Width = 150
-    Height = 17
-    TabOrder = 9
-  end
-  object ProgressBar2: TProgressBar
-    Left = 0
-    Top = 215
-    Width = 150
-    Height = 17
-    TabOrder = 10
-  end
-  object ProgressBar3: TProgressBar
-    Left = 0
-    Top = 238
-    Width = 150
-    Height = 17
-    TabOrder = 11
   end
   object pictureD: TOpenPictureDialog
     Options = [ofEnableSizing]

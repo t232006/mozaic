@@ -19,16 +19,12 @@ type
     pictureD: TOpenPictureDialog;
     progrBar: TProgressBar;
     ColorCount: TComboBox;
-    ProgressBar1: TProgressBar;
-    ProgressBar2: TProgressBar;
-    ProgressBar3: TProgressBar;
     procedure BitBtn1Click(Sender: TObject);
     procedure ColCountKeyPress(Sender: TObject; var Key: Char);
     procedure BitBtn2Click(Sender: TObject);
     procedure ColorCountKeyPress(Sender: TObject; var Key: Char);
     procedure Button1Click(Sender: TObject);
     //procedure progrBarChange(Sender: TObject);
-    procedure incProgr(var msg: tmessage); message wmaddproc;
     procedure PassMap(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -60,7 +56,7 @@ begin
      //form1.Show;
      //initform.hide;
      //for var i := 1 to 4 do
-     th:=Tengine.create(self.handle, fPicture,
+     th:=Tengine.create(fPicture,
                           strtoint(ColCount.Text),
                           strtoint(RowCount.Text),
                           ColorCount.ItemIndex+2,
@@ -99,16 +95,6 @@ begin
   progrbar.Position:=0;
 end;
 
-procedure TinitForm.incProgr(var msg: tmessage);
-begin
-  case msg.LParam of
-  1: ProgressBar1.Position:=progressbar1.Position+1;
-    2: ProgressBar1.Position:=progressbar1.Position+2;
-      3: ProgressBar1.Position:=progressbar1.Position+3;
-  end;
-
-end;
-
 procedure TinitForm.PassMap(Sender: TObject);
 begin
     TMap(form1.pg.ColorMap):=th.map;
@@ -139,6 +125,7 @@ begin
     end else
 
     fpicture.loadfromfile(pictureD.FileName);
+    //
   end;
 
 end;
