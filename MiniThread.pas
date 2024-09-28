@@ -90,7 +90,6 @@ begin
       end;
       FMap[i,j]:=RGB(sr div (Wcoef*Hcoef), sg div (Wcoef*Hcoef), sb div (Wcoef*Hcoef));
     end;
-
     Synchronize(IncBar);
   end;
 end;

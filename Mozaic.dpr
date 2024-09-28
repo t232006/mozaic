@@ -8,7 +8,8 @@ uses
   engineThread in 'engineThread.pas',
   ColorsUnit in 'ColorsUnit.pas' {ColorsForm},
   PaintGrid in '..\My components\PaintGrid\PaintGrid.pas',
-  MiniThread in 'MiniThread.pas';
+  MiniThread in 'MiniThread.pas',
+  MediaClass in 'MediaClass.pas';
 
 {$R *.res}
 

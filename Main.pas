@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid,
-  Vcl.StdCtrls, colorsUnit;
+  Vcl.StdCtrls, colorsUnit, mediaClass;
 
 type
   TForm1 = class(TForm)
@@ -13,11 +13,13 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    Button4: TButton;
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -62,6 +64,18 @@ begin
       end;
     end;
 
+
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+var mediana: TMediaSplit;
+    map: TMap;
+begin
+    setlength(map, pg.RowCount, pg.ColCount);
+    for var i := 0 to pg.RowCount-1 do
+      for var j := 0 to pg.ColCount-1 do
+        map[i,j]:=pg.ColorMap[i,j];
+    mediana:=TMediaSplit.create(map,2);
 
 end;
 
