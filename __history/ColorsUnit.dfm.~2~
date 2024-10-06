@@ -20,13 +20,13 @@ object ColorsForm: TColorsForm
     Color = clScrollBar
     ColCount = 2
     DrawingStyle = gdsClassic
-    FixedCols = 0
     FixedRows = 0
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goFixedColDefAlign]
     TabOrder = 0
-    OnClick = FormPaint
-    ExplicitWidth = 337
-    ExplicitHeight = 293
+    ExplicitLeft = 48
+    ExplicitTop = 32
+    ExplicitWidth = 320
+    ExplicitHeight = 120
     RowHeights = (
       26
       24

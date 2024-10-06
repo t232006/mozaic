@@ -21,7 +21,7 @@ TMediaSplit = class
   function MakeMiddle(miniCube: Tarr):TCell;
   procedure MakePallete(Cube: Tarr; deep: byte);
   public
-
+  property map: TMap read FMap;
   constructor create(Amap: TMap; deep: byte);
 end;
 
@@ -29,23 +29,25 @@ implementation
 
 constructor TMediaSplit.create(Amap: TMap; deep: byte);
 var cu: TArr; k:integer;
+    vRGB: longint;
 begin
      Fmap:=Amap;
      k:=0;
      setlength(Cu, length(Amap)*length(Amap[0]));
-     for k := 0 to 255 do
+     {for k := 0 to 255 do
      begin
         mr[k]:=0; mg[k]:=0; mb[k]:=0;
-     end;
-
+     end;       }
+     k:=0;
      for var i := Low(Fmap) to High(Fmap) do
      for var j := Low(fMap[i]) to High(Fmap[i]) do
        begin
-        Cu[k].R:=Fmap[i,j] and 255;
+        vRGB:=Fmap[i,j];
+        Cu[k].R:=vRGB and 255;
         inc(mr[Cu[k].R]);
-        Cu[k].G:=Fmap[i,j] shr 8 and 255;
+        Cu[k].G:=vRGB shr 8 and 255;
         inc(mg[Cu[k].G]);
-        Cu[k].B:=Fmap[i,j] shr 16 and 255;
+        Cu[k].B:=vRGB shr 16 and 255;
         inc(mb[Cu[k].B]);
         Cu[k].I:=i;
         Cu[k].J:=j;
@@ -127,25 +129,23 @@ end;
 function TMediaSplit.MakeMiddle(miniCube: TArr):TCell;
 var sr,sg,sb: integer;  i:byte;
     total: longint;
-    mr:array[byte] of longint;
-    mg:array[byte] of longint;
-    mb:array[byte] of longint;
 begin
-    sr:=0; sg:=0; sb:=0; total:=0;
+    sr:=0; sg:=0; sb:=0; //total:=0;
     for i:=low(minicube) to high(minicube) do
     begin
-       sr:=sr+miniCube[i].r*mr[minicube[i].r];
-       sg:=sg+miniCube[i].g*mr[minicube[i].r];
-       sb:=sb+minicube[i].b*mr[minicube[i].r];
-       total:=total+mr[minicube[i].r]+mr[minicube[i].r]+mr[minicube[i].r];
+       {sr:=sr+miniCube[i].r*mr[minicube[i].r];
+       sg:=sg+miniCube[i].g*mg[minicube[i].g];
+       sb:=sb+minicube[i].b*mb[minicube[i].b];
+       total:=total+mr[minicube[i].r]+mg[minicube[i].g]+mb[minicube[i].b]; }
+       sr:=sr+miniCube[i].R; sg:=sg+minicube[i].G; sb:=sb+minicube[i].B;
     end;
-    result.r:=sr div total;
-    result.g:=sg div total;
-    result.b:=sb div total;
+    result.r:=sr div (high(minicube)+1);
+    result.g:=sg div (high(minicube)+1);
+    result.b:=sb div (high(minicube)+1);
 end;
 
 procedure TMediaSplit.MakePallete(Cube: tArr; deep: byte);
-    var arr1, arr2: TArr;
+    var arr1, arr2: TArr; cell: Tcell;
     i:word;
     begin
        if deep>0 then
@@ -165,7 +165,10 @@ procedure TMediaSplit.MakePallete(Cube: tArr; deep: byte);
        end else
        begin
            for i:=0 to high(cube) do
-           FMap[cube[i].i, cube[i].j]:=RGB(MakeMiddle(Cube).R, MakeMiddle(Cube).G, MakeMiddle(Cube).B);
+           begin
+             cell:=MakeMiddle(Cube);
+             FMap[cube[i].i, cube[i].j]:=RGB(cell.R, cell.G, cell.B);
+           end;
        end;
     end;
 {begin

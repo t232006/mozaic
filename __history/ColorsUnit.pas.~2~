@@ -1,22 +1,22 @@
-unit Main;
+unit ColorsUnit;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids;
 
 type
-  TForm1 = class(TForm)
-    PaintGrid1: TPaintGrid;
+  TColorsForm = class(TForm)
+    Dg: TDrawGrid;
   private
     { Private declarations }
   public
-    FPicture: TBitmap;
+    { Public declarations }
   end;
 
 var
-  Form1: TForm1;
+  ColorsForm: TColorsForm;
 
 implementation
 

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid,
-  Vcl.StdCtrls, colorsUnit, mediaClass, System.Generics.Collections;
+  Vcl.StdCtrls, colorsUnit, mediaClass;
 
 type
   TForm1 = class(TForm)
@@ -21,7 +21,7 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
   private
-    map: TMap;
+    { Private declarations }
   public
     //FcolorCont: TList<TColor>;
   end;
@@ -47,25 +47,34 @@ begin
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
-var pallette: array of TColor;
-    l: TList<TColor>;
+var  r: TRect; s:string; cc: byte;
 begin
-    l:=TList<TColor>.Create;
-    for var i := Low(map) to High(map) do
-      for var j := Low(map[i]) to High(map[i]) do
-          if not(l.Contains(map[i,j])) then l.Add(map[i,j]);
-    colorsform.pallete:=l;
     colorsform.show;
-
+    with initForm.th do
+    begin
+      cc:=Colorconteiner.Count;
+      ColorsForm.dg.rowCount:=7;
+      for var k:=0 to cc-1 do
+      begin
+        Colorsform.dg.canvas.Brush.Color:=ColorConteiner[k];
+        ColorsForm.dg.canvas.Rectangle(ColorsForm.dg.CellRect(k div 7,k mod 7));
+        r:= ColorsForm.dg.CellRect(1,k) ;
+        s:= IntToHex(ColorConteiner[k],1);
+        ColorsForm.dg.canvas.TextRect(r,s,[]);
+      end;
+    end;
 
 
 end;
 
 procedure TForm1.Button4Click(Sender: TObject);
 var mediana: TMediaSplit;
-
+    map: TMap;
 begin
-    
+    setlength(map, pg.RowCount, pg.ColCount);
+    for var i := 0 to pg.RowCount-1 do
+      for var j := 0 to pg.ColCount-1 do
+        map[i,j]:=pg.ColorMap[i,j];
     mediana:=TMediaSplit.create(map,2);
     for var i := 0 to pg.RowCount-1 do
       for var j := 0 to pg.ColCount-1 do
@@ -82,10 +91,10 @@ end;
 procedure TForm1.FormShow(Sender: TObject);
 //var th:TengineTh;
 begin
-  setlength(map, pg.RowCount, pg.ColCount);
-    for var i := 0 to pg.RowCount-1 do
-      for var j := 0 to pg.ColCount-1 do
-        map[i,j]:=pg.ColorMap[i,j];
+  //th:=TengineTh.create(FPicture,pg.ColCount,pg.RowCount,ColorCount);
+
+  //TMap(pg.ColorMap):=GetMap();
+  //pg.DrawFromMap;
 end;
 
 end.

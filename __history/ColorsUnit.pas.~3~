@@ -24,17 +24,16 @@ implementation
 {$R *.dfm}
 
 procedure TColorsForm.FormPaint(Sender: TObject);
-var s:string; re:Trect;
+var y:integer; s:string; re:Trect;
 begin
   dg.RowCount:=Fpallete.Count;
-  //dg.Canvas.Rectangle(0,0,10,15);
   for var i := 0 to dg.RowCount-1 do
     begin
       dg.Canvas.Brush.Color:=Fpallete[i];
-
-      dg.Canvas.Rectangle(dg.CellRect(0,i));
+      y:=i*dg.DefaultRowHeight+dg.GridLineWidth;
+      dg.Canvas.Rectangle(dg.CellRect(0,i-1));
       s:=inttostr(Fpallete[i]);
-      re:= dg.CellRect(1,i);
+      re:= dg.CellRect(1,i-1);
       dg.Canvas.TextRect(re,s,[]);
     end;
 end;
