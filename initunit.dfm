@@ -23,7 +23,7 @@ object initForm: TinitForm
     Height = 21
     Associate = ColCount
     Increment = 5
-    Position = 5
+    Position = 45
     TabOrder = 0
   end
   object UpDown2: TUpDown
@@ -33,7 +33,7 @@ object initForm: TinitForm
     Height = 21
     Associate = RowCount
     Increment = 5
-    Position = 5
+    Position = 30
     TabOrder = 1
   end
   object ColCount: TLabeledEdit
@@ -45,7 +45,7 @@ object initForm: TinitForm
     EditLabel.Height = 13
     EditLabel.Caption = #1082#1086#1083#1086#1085#1086#1082
     TabOrder = 2
-    Text = '5'
+    Text = '45'
     OnKeyPress = ColCountKeyPress
   end
   object RowCount: TLabeledEdit
@@ -57,7 +57,7 @@ object initForm: TinitForm
     EditLabel.Height = 13
     EditLabel.Caption = #1089#1090#1088#1086#1082
     TabOrder = 4
-    Text = '5'
+    Text = '30'
     OnKeyPress = ColCountKeyPress
   end
   object BitBtn1: TBitBtn
@@ -107,14 +107,12 @@ object initForm: TinitForm
     Height = 21
     DropDownCount = 3
     TabOrder = 8
-    Text = '6'
+    Text = '8'
     Items.Strings = (
-      '6'
-      '27'
-      '64'
-      '125'
-      '216'
-      '343')
+      '8'
+      '16'
+      '32'
+      '64')
   end
   object pictureD: TOpenPictureDialog
     Options = [ofEnableSizing]

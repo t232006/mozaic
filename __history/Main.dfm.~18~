@@ -1,0 +1,64 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 442
+  ClientWidth = 628
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  OnActivate = FormActivate
+  OnClose = FormClose
+  TextHeight = 15
+  object Button1: TButton
+    Left = 8
+    Top = 376
+    Width = 75
+    Height = 25
+    Caption = 'Button1'
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 120
+    Top = 376
+    Width = 75
+    Height = 25
+    Caption = 'save picture'
+    TabOrder = 1
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 216
+    Top = 376
+    Width = 75
+    Height = 25
+    Caption = 'Button3'
+    TabOrder = 2
+    OnClick = Button3Click
+  end
+  object Button4: TButton
+    Left = 312
+    Top = 376
+    Width = 89
+    Height = 25
+    Caption = 'quantification'
+    TabOrder = 3
+    OnClick = Button4Click
+  end
+  object pg: TPaintGrid
+    Left = 8
+    Top = 8
+    Width = 69
+    Height = 69
+    DefaultColWidth = 12
+    DefaultRowHeight = 12
+    FixedCols = 0
+    FixedRows = 0
+    TabOrder = 4
+    currentColor = clBlack
+  end
+end

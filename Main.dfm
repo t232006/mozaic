@@ -10,28 +10,16 @@ object Form1: TForm1
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnActivate = FormActivate
   OnClose = FormClose
-  OnShow = FormShow
   TextHeight = 15
-  object pg: TPaintGrid
-    Left = 0
-    Top = 0
-    Width = 161
-    Height = 161
-    DefaultColWidth = 12
-    DefaultRowHeight = 12
-    FixedCols = 0
-    FixedRows = 0
-    TabOrder = 0
-    currentColor = clBlack
-  end
   object Button1: TButton
     Left = 8
     Top = 376
     Width = 75
     Height = 25
     Caption = 'Button1'
-    TabOrder = 1
+    TabOrder = 0
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -40,7 +28,7 @@ object Form1: TForm1
     Width = 75
     Height = 25
     Caption = 'save picture'
-    TabOrder = 2
+    TabOrder = 1
     OnClick = Button2Click
   end
   object Button3: TButton
@@ -49,7 +37,7 @@ object Form1: TForm1
     Width = 75
     Height = 25
     Caption = 'Button3'
-    TabOrder = 3
+    TabOrder = 2
     OnClick = Button3Click
   end
   object Button4: TButton
@@ -58,7 +46,60 @@ object Form1: TForm1
     Width = 89
     Height = 25
     Caption = 'quantification'
-    TabOrder = 4
+    TabOrder = 3
     OnClick = Button4Click
+  end
+  object pg: TPaintGrid
+    Left = 8
+    Top = 8
+    Width = 69
+    Height = 69
+    DefaultColWidth = 12
+    DefaultRowHeight = 12
+    FixedCols = 0
+    FixedRows = 0
+    TabOrder = 4
+    OnDrawCell = pgDrawCell
+    currentColor = clBlack
+  end
+  object ToolBar1: TToolBar
+    Left = 0
+    Top = 413
+    Width = 628
+    Height = 29
+    Align = alBottom
+    Caption = 'ToolBar1'
+    TabOrder = 5
+    ExplicitLeft = 48
+    ExplicitTop = 272
+    ExplicitWidth = 150
+    object ToolButton1: TToolButton
+      Left = 0
+      Top = 0
+      Caption = 'ToolButton1'
+      ImageIndex = 0
+      OnClick = Button2Click
+    end
+    object ToolButton2: TToolButton
+      Left = 23
+      Top = 0
+      Caption = 'ToolButton2'
+      ImageIndex = 1
+      OnClick = Button3Click
+    end
+    object ToolButton3: TToolButton
+      Left = 46
+      Top = 0
+      Caption = 'ToolButton3'
+      ImageIndex = 2
+      OnClick = Button4Click
+    end
+  end
+  object ScrollBox1: TScrollBox
+    Left = 24
+    Top = 128
+    Width = 185
+    Height = 41
+    TabOrder = 6
   end
 end

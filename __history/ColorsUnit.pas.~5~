@@ -1,0 +1,60 @@
+unit ColorsUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections;
+
+type
+  TColorsForm = class(TForm)
+    Dg: TDrawGrid;
+    procedure FormActivate(Sender: TObject);
+    procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
+      State: TGridDrawState);
+  private
+    Fpallete: TList<TColor>;
+  public
+      property Pallete: TList<TColor> write Fpallete;
+  end;
+
+var
+  ColorsForm: TColorsForm;
+
+implementation
+
+{$R *.dfm}
+
+procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
+  Rect: TRect; State: TGridDrawState);
+var s:string;
+begin
+      if ACol=0 then
+      begin
+        dg.Canvas.Brush.Color:=Fpallete[ARow];
+
+        dg.Canvas.Rectangle(Rect);
+      end else
+      begin
+        s:=inttostr(Fpallete[ARow]);
+        dg.Canvas.TextRect(Rect,s,[]);
+      end;
+end;
+
+procedure TColorsForm.FormActivate(Sender: TObject);
+var s:string; re:Trect;
+begin
+  dg.RowCount:=Fpallete.Count;
+  //dg.Canvas.Rectangle(0,0,10,15);
+  for var i := 0 to dg.RowCount-1 do
+    begin
+      dg.Canvas.Brush.Color:=Fpallete[i];
+
+      dg.Canvas.Rectangle(dg.CellRect(0,i));
+      s:=inttostr(Fpallete[i]);
+      re:= dg.CellRect(1,i);
+      dg.Canvas.TextRect(re,s,[]);
+    end;
+end;
+
+end.

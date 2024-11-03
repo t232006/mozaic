@@ -65,8 +65,6 @@ begin
 end;
 
 
-
-
 procedure TinitForm.ColCountKeyPress(Sender: TObject; var Key: Char);
 begin
      if not((key>'1') and (key<'9')) and (ord(key)<>8) then

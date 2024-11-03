@@ -3,7 +3,7 @@ unit engineThread;
 interface
 
 uses Windows, Graphics, classes, math, dialogs,
-System.Generics.Collections, comctrls, winapi.Messages;
+System.Generics.Collections, comctrls, winapi.Messages, MediaClass;
 
 const PROC=1;
 //nst wmaddproc=wm_user+123+$10;
@@ -21,11 +21,13 @@ TMap=array of array of TColor;
     Fpool: 0..proc;
     FFinish: boolean;
     FOnFinish: TNotifyEvent;
+    //fMediana: TMediaSplit;
     procedure startMap;
-    function Quantor(num, min, max, colorcount: integer):integer;
+    //function Quantor(num, min, max, colorcount: integer):integer;
     procedure GetMap(Sender: TObject); //<==starts when thread terminates
   public
     property OnFinish: TNotifyEvent read FOnFinish write FOnFinish;
+    //procedure Quantor;
     constructor create(Picture: TBitmap; ColCount, RowCount,
     colorCount: integer; var bar: TProgressbar);
     destructor destroy;
@@ -96,6 +98,16 @@ begin
 
 end;
 
+{procedure Tengine.Quantor;
+var Mediana: TMediaSplit;
+begin
+  Mediana:=TMediaSplit.create(fMap,fcolorCount);
+  for var i := 0 to pg.RowCount-1 do
+      for var j := 0 to pg.ColCount-1 do
+        fMap[i,j]:=mediana.map[i,j];
+  Mediana.free;
+end;        }
+
 constructor Tengine.create(Picture: TBitmap; ColCount, RowCount,
   colorCount: integer; var bar: TProgressBar);
 begin
@@ -132,7 +144,7 @@ begin
     k, GetMap);
 end;
 
-function Tengine.Quantor(num, min, max, colorcount: integer): integer;
+{function Tengine.Quantor(num, min, max, colorcount: integer): integer;
 var koef:integer;   cut:byte;
 begin
   koef:=(max-min) div colorcount;
@@ -141,6 +153,6 @@ begin
     cut:=floor((num-min)/koef);
   if cut=0 then cut:=1;
   result:=min+cut*koef-(koef div 2);
-end;
+end;}
 
 end.

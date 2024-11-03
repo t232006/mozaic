@@ -127,7 +127,7 @@ end;
 
 
 function TMediaSplit.MakeMiddle(miniCube: TArr):TCell;
-var sr,sg,sb: integer;  i:byte;
+var sr,sg,sb: integer;  i:word;
     total: longint;
 begin
     sr:=0; sg:=0; sb:=0; //total:=0;

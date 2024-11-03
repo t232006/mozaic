@@ -3,7 +3,6 @@ program Mozaic;
 uses
   Vcl.Forms,
   Main in 'Main.pas' {Form1},
-  engine in 'engine.pas',
   initunit in 'initunit.pas' {initForm},
   engineThread in 'engineThread.pas',
   ColorsUnit in 'ColorsUnit.pas' {ColorsForm},
