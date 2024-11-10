@@ -22,7 +22,6 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure ColCountKeyPress(Sender: TObject; var Key: Char);
     procedure BitBtn2Click(Sender: TObject);
-    procedure ColorCountKeyPress(Sender: TObject; var Key: Char);
     procedure Button1Click(Sender: TObject);
     //procedure progrBarChange(Sender: TObject);
     procedure PassMap(Sender: TObject);
@@ -67,14 +66,8 @@ end;
 
 procedure TinitForm.ColCountKeyPress(Sender: TObject; var Key: Char);
 begin
-     if not((key>'1') and (key<'9')) and (ord(key)<>8) then
+     if (key<'0') or (key>'9') then
       key:='5';
-end;
-
-procedure TinitForm.ColorCountKeyPress(Sender: TObject; var Key: Char);
-begin
-    if (key<'0') or (key>'9') then key:='1';
-
 end;
 
 procedure TinitForm.FormCreate(Sender: TObject);

@@ -6,11 +6,10 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid,
   Vcl.StdCtrls, colorsUnit, mediaClass, System.Generics.Collections, math,
-  Vcl.ComCtrls, Vcl.ToolWin;
+  Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList;
 
 type
   TForm1 = class(TForm)
-    Button1: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -20,6 +19,7 @@ type
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ScrollBox1: TScrollBox;
+    ImageList1: TImageList;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
