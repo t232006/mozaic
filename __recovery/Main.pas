@@ -76,9 +76,9 @@ var mediana: TMediaSplit;
 begin
      //w:= 2 shl ();
     if legacy.Checked then
-
-      mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+3,[koef]) else
-      mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+3,[]);
+      mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+2,[koef])
+    else
+      mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+2,[]);
     for var i := 0 to pg.RowCount-1 do
       for var j := 0 to pg.ColCount-1 do
         pg.ColorMap[i,j]:=mediana.map[i,j];
