@@ -105,10 +105,12 @@ object initForm: TinitForm
     Top = 80
     Width = 65
     Height = 21
-    DropDownCount = 3
+    DropDownCount = 5
+    ItemIndex = 1
     TabOrder = 8
     Text = '8'
     Items.Strings = (
+      '4'
       '8'
       '16'
       '32'

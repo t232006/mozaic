@@ -46,6 +46,8 @@ var s:string; re:Trect;
 begin
   dg.RowCount:=8;
   dg.ColCount:=2*Fpallete.Count div 8;
+  if dg.ColCount=0 then dg.ColCount:=2;
+
   //dg.Canvas.Rectangle(0,0,10,15);
   for var i := 0 to (dg.ColCount div 2)-1 do
     for var j := 0 to 7 do
