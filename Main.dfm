@@ -81,6 +81,14 @@ object Form1: TForm1
       ShowHint = True
       OnClick = Button4Click
     end
+    object legacy: TCheckBox
+      Left = 156
+      Top = 0
+      Width = 157
+      Height = 51
+      Caption = #1054#1090#1085#1086#1089#1080#1090#1077#1083#1100#1085#1072#1103' '#1103#1088#1082#1086#1089#1090#1100
+      TabOrder = 0
+    end
   end
   object ScrollBox1: TScrollBox
     Left = 0

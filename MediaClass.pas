@@ -7,11 +7,14 @@ TMap = array of array of TColor;
 Tcell = packed record
 R,G,B,I,J: Byte;
 end;
+TMode = (koef, fullanalis);
+TOptions = set of Tmode;
 Tarr=array of Tcell;
 TMediaSplit = class
   private
   Cubes: array of array of Tcell;
   Fmap: TMap;
+  options: TOptions;
   mr: array[byte] of word;
   mg: array[byte] of word;
   mb: array[byte] of word;
@@ -22,16 +25,17 @@ TMediaSplit = class
   procedure MakePallete(Cube: Tarr; deep: byte);
   public
   property map: TMap read FMap;
-  constructor create(Amap: TMap; deep: byte);
+  constructor create(Amap: TMap; deep: byte; Opt: TOptions);
 end;
 
 implementation
 
-constructor TMediaSplit.create(Amap: TMap; deep: byte);
+constructor TMediaSplit.create(Amap: TMap; deep: byte; Opt: TOptions);
 var cu: TArr; k:integer;
     vRGB: longint;
 begin
      Fmap:=Amap;
+     Options:=Opt;
      k:=0;
      setlength(Cu, length(Amap)*length(Amap[0]));
      {for k := 0 to 255 do
@@ -119,8 +123,15 @@ begin
        if min.G>Cube[i].G then min.G:=Cube[i].G;
        if min.R>Cube[i].R then min.R:=Cube[i].R;
     end;
-    if (((max.R-min.R)>=(max.G-min.G)) and ((max.R-min.R)>=(max.B-min.B))) then sortIns(0) else
-    if (((max.G-min.G)>=(max.R-min.R)) and ((max.G-min.G)>=(max.B-min.B))) then sortIns(1) else
+    if koef in Options then
+    begin
+      if ((0.2126*(max.R-min.R)>=0.7152*(max.G-min.G)) and (0.2126*(max.R-min.R)>=0.0722*(max.B-min.B))) then sortIns(0) else
+      if ((0.7152*(max.G-min.G)>=0.2126*(max.R-min.R)) and (0.7152*(max.G-min.G)>=0.0722*(max.B-min.B))) then sortIns(1) else
+    end else
+    begin
+      if (((max.R-min.R)>=(max.G-min.G)) and ((max.R-min.R)>=(max.B-min.B))) then sortIns(0) else
+      if (((max.G-min.G)>=(max.R-min.R)) and ((max.G-min.G)>=(max.B-min.B))) then sortIns(1) else
+    end;
     sortIns(2);
 
 end;

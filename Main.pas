@@ -20,6 +20,7 @@ type
     ToolButton3: TToolButton;
     ScrollBox1: TScrollBox;
     ImageList1: TImageList;
+    legacy: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
@@ -74,7 +75,10 @@ var mediana: TMediaSplit;
     //w: word;
 begin
      //w:= 2 shl ();
-    mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+3);
+    if legacy.Checked then
+
+      mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+3,[koef]) else
+      mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+3,[]);
     for var i := 0 to pg.RowCount-1 do
       for var j := 0 to pg.ColCount-1 do
         pg.ColorMap[i,j]:=mediana.map[i,j];
