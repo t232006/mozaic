@@ -127,12 +127,14 @@ begin
     begin
       if ((0.2126*(max.R-min.R)>=0.7152*(max.G-min.G)) and (0.2126*(max.R-min.R)>=0.0722*(max.B-min.B))) then sortIns(0) else
       if ((0.7152*(max.G-min.G)>=0.2126*(max.R-min.R)) and (0.7152*(max.G-min.G)>=0.0722*(max.B-min.B))) then sortIns(1) else
+      sortIns(2);
     end else
     begin
       if (((max.R-min.R)>=(max.G-min.G)) and ((max.R-min.R)>=(max.B-min.B))) then sortIns(0) else
       if (((max.G-min.G)>=(max.R-min.R)) and ((max.G-min.G)>=(max.B-min.B))) then sortIns(1) else
+      sortIns(2);
     end;
-    sortIns(2);
+
 
 end;
 
@@ -175,11 +177,9 @@ procedure TMediaSplit.MakePallete(Cube: tArr; deep: byte);
            MakePallete(arr2, deep-1);
        end else
        begin
+           cell:=MakeMiddle(Cube);
            for i:=0 to high(cube) do
-           begin
-             cell:=MakeMiddle(Cube);
              FMap[cube[i].i, cube[i].j]:=RGB(cell.R, cell.G, cell.B);
-           end;
        end;
     end;
 {begin

@@ -111,9 +111,9 @@
             <Form>ColorsForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\My components\PaintGrid\PaintGrid.pas"/>
         <DCCReference Include="MiniThread.pas"/>
         <DCCReference Include="MediaClass.pas"/>
+        <DCCReference Include="..\..\repos\My components\PaintGrid\PaintGrid.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -51,7 +51,7 @@ begin
   //dg.Canvas.Rectangle(0,0,10,15);
   for var i := 0 to (dg.ColCount div 2)-1 do
     for var j := 0 to 7 do
-
+    try
     begin
       dg.Canvas.Brush.Color:=Fpallete[i*8+j];
 
@@ -59,6 +59,9 @@ begin
       s:=inttostr(Fpallete[i*8+j]);
       re:= dg.CellRect(i*2+1,j);
       dg.Canvas.TextRect(re,s,[]);
+    end;
+    finally
+
     end;
 end;
 

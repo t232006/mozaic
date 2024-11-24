@@ -6,9 +6,9 @@ uses
   initunit in 'initunit.pas' {initForm},
   engineThread in 'engineThread.pas',
   ColorsUnit in 'ColorsUnit.pas' {ColorsForm},
-  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas',
   MiniThread in 'MiniThread.pas',
-  MediaClass in 'MediaClass.pas';
+  MediaClass in 'MediaClass.pas',
+  PaintGrid in '..\..\repos\My components\PaintGrid\PaintGrid.pas';
 
 {$R *.res}
 
