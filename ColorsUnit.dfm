@@ -11,8 +11,10 @@ object ColorsForm: TColorsForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   OnActivate = FormActivate
+  OnClose = FormClose
   TextHeight = 15
   object Dg: TDrawGrid
+    Tag = -1
     Left = 0
     Top = 0
     Width = 341
@@ -35,5 +37,9 @@ object ColorsForm: TColorsForm
       25
       24
       24)
+  end
+  object ColorDialog1: TColorDialog
+    Left = 104
+    Top = 192
   end
 end

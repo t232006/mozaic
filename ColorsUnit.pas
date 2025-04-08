@@ -9,13 +9,17 @@ uses
 type
   TColorsForm = class(TForm)
     Dg: TDrawGrid;
+    ColorDialog1: TColorDialog;
     procedure FormActivate(Sender: TObject);
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
     procedure DgSelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     Fpallete: TList<TColor>;
+    {$j+}
+    const pressed: boolean=false;
   public
       property Pallete: TList<TColor> write Fpallete;
   end;
@@ -47,10 +51,25 @@ end;
 procedure TColorsForm.DgSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
 begin
-    if tag mod 2 = 0 then
-      mosaic.selectColor(Fpallete[ACol*8+ARow], false) else
-      mosaic.selectColor(Fpallete[ACol*8+ARow], true) ;
-    tag:=tag+1;
+    if ACol mod 2 = 0 then
+    begin
+      if pressed and (dg.tag<>-1) then
+        if dg.tag<>acol*8+arow then
+        begin
+          mosaic.selectColor(Fpallete[dg.tag], true);
+          mosaic.selectColor(Fpallete[ACol*8+ARow], false) ;
+        end else
+        begin
+          mosaic.selectColor(Fpallete[ACol*8+ARow], true);
+          pressed:=not(pressed);
+        end
+      else
+      begin
+        mosaic.selectColor(Fpallete[ACol*8+ARow], false) ;
+        pressed:=not(pressed);
+      end;
+      dg.tag:=acol*8+arow;
+    end;
 end;
 
 procedure TColorsForm.FormActivate(Sender: TObject);
@@ -75,6 +94,11 @@ begin
     finally
 
     end;
+end;
+
+procedure TColorsForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+   mosaic.selectColor(Fpallete[dg.tag], true);
 end;
 
 end.
