@@ -2,13 +2,13 @@ program Mozaic;
 
 uses
   Vcl.Forms,
-  Main in 'Main.pas' {Form1},
+  Main in 'Main.pas' {mosaic},
   initunit in 'initunit.pas' {initForm},
   engineThread in 'engineThread.pas',
   ColorsUnit in 'ColorsUnit.pas' {ColorsForm},
   MiniThread in 'MiniThread.pas',
   MediaClass in 'MediaClass.pas',
-  PaintGrid in '..\..\repos\My components\PaintGrid\PaintGrid.pas';
+  PaintGrid in '..\myComponents\PaintGrid\PaintGrid.pas';
 
 {$R *.res}
 
@@ -16,7 +16,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TinitForm, initForm);
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(Tmosaic, mosaic);
   Application.CreateForm(TColorsForm, ColorsForm);
   Application.Run;
 end.

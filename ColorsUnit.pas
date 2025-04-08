@@ -12,6 +12,8 @@ type
     procedure FormActivate(Sender: TObject);
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
+    procedure DgSelectCell(Sender: TObject; ACol, ARow: Integer;
+      var CanSelect: Boolean);
   private
     Fpallete: TList<TColor>;
   public
@@ -22,6 +24,7 @@ var
   ColorsForm: TColorsForm;
 
 implementation
+uses main;
 
 {$R *.dfm}
 
@@ -39,6 +42,15 @@ begin
         s:=inttostr(Fpallete[(ACol div 2)*8+ARow]);
         dg.Canvas.TextRect(Rect,s,[]);
       end;
+end;
+
+procedure TColorsForm.DgSelectCell(Sender: TObject; ACol, ARow: Integer;
+  var CanSelect: Boolean);
+begin
+    if tag mod 2 = 0 then
+      mosaic.selectColor(Fpallete[ACol*8+ARow], false) else
+      mosaic.selectColor(Fpallete[ACol*8+ARow], true) ;
+    tag:=tag+1;
 end;
 
 procedure TColorsForm.FormActivate(Sender: TObject);

@@ -48,8 +48,8 @@ implementation
 procedure TinitForm.BitBtn1Click(Sender: TObject);
 begin
      //cl:=false;
-     form1.pg.ColCount:=strtoint(ColCount.Text);
-     form1.pg.RowCount:=strtoint(RowCount.Text);
+     mosaic.pg.ColCount:=strtoint(ColCount.Text);
+     mosaic.pg.RowCount:=strtoint(RowCount.Text);
      //form1.ColorCount:=strtoint(ColorCount.Text);
 //     form1.FPicture.LoadFromFile()
      //form1.Show;
@@ -88,8 +88,8 @@ end;
 
 procedure TinitForm.PassMap(Sender: TObject);
 begin
-    TMap(form1.pg.ColorMap):=th.map;
-     form1.Show;
+    TMap(mosaic.pg.ColorMap):=th.map;
+     mosaic.Show;
      initform.hide;
 end;
 

@@ -1,7 +1,7 @@
-object Form1: TForm1
+object mosaic: Tmosaic
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'mosaic'
   ClientHeight = 442
   ClientWidth = 628
   Color = clBtnFace
@@ -51,8 +51,8 @@ object Form1: TForm1
     Caption = 'ToolBar1'
     Images = ImageList1
     TabOrder = 3
-    ExplicitTop = 391
-    ExplicitWidth = 624
+    ExplicitTop = 374
+    ExplicitWidth = 618
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -99,20 +99,15 @@ object Form1: TForm1
     Height = 392
     Align = alClient
     TabOrder = 4
-    ExplicitWidth = 624
-    ExplicitHeight = 391
+    ExplicitWidth = 618
+    ExplicitHeight = 374
     object pg: TPaintGrid
-      Left = 3
-      Top = 3
+      Left = 16
+      Top = 16
       Width = 69
       Height = 69
-      DefaultColWidth = 12
-      DefaultRowHeight = 12
-      FixedCols = 0
-      FixedRows = 0
       TabOrder = 0
       OnDrawCell = pgDrawCell
-      currentColor = clBlack
     end
   end
   object ImageList1: TImageList

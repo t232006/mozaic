@@ -9,11 +9,10 @@ uses
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList;
 
 type
-  TForm1 = class(TForm)
+  Tmosaic = class(TForm)
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
-    pg: TPaintGrid;
     ToolBar1: TToolBar;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
@@ -21,6 +20,7 @@ type
     ScrollBox1: TScrollBox;
     ImageList1: TImageList;
     legacy: TCheckBox;
+    pg: TPaintGrid;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
@@ -31,23 +31,24 @@ type
       State: TGridDrawState);
   private
     map: TMap;
+    function ContrastColor(AColor: TColor): TColor;
   public
-    //FcolorCont: TList<TColor>;
+    procedure SelectColor(color: TColor; unselect: boolean);
   end;
 
 var
-  Form1: TForm1;
+  mosaic: Tmosaic;
 
 implementation
 uses initunit;
 {$R *.dfm}
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure Tmosaic.Button1Click(Sender: TObject);
 begin
   pg.DrawFromMap;
 end;
 
-procedure TForm1.Button2Click(Sender: TObject);
+procedure Tmosaic.Button2Click(Sender: TObject);
 var saver: TBitmap;
 begin
   saver:=Tbitmap.Create(pg.width, pg.Height);
@@ -55,7 +56,7 @@ begin
   saver.SaveToFile('picture.bmp');
 end;
 
-procedure TForm1.Button3Click(Sender: TObject);
+procedure Tmosaic.Button3Click(Sender: TObject);
 var pallette: array of TColor;
     l: TList<TColor>;
 begin
@@ -70,7 +71,7 @@ begin
 
 end;
 
-procedure TForm1.Button4Click(Sender: TObject);
+procedure Tmosaic.Button4Click(Sender: TObject);
 var mediana: TMediaSplit;
     //w: word;
 begin
@@ -88,7 +89,7 @@ begin
     mediana.Destroy;
 end;
 
-procedure TForm1.FormActivate(Sender: TObject);
+procedure Tmosaic.FormActivate(Sender: TObject);
 begin
   setlength(map, pg.RowCount, pg.ColCount);
     for var i := 0 to pg.RowCount-1 do
@@ -97,16 +98,58 @@ begin
   pg.DrawFromMap;
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure Tmosaic.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   initform.show;
 end;
 
-procedure TForm1.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
+procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
   State: TGridDrawState);
 begin
   pg.Canvas.Brush.Color:=pg.ColorMap[ARow, ACol];
-  pg.Canvas.Rectangle(Rect);
+  pg.Canvas.Pen.Width:=1;
+  pg.Canvas.Pen.Color:=clBlack;
+  pg.Canvas.Rectangle(Rect );
 end;
+
+procedure Tmosaic.SelectColor(color: TColor; unselect: boolean);
+begin
+
+  pg.Canvas.Brush.Color:=color;
+
+  for var i := 0 to High(pg.ColorMap) do
+    for var j := 0 to High(pg.ColorMap[i]) do
+        if pg.ColorMap[i,j]=color then
+        with pg.Canvas do
+        begin
+          if unselect then
+          begin
+            Pen.Width:=2;
+            Pen.Color:=pg.Color;
+            Rectangle(pg.CellRect(j,i));
+            Pen.Width:=1;
+            Pen.Color:=0;
+          end
+          else
+          begin
+            Pen.Width:=2;
+            Pen.Color:=ContrastColor(color);
+          end;
+
+          Rectangle(pg.CellRect(j,i));
+        end;
+end;
+
+function Tmosaic.ContrastColor(AColor: TColor): TColor;
+const TolerSq = 16 * 16;
+begin
+ if Sqr(GetRValue(AColor) - $80) + Sqr(GetGValue(AColor) - $80)
+  + Sqr(GetBValue(AColor) - $80) < TolerSq then
+  Result := (AColor + $7F7F7F) and $FFFFFF
+ else
+  Result := AColor xor $FFFFFF;
+end;
+
+
 
 end.

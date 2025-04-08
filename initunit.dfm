@@ -97,8 +97,8 @@ object initForm: TinitForm
     Height = 17
     Align = alBottom
     TabOrder = 7
-    ExplicitTop = 178
-    ExplicitWidth = 266
+    ExplicitTop = 161
+    ExplicitWidth = 260
   end
   object ColorCount: TComboBox
     Left = 32

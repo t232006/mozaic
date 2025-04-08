@@ -99,7 +99,7 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Main.pas">
-            <Form>Form1</Form>
+            <Form>mosaic</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="initunit.pas">
@@ -113,7 +113,7 @@
         </DCCReference>
         <DCCReference Include="MiniThread.pas"/>
         <DCCReference Include="MediaClass.pas"/>
-        <DCCReference Include="..\..\repos\My components\PaintGrid\PaintGrid.pas"/>
+        <DCCReference Include="..\myComponents\PaintGrid\PaintGrid.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -134,6 +134,10 @@
                 <Source>
                     <Source Name="MainSource">Mozaic.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
                 <DeployFile LocalName="Win32\Debug\Mozaic.exe" Configuration="Debug" Class="ProjectOutput">

@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{B33CB07D-B9E8-4129-85B8-7F1DA34B026F}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Mozaic.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\myComponents\PaintGrid\PaintGrid.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Mozaic">
+        <MSBuild Projects="Mozaic.dproj"/>
+    </Target>
+    <Target Name="Mozaic:Clean">
+        <MSBuild Projects="Mozaic.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Mozaic:Make">
+        <MSBuild Projects="Mozaic.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="PaintGrid">
+        <MSBuild Projects="..\myComponents\PaintGrid\PaintGrid.dproj"/>
+    </Target>
+    <Target Name="PaintGrid:Clean">
+        <MSBuild Projects="..\myComponents\PaintGrid\PaintGrid.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PaintGrid:Make">
+        <MSBuild Projects="..\myComponents\PaintGrid\PaintGrid.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Mozaic;PaintGrid"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Mozaic:Clean;PaintGrid:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Mozaic:Make;PaintGrid:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
