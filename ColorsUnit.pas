@@ -16,6 +16,8 @@ type
     procedure DgSelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure DgMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     Fpallete: TList<TColor>;
     {$j+}
@@ -46,6 +48,30 @@ begin
         s:=inttostr(Fpallete[(ACol div 2)*8+ARow]);
         dg.Canvas.TextRect(Rect,s,[]);
       end;
+end;
+
+procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+  var ce:TPoint; const tr: boolean=true;
+  begin
+   if button=TMouseButton.mbRight then
+   begin
+     dg.MouseToCell(x,y, ce.X, ce.y);
+     if ce.X mod 2 = 0 then
+     if colordialog1.Execute then
+      begin
+        dg.Canvas.Brush.Color:=colordialog1.Color;
+        dg.Canvas.Rectangle(dg.CellRect(ce.X,ce.Y));
+        mosaic.selectColor(Fpallete[ce.X*8+ce.y], true); pressed:=false;
+        mosaic.ChangeColor(colordialog1.Color, fpallete[ce.X*8+ce.y]);
+        fpallete[ce.X*8+ce.y]:=colordialog1.Color;
+        dg.Repaint;
+        mosaic.pg.Repaint;
+        //dgselectcell(sender,ce.X,ce.Y,tr);
+
+      end;
+
+   end;
 end;
 
 procedure TColorsForm.DgSelectCell(Sender: TObject; ACol, ARow: Integer;

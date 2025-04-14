@@ -28,6 +28,7 @@ object ColorsForm: TColorsForm
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goFixedColDefAlign]
     TabOrder = 0
     OnDrawCell = DgDrawCell
+    OnMouseUp = DgMouseUp
     OnSelectCell = DgSelectCell
     ExplicitWidth = 331
     ExplicitHeight = 276

@@ -6,14 +6,14 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid,
   Vcl.StdCtrls, colorsUnit, mediaClass, System.Generics.Collections, math,
-  Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList;
+  Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.Menus;
 
 type
   Tmosaic = class(TForm)
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
-    ToolBar1: TToolBar;
+    ToolBar: TToolBar;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
@@ -21,6 +21,12 @@ type
     ImageList1: TImageList;
     legacy: TCheckBox;
     pg: TPaintGrid;
+    PopupMenu1: TPopupMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    saveD: TSaveDialog;
+    N3: TMenuItem;
+    OpenD: TOpenDialog;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
@@ -29,11 +35,15 @@ type
     procedure FormActivate(Sender: TObject);
     procedure pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
+    procedure N2Click(Sender: TObject);
+    procedure N1Click(Sender: TObject);
+    procedure N3Click(Sender: TObject);
   private
     map: TMap;
     function ContrastColor(AColor: TColor): TColor;
   public
     procedure SelectColor(color: TColor; unselect: boolean);
+    procedure ChangeColor(newColor: TColor; oldColor: TColor);
   end;
 
 var
@@ -49,11 +59,12 @@ begin
 end;
 
 procedure Tmosaic.Button2Click(Sender: TObject);
-var saver: TBitmap;
+var a:TPoint;
 begin
-  saver:=Tbitmap.Create(pg.width, pg.Height);
-  saver.Canvas.CopyRect(rect(0,0,pg.Width,pg.Height),pg.Canvas,rect(0,0,pg.Width,pg.Height));
-  saver.SaveToFile('picture.bmp');
+
+   GetCursorPos(a);
+  PopupMenu1.Popup(a.x,a.Y);
+
 end;
 
 procedure Tmosaic.Button3Click(Sender: TObject);
@@ -66,9 +77,6 @@ begin
           if not(l.Contains(map[i,j])) then l.Add(map[i,j]);
     colorsform.pallete:=l;
     colorsform.show;
-
-
-
 end;
 
 procedure Tmosaic.Button4Click(Sender: TObject);
@@ -102,6 +110,48 @@ procedure Tmosaic.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   initform.show;
 end;
+
+procedure Tmosaic.N1Click(Sender: TObject);
+var //memstream: TMemoryStream;
+    filestream: TfileStream;
+begin
+  if saved.Execute then
+  begin
+      filestream:=TFileStream.Create(saved.FileName+'.moz',fmcreate);
+      filestream.Write(pg.ColCount,sizeof(integer));
+      filestream.Write(pg.RowCount,sizeof(integer));
+      for var i := Low(pg.ColorMap) to High(pg.ColorMap) do
+      for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
+       filestream.Write(pg.ColorMap[i,j],sizeof(TColor));
+      filestream.Free;
+  end;
+end;
+
+procedure Tmosaic.N2Click(Sender: TObject);
+    var saver: TBitmap;
+begin
+  saver:=Tbitmap.Create(pg.width, pg.Height);
+  saver.Canvas.CopyRect(rect(0,0,pg.Width,pg.Height),pg.Canvas,rect(0,0,pg.Width,pg.Height));
+  saver.SaveToFile('picture.bmp');
+end;
+
+procedure Tmosaic.N3Click(Sender: TObject);
+var filestream: TFileStream;
+    buf:integer;
+    begin
+    if opend.Execute() then
+    begin
+
+      filestream:=TFileStream.Create(saved.FileName,fmOpenRead);
+      filestream.ReadBuffer(buf,4);  pg.ColCount:=buf;
+      filestream.ReadBuffer(buf,4);  pg.RowCount:=buf;
+      for var i := Low(pg.ColorMap) to High(pg.ColorMap) do
+      for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
+       filestream.ReadBuffer(pg.ColorMap[i,j],sizeof(TColor));
+      filestream.Free;
+      pg.Repaint;
+    end;
+  end;
 
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
   State: TGridDrawState);
@@ -137,6 +187,17 @@ begin
           end;
 
           Rectangle(pg.CellRect(j,i));
+        end;
+end;
+
+procedure Tmosaic.ChangeColor(newColor, oldColor: TColor);
+begin
+  pg.Canvas.Brush.Color:=Newcolor;
+  for var i := 0 to High(pg.ColorMap) do
+    for var j := 0 to High(pg.ColorMap[i]) do
+        if pg.ColorMap[i,j]=oldcolor then
+        begin
+          pg.ColorMap[i,j]:=newcolor;
         end;
 end;
 
