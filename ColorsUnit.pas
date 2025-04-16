@@ -45,7 +45,9 @@ begin
         dg.Canvas.Rectangle(Rect);
       end else
       begin
-        s:=inttostr(Fpallete[(ACol div 2)*8+ARow]);
+        //s:=inttostr(Fpallete[(ACol div 2)*8+ARow]);
+        s:=inttostr((ACol div 2)*8+ARow);
+        dg.Canvas.Brush.Color:=dg.Color;
         dg.Canvas.TextRect(Rect,s,[]);
       end;
 end;
@@ -124,7 +126,7 @@ end;
 
 procedure TColorsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-   mosaic.selectColor(Fpallete[dg.tag], true);
+   if dg.Tag>-1 then mosaic.selectColor(Fpallete[dg.tag], true);
 end;
 
 end.

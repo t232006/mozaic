@@ -3,10 +3,10 @@
         <ProjectGuid>{B33CB07D-B9E8-4129-85B8-7F1DA34B026F}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="Mozaic.dproj">
+        <Projects Include="..\myComponents\PaintGrid\PaintGrid.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\myComponents\PaintGrid\PaintGrid.dproj">
+        <Projects Include="Mozaic.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -17,15 +17,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="Mozaic">
-        <MSBuild Projects="Mozaic.dproj"/>
-    </Target>
-    <Target Name="Mozaic:Clean">
-        <MSBuild Projects="Mozaic.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Mozaic:Make">
-        <MSBuild Projects="Mozaic.dproj" Targets="Make"/>
-    </Target>
     <Target Name="PaintGrid">
         <MSBuild Projects="..\myComponents\PaintGrid\PaintGrid.dproj"/>
     </Target>
@@ -35,14 +26,23 @@
     <Target Name="PaintGrid:Make">
         <MSBuild Projects="..\myComponents\PaintGrid\PaintGrid.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Mozaic">
+        <MSBuild Projects="Mozaic.dproj"/>
+    </Target>
+    <Target Name="Mozaic:Clean">
+        <MSBuild Projects="Mozaic.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Mozaic:Make">
+        <MSBuild Projects="Mozaic.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Mozaic;PaintGrid"/>
+        <CallTarget Targets="PaintGrid;Mozaic"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Mozaic:Clean;PaintGrid:Clean"/>
+        <CallTarget Targets="PaintGrid:Clean;Mozaic:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Mozaic:Make;PaintGrid:Make"/>
+        <CallTarget Targets="PaintGrid:Make;Mozaic:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

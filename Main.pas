@@ -27,6 +27,14 @@ type
     saveD: TSaveDialog;
     N3: TMenuItem;
     OpenD: TOpenDialog;
+    ToolButton4: TToolButton;
+    showColor: TToolButton;
+    shapebut: TToolButton;
+    digitdisign: TToolButton;
+    PopupMenu2: TPopupMenu;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
@@ -38,8 +46,14 @@ type
     procedure N2Click(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure N3Click(Sender: TObject);
+    procedure showColorClick(Sender: TObject);
+    procedure shapebutClick(Sender: TObject);
+    procedure N4Click(Sender: TObject);
+    procedure N5Click(Sender: TObject);
+    procedure N6Click(Sender: TObject);
   private
     map: TMap;
+    l: TList<TColor>;
     function ContrastColor(AColor: TColor): TColor;
   public
     procedure SelectColor(color: TColor; unselect: boolean);
@@ -68,14 +82,10 @@ begin
 end;
 
 procedure Tmosaic.Button3Click(Sender: TObject);
-var pallette: array of TColor;
-    l: TList<TColor>;
 begin
-    l:=TList<TColor>.Create;
-    for var i := Low(map) to High(map) do
-      for var j := Low(map[i]) to High(map[i]) do
-          if not(l.Contains(map[i,j])) then l.Add(map[i,j]);
+
     colorsform.pallete:=l;
+    //printnumber;
     colorsform.show;
 end;
 
@@ -83,7 +93,7 @@ procedure Tmosaic.Button4Click(Sender: TObject);
 var mediana: TMediaSplit;
     //w: word;
 begin
-     //w:= 2 shl ();
+     l.Free; l:=TList<TColor>.Create;
     if legacy.Checked then
 
       mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+2,[koef]) else
@@ -94,16 +104,19 @@ begin
     //initForm.th.Quantor;
 
     pg.DrawFromMap;
+    pg.Repaint;
     mediana.Destroy;
 end;
 
 procedure Tmosaic.FormActivate(Sender: TObject);
 begin
+  l.Free; l:=TList<TColor>.Create;
   setlength(map, pg.RowCount, pg.ColCount);
     for var i := 0 to pg.RowCount-1 do
       for var j := 0 to pg.ColCount-1 do
         map[i,j]:=pg.ColorMap[i,j];
   pg.DrawFromMap;
+  //PrintNumber;
 end;
 
 procedure Tmosaic.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -142,7 +155,7 @@ var filestream: TFileStream;
     if opend.Execute() then
     begin
 
-      filestream:=TFileStream.Create(saved.FileName,fmOpenRead);
+      filestream:=TFileStream.Create(opend.FileName,fmOpenRead);
       filestream.ReadBuffer(buf,4);  pg.ColCount:=buf;
       filestream.ReadBuffer(buf,4);  pg.RowCount:=buf;
       for var i := Low(pg.ColorMap) to High(pg.ColorMap) do
@@ -153,13 +166,41 @@ var filestream: TFileStream;
     end;
   end;
 
+procedure Tmosaic.N4Click(Sender: TObject);
+begin
+  digitdisign.ImageIndex:=9;
+  PopupMenu2.Tag:=1;
+end;
+
+procedure Tmosaic.N5Click(Sender: TObject);
+begin
+     digitdisign.ImageIndex:=10;
+     PopupMenu2.Tag:=2;
+end;
+
+procedure Tmosaic.N6Click(Sender: TObject);
+begin
+    digitdisign.ImageIndex:=11;
+    PopupMenu2.Tag:=3;
+end;
+
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
   State: TGridDrawState);
+  var s: string;
 begin
-  pg.Canvas.Brush.Color:=pg.ColorMap[ARow, ACol];
-  pg.Canvas.Pen.Width:=1;
-  pg.Canvas.Pen.Color:=clBlack;
-  pg.Canvas.Rectangle(Rect );
+  if not(l.Contains(map[ARow,ACol])) then l.Add(map[ARow,ACol]);
+  with pg.canvas do
+  begin
+    Brush.Color:=pg.ColorMap[ARow, ACol];
+    Pen.Width:=1;
+    Pen.Color:=clBlack;
+    Rectangle(Rect );
+    s:=inttostr(l.IndexOf(brush.Color));
+    Font.Size:=8;
+    font.Color:=ContrastColor(brush.Color);
+    TextRect(rect,s,[]);
+  end;
+
 end;
 
 procedure Tmosaic.SelectColor(color: TColor; unselect: boolean);
@@ -188,6 +229,20 @@ begin
 
           Rectangle(pg.CellRect(j,i));
         end;
+end;
+
+procedure Tmosaic.shapebutClick(Sender: TObject);
+begin
+  shapebut.Tag:=shapebut.Tag+1;
+  if shapebut.tag mod 2 = 0 then shapebut.ImageIndex:=7 else
+  shapebut.ImageIndex:=8;
+end;
+
+procedure Tmosaic.showColorClick(Sender: TObject);
+begin
+  showcolor.Tag:=showcolor.Tag+1;
+  if showcolor.tag mod 2 = 0 then showcolor.ImageIndex:=6 else
+  showcolor.ImageIndex:=1;
 end;
 
 procedure Tmosaic.ChangeColor(newColor, oldColor: TColor);

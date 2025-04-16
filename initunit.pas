@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Buttons, ExtCtrls, ComCtrls,
-  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread;
+  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread, System.ImageList, Vcl.ImgList;
 
 type
   TinitForm = class(TForm)
@@ -19,6 +19,8 @@ type
     pictureD: TOpenPictureDialog;
     progrBar: TProgressBar;
     ColorCount: TComboBox;
+    ImageList1: TImageList;
+    Button2: TButton;
     procedure BitBtn1Click(Sender: TObject);
     procedure ColCountKeyPress(Sender: TObject; var Key: Char);
     procedure BitBtn2Click(Sender: TObject);
@@ -28,6 +30,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
 
     FPicture: TBitmap;
@@ -119,6 +122,13 @@ begin
     //
   end;
 
+end;
+
+procedure TinitForm.Button2Click(Sender: TObject);
+begin
+  mosaic.N3Click(sender);
+  mosaic.Show;
+  initform.hide;
 end;
 
 end.
