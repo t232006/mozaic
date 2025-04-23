@@ -6,16 +6,53 @@ type TRGBColor = record Red, Green, Blue : Byte; end;
 
 THSBColor = record Hue, Saturnation, Brightness : Double;
 end;
-function ContrastColor(AColor: TColor; tolerance:real): TColor;
+TContrast = class
+  class function ContrastColor(AColor: TColor; tolerance:real): TColor;
+  class function rudeContrast(AColor: TColor): TColor;
+  private
+  class function RGBToHSB(rgb : TRGBColor) : THSBColor;
+  class function HSVtoRGB(h: integer; s,v: double):TColor;
+end;
 
 
 
 implementation
+ { TContrast }
+class function TContrast.ContrastColor(AColor: TColor; tolerance:real): TColor;
+var rgb:Trgbcolor;  hsb:Thsbcolor;
+begin
+  rgb.Red:=getRvalue(AColor);
+  rgb.Green:=getGValue(AColor);
+  rgb.Blue:=getBvalue(AColor);
+  hsb:=rgbtohsb(rgb);
+  if (hsb.Saturnation<tolerance/100) and (1-hsb.Brightness<tolerance/100) then
+    hsb.Brightness:=0
+  else
+   if (hsb.Saturnation<tolerance/100) and (1-hsb.Brightness>tolerance/100) then
+    hsb.Brightness:=1
+  else
+  if (hsb.Saturnation>=tolerance/100) and (1-hsb.Brightness<tolerance/200) then
+  begin
+    hsb.Brightness:=0;
+    hsb.Saturnation:=1;
+  end
+  else
+  begin
+    hsb.Hue:=hsb.Hue-180; if hsb.Hue<0 then hsb.Hue:=hsb.Hue+360;
+    if inrange(hsb.Brightness,0.3,0.5) then hsb.Brightness:=1 else
+    if inrange(hsb.Brightness,0.5,0.7) then hsb.Brightness:=0.3;
 
-function ContrastColor(AColor: TColor; tolerance:real): TColor;
+    //hsb.Hue:=hsb.Hue-180; if hsb.Hue<0 then hsb.Hue:=hsb.Hue+360;
+
+  end;
+
+  result:=hsvtorgb(round(hsb.Hue), hsb.Saturnation, hsb.Brightness);
+
+end;
 
 
-  function HSVtoRGB(h: integer; s,v: double):TColor;
+
+class function TContrast.HSVtoRGB(h: integer; s, v: double): TColor;
 var
   Hi: integer;
   f,p,q,t,r,g,b: double;
@@ -66,8 +103,8 @@ begin
   result:=RGB(round(r*255),round(g*255),round(b*255));
 end;
 
-  function RGBToHSB(rgb : TRGBColor) : THSBColor;
-  var minRGB, maxRGB, delta : Double; h , s , b : Double ;
+class function TContrast.RGBToHSB(rgb: TRGBColor): THSBColor;
+var minRGB, maxRGB, delta : Double; h , s , b : Double ;
   begin
   H := 0.0 ;
   minRGB := Min(Min(rgb.Red, rgb.Green), rgb.Blue) ;
@@ -84,7 +121,7 @@ end;
   begin
   if rgb.Red = maxRGB then
   h := (rgb.Green - rgb.Blue) / Delta
-  else if rgb.Green = minRGB then
+  else if rgb.Green = maxRGB then
   h := 2.0 + (rgb.Blue - rgb.Red) / Delta
   else if rgb.Blue = maxRGB then
   h := 4.0 + (rgb.Red - rgb.Green) / Delta
@@ -99,25 +136,19 @@ end;
   Brightness := b / 255;
   end;
 end;
-var rgb:Trgbcolor;  hsb:Thsbcolor;
+
+class function TContrast.rudeContrast(AColor: TColor): TColor;
+   var rgb:Trgbcolor;  hsb:Thsbcolor;
 begin
   rgb.Red:=getRvalue(AColor);
   rgb.Green:=getGValue(AColor);
   rgb.Blue:=getBvalue(AColor);
   hsb:=rgbtohsb(rgb);
-  if (hsb.Saturnation<tolerance/100) or (hsb.Brightness<tolerance/100) then
+  if hsb.Brightness>0.5 then hsb.Brightness:=0 else
   begin
-  hsb.Brightness:=1;
-  hsb.Saturnation:=0;
-
-  if {(1-hsb.Saturnation>tolerance/100) or} (1-hsb.Brightness<tolerance/100) then
-    begin
-    hsb.Brightness:=0;
-    hsb.Saturnation:=1;
-    end
-  end
-  else
-  hsb.Hue:=hsb.Hue-180; if hsb.Hue<0 then hsb.Hue:=hsb.Hue+360;
+    hsb.Brightness:=1;
+    hsb.Saturnation:=0;
+  end;
   result:=hsvtorgb(round(hsb.Hue), hsb.Saturnation, hsb.Brightness);
 
 end;

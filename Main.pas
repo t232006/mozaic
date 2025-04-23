@@ -4,15 +4,16 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid, contrast,
   Vcl.StdCtrls, colorsUnit, mediaClass, System.Generics.Collections, math,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.Menus;
+
+const TOLER = 40;
 
 type
   Tmosaic = class(TForm)
     Button2: TButton;
     Button3: TButton;
-    Button4: TButton;
     ToolBar: TToolBar;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
@@ -35,6 +36,7 @@ type
     N4: TMenuItem;
     N5: TMenuItem;
     N6: TMenuItem;
+    Edit1: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
@@ -51,10 +53,11 @@ type
     procedure N4Click(Sender: TObject);
     procedure N5Click(Sender: TObject);
     procedure N6Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure pgMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
   private
     map: TMap;
     l: TList<TColor>;
-    function ContrastColor(AColor: TColor): TColor;
   public
     procedure SelectColor(color: TColor; unselect: boolean);
     procedure ChangeColor(newColor: TColor; oldColor: TColor);
@@ -62,6 +65,7 @@ type
 
 var
   mosaic: Tmosaic;
+  oldbkmode: integer;
 
 implementation
 uses initunit;
@@ -124,6 +128,13 @@ begin
   initform.show;
 end;
 
+procedure Tmosaic.FormCreate(Sender: TObject);
+begin
+  //pg.Canvas.Font.Size:=5;
+  //oldbkmode:=setbkmode(pg.canvas.Handle, transparent);
+
+end;
+
 procedure Tmosaic.N1Click(Sender: TObject);
 var //memstream: TMemoryStream;
     filestream: TfileStream;
@@ -169,19 +180,19 @@ var filestream: TFileStream;
 procedure Tmosaic.N4Click(Sender: TObject);
 begin
   digitdisign.ImageIndex:=9;
-  PopupMenu2.Tag:=1;
+  pg.Repaint;
 end;
 
 procedure Tmosaic.N5Click(Sender: TObject);
 begin
      digitdisign.ImageIndex:=10;
-     PopupMenu2.Tag:=2;
+     pg.Repaint;
 end;
 
 procedure Tmosaic.N6Click(Sender: TObject);
 begin
     digitdisign.ImageIndex:=11;
-    PopupMenu2.Tag:=3;
+    pg.Repaint;
 end;
 
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
@@ -191,21 +202,41 @@ begin
   if not(l.Contains(map[ARow,ACol])) then l.Add(map[ARow,ACol]);
   with pg.canvas do
   begin
-    Brush.Color:=pg.ColorMap[ARow, ACol];
-    Pen.Width:=1;
-    Pen.Color:=clBlack;
-    Rectangle(Rect );
-    s:=inttostr(l.IndexOf(brush.Color));
-    Font.Size:=8;
-    font.Color:=ContrastColor(brush.Color);
-    TextRect(rect,s,[]);
+
+    if showcolor.Tag mod 2 = 0 then
+    begin
+      Brush.Color:=pg.ColorMap[ARow, ACol];
+      Pen.Width:=1;
+      Pen.Color:=clBlack;
+      if shapebut.Tag mod 2 =0 then
+        Rectangle(Rect ) else ellipse(rect);
+    end ;
+
+    s:=inttostr(l.IndexOf(pg.ColorMap[ARow, ACol]));
+    Font.Size:=5;
+    font.Color:=TContrast.rudeContrast(brush.Color);
+    if digitdisign.ImageIndex=9 then
+    begin
+      brush.Color:=clwhite;
+      ellipse(rect.Left+1,rect.Top+1,Rect.Right-1,rect.Bottom-1);
+    end;
+    if digitdisign.ImageIndex<>11 then
+      TextOut(rect.Left+4,rect.Top+3,s);
+    //SetBkMode(pg.Canvas.Handle, oldbkmode);
   end;
 
 end;
 
+procedure Tmosaic.pgMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+  var Arow,acol:integer ;
+  begin
+ pg.MouseToCell(x,y,acol,arow);
+ edit1.Text:=inttostr(pg.ColorMap[ARow,ACol]);
+end;
+
 procedure Tmosaic.SelectColor(color: TColor; unselect: boolean);
 begin
-
   pg.Canvas.Brush.Color:=color;
 
   for var i := 0 to High(pg.ColorMap) do
@@ -224,7 +255,7 @@ begin
           else
           begin
             Pen.Width:=2;
-            Pen.Color:=ContrastColor(color);
+            Pen.Color:=TContrast.rudeContrast(color);
           end;
 
           Rectangle(pg.CellRect(j,i));
@@ -234,15 +265,26 @@ end;
 procedure Tmosaic.shapebutClick(Sender: TObject);
 begin
   shapebut.Tag:=shapebut.Tag+1;
-  if shapebut.tag mod 2 = 0 then shapebut.ImageIndex:=7 else
-  shapebut.ImageIndex:=8;
+  if shapebut.tag mod 2 = 0 then
+  begin
+    shapebut.ImageIndex:=7 ;
+    pg.Shape:=ARectangle;
+  end
+
+    else
+  begin
+    shapebut.ImageIndex:=8;
+    pg.Shape:=AEllipse;
+  end;
+  pg.Repaint;
 end;
 
 procedure Tmosaic.showColorClick(Sender: TObject);
 begin
   showcolor.Tag:=showcolor.Tag+1;
   if showcolor.tag mod 2 = 0 then showcolor.ImageIndex:=6 else
-  showcolor.ImageIndex:=1;
+  showcolor.ImageIndex:=-1;
+  pg.Repaint;
 end;
 
 procedure Tmosaic.ChangeColor(newColor, oldColor: TColor);
@@ -254,16 +296,6 @@ begin
         begin
           pg.ColorMap[i,j]:=newcolor;
         end;
-end;
-
-function Tmosaic.ContrastColor(AColor: TColor): TColor;
-const TolerSq = 16 * 16;
-begin
- if Sqr(GetRValue(AColor) - $80) + Sqr(GetGValue(AColor) - $80)
-  + Sqr(GetBValue(AColor) - $80) < TolerSq then
-  Result := (AColor + $7F7F7F) and $FFFFFF
- else
-  Result := AColor xor $FFFFFF;
 end;
 
 

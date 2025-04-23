@@ -12,6 +12,7 @@ object mosaic: Tmosaic
   Font.Style = []
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCreate = FormCreate
   TextHeight = 15
   object Button2: TButton
     Left = 120
@@ -31,15 +32,6 @@ object mosaic: Tmosaic
     TabOrder = 1
     OnClick = Button3Click
   end
-  object Button4: TButton
-    Left = 312
-    Top = 376
-    Width = 89
-    Height = 25
-    Caption = 'quantification'
-    TabOrder = 2
-    OnClick = Button4Click
-  end
   object ToolBar: TToolBar
     Left = 0
     Top = 392
@@ -49,7 +41,9 @@ object mosaic: Tmosaic
     ButtonHeight = 51
     ButtonWidth = 52
     Images = ImageList1
-    TabOrder = 3
+    TabOrder = 2
+    ExplicitTop = 374
+    ExplicitWidth = 618
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -107,7 +101,7 @@ object mosaic: Tmosaic
       Left = 293
       Top = 0
       DropdownMenu = PopupMenu2
-      ImageIndex = 9
+      ImageIndex = 11
       Style = tbsDropDown
     end
     object legacy: TCheckBox
@@ -125,8 +119,9 @@ object mosaic: Tmosaic
     Width = 628
     Height = 392
     Align = alClient
-    TabOrder = 4
-    ExplicitTop = -72
+    TabOrder = 3
+    ExplicitWidth = 618
+    ExplicitHeight = 374
     object pg: TPaintGrid
       Left = 3
       Top = 3
@@ -134,6 +129,15 @@ object mosaic: Tmosaic
       Height = 69
       TabOrder = 0
       OnDrawCell = pgDrawCell
+      OnMouseMove = pgMouseMove
+    end
+    object Edit1: TEdit
+      Left = 336
+      Top = 360
+      Width = 121
+      Height = 23
+      TabOrder = 1
+      Text = 'Edit1'
     end
   end
   object ImageList1: TImageList
@@ -4336,8 +4340,8 @@ object mosaic: Tmosaic
   end
   object PopupMenu1: TPopupMenu
     Images = ImageList1
-    Left = 352
-    Top = 352
+    Left = 176
+    Top = 240
     object N1: TMenuItem
       Caption = #1082#1072#1082' '#1090#1072#1073#1083#1080#1094#1091
       ImageIndex = 3
@@ -4370,7 +4374,6 @@ object mosaic: Tmosaic
     Top = 280
     object N4: TMenuItem
       Caption = ' '
-      SubMenuImages = ImageList1
       ImageIndex = 9
       OnClick = N4Click
     end
