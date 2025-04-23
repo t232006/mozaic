@@ -25,7 +25,7 @@ type
     PopupMenu1: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
-    saveD: TSaveDialog;
+    saveD2: TSaveDialog;
     N3: TMenuItem;
     OpenD: TOpenDialog;
     ToolButton4: TToolButton;
@@ -36,7 +36,7 @@ type
     N4: TMenuItem;
     N5: TMenuItem;
     N6: TMenuItem;
-    Edit1: TEdit;
+    SaveD1: TSaveDialog;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
@@ -58,6 +58,7 @@ type
   private
     map: TMap;
     l: TList<TColor>;
+    procedure DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
   public
     procedure SelectColor(color: TColor; unselect: boolean);
     procedure ChangeColor(newColor: TColor; oldColor: TColor);
@@ -139,9 +140,9 @@ procedure Tmosaic.N1Click(Sender: TObject);
 var //memstream: TMemoryStream;
     filestream: TfileStream;
 begin
-  if saved.Execute then
+  if saved2.Execute then
   begin
-      filestream:=TFileStream.Create(saved.FileName+'.moz',fmcreate);
+      filestream:=TFileStream.Create(saved2.FileName+'.moz',fmcreate);
       filestream.Write(pg.ColCount,sizeof(integer));
       filestream.Write(pg.RowCount,sizeof(integer));
       for var i := Low(pg.ColorMap) to High(pg.ColorMap) do
@@ -154,9 +155,15 @@ end;
 procedure Tmosaic.N2Click(Sender: TObject);
     var saver: TBitmap;
 begin
-  saver:=Tbitmap.Create(pg.width, pg.Height);
-  saver.Canvas.CopyRect(rect(0,0,pg.Width,pg.Height),pg.Canvas,rect(0,0,pg.Width,pg.Height));
-  saver.SaveToFile('picture.bmp');
+  if saveD1.Execute then
+  begin
+    saver:=Tbitmap.Create(pg.width, pg.Height);
+    //saver.Canvas.CopyRect(rect(0,0,pg.Width,pg.Height),pg.Canvas,rect(0,0,pg.Width,pg.Height));
+    for var i := 0 to pg.RowCount-1 do
+      for var j := 0 to pg.ColCount-1 do
+        DrawCanvas(j,i,pg.CellRect(j,i),saver.Canvas);
+    saver.SaveToFile(SaveD1.FileName+'.jpg');
+  end;
 end;
 
 procedure Tmosaic.N3Click(Sender: TObject);
@@ -197,33 +204,9 @@ end;
 
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
   State: TGridDrawState);
-  var s: string;
 begin
   if not(l.Contains(map[ARow,ACol])) then l.Add(map[ARow,ACol]);
-  with pg.canvas do
-  begin
-
-    if showcolor.Tag mod 2 = 0 then
-    begin
-      Brush.Color:=pg.ColorMap[ARow, ACol];
-      Pen.Width:=1;
-      Pen.Color:=clBlack;
-      if shapebut.Tag mod 2 =0 then
-        Rectangle(Rect ) else ellipse(rect);
-    end ;
-
-    s:=inttostr(l.IndexOf(pg.ColorMap[ARow, ACol]));
-    Font.Size:=5;
-    font.Color:=TContrast.rudeContrast(brush.Color);
-    if digitdisign.ImageIndex=9 then
-    begin
-      brush.Color:=clwhite;
-      ellipse(rect.Left+1,rect.Top+1,Rect.Right-1,rect.Bottom-1);
-    end;
-    if digitdisign.ImageIndex<>11 then
-      TextOut(rect.Left+4,rect.Top+3,s);
-    //SetBkMode(pg.Canvas.Handle, oldbkmode);
-  end;
+  DrawCanvas(ACol,Arow,rect,pg.Canvas);
 
 end;
 
@@ -232,7 +215,7 @@ procedure Tmosaic.pgMouseMove(Sender: TObject; Shift: TShiftState; X,
   var Arow,acol:integer ;
   begin
  pg.MouseToCell(x,y,acol,arow);
- edit1.Text:=inttostr(pg.ColorMap[ARow,ACol]);
+ //edit1.Text:=inttostr(pg.ColorMap[ARow,ACol]);
 end;
 
 procedure Tmosaic.SelectColor(color: TColor; unselect: boolean);
@@ -299,5 +282,35 @@ begin
 end;
 
 
+
+procedure Tmosaic.DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
+var s:string;
+begin
+with WhereTo do
+  begin
+
+    if showcolor.Tag mod 2 = 0 then
+    begin
+      Brush.Color:=pg.ColorMap[ARow, ACol];
+      Pen.Width:=1;
+      Pen.Color:=clBlack;
+      if shapebut.Tag mod 2 =0 then
+        Rectangle(Rect ) else ellipse(rect);
+    end ;
+
+    s:=inttostr(l.IndexOf(pg.ColorMap[ARow, ACol]));
+    Font.Size:=5;
+    font.Color:=TContrast.rudeContrast(brush.Color);
+    if digitdisign.ImageIndex=9 then
+    begin
+      brush.Color:=clwhite;
+      ellipse(rect.Left+1,rect.Top+1,Rect.Right-1,rect.Bottom-1);
+      font.Color:=clblack;
+    end;
+    if digitdisign.ImageIndex<>11 then
+      TextOut(rect.Left+4,rect.Top+3,s);
+    //SetBkMode(pg.Canvas.Handle, oldbkmode);
+  end;
+end;
 
 end.

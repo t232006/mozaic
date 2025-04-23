@@ -17,7 +17,7 @@ object initForm: TinitForm
   OnShow = FormShow
   TextHeight = 13
   object UpDown1: TUpDown
-    Left = 97
+    Left = 214
     Top = 24
     Width = 16
     Height = 21
@@ -25,19 +25,21 @@ object initForm: TinitForm
     Increment = 5
     Position = 45
     TabOrder = 0
+    OnChangingEx = UpDown1ChangingEx
   end
   object UpDown2: TUpDown
-    Left = 217
-    Top = 24
+    Left = 91
+    Top = 80
     Width = 16
     Height = 21
     Associate = RowCount
     Increment = 5
     Position = 30
     TabOrder = 1
+    OnChangingEx = UpDown2ChangingEx
   end
   object ColCount: TLabeledEdit
-    Left = 32
+    Left = 152
     Top = 24
     Width = 65
     Height = 21
@@ -46,19 +48,19 @@ object initForm: TinitForm
     EditLabel.Caption = #1082#1086#1083#1086#1085#1086#1082
     TabOrder = 2
     Text = '45'
-    OnKeyPress = ColCountKeyPress
+    OnKeyPress = Col
   end
   object RowCount: TLabeledEdit
-    Left = 152
-    Top = 24
+    Left = 32
+    Top = 80
     Width = 65
     Height = 21
     EditLabel.Width = 29
     EditLabel.Height = 13
     EditLabel.Caption = #1089#1090#1088#1086#1082
-    TabOrder = 4
+    TabOrder = 3
     Text = '30'
-    OnKeyPress = ColCountKeyPress
+    OnKeyPress = RowCountKeyPress
   end
   object BitBtn1: TBitBtn
     Left = 32
@@ -91,7 +93,7 @@ object initForm: TinitForm
     Images = ImageList1
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 3
+    TabOrder = 4
     OnClick = Button1Click
   end
   object progrBar: TProgressBar
@@ -106,7 +108,7 @@ object initForm: TinitForm
   end
   object ColorCount: TComboBox
     Left = 32
-    Top = 80
+    Top = 24
     Width = 65
     Height = 21
     DropDownCount = 5
@@ -132,6 +134,16 @@ object initForm: TinitForm
     ShowHint = True
     TabOrder = 9
     OnClick = Button2Click
+  end
+  object proport: TCheckBox
+    Left = 32
+    Top = 113
+    Width = 97
+    Height = 17
+    Caption = #1087#1088#1086#1087#1086#1088#1094#1080#1080
+    Enabled = False
+    TabOrder = 10
+    OnClick = proportClick
   end
   object pictureD: TOpenPictureDialog
     Options = [ofEnableSizing]

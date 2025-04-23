@@ -9,7 +9,8 @@ uses
   MiniThread in 'MiniThread.pas',
   MediaClass in 'MediaClass.pas',
   PaintGrid in '..\myComponents\PaintGrid\PaintGrid.pas',
-  contrast in 'contrast.pas';
+  contrast in 'contrast.pas',
+  resolution in 'resolution.pas';
 
 {$R *.res}
 

@@ -4,8 +4,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons, ExtCtrls, ComCtrls,
-  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread, System.ImageList, Vcl.ImgList;
+  Dialogs, StdCtrls, Buttons, ExtCtrls, ComCtrls, resolution,
+  Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread, System.ImageList, Vcl.ImgList,
+  Data.Bind.EngExt, Vcl.Bind.DBEngExt, Data.Bind.Components;
 
 type
   TinitForm = class(TForm)
@@ -21,8 +22,9 @@ type
     ColorCount: TComboBox;
     ImageList1: TImageList;
     Button2: TButton;
+    proport: TCheckBox;
     procedure BitBtn1Click(Sender: TObject);
-    procedure ColCountKeyPress(Sender: TObject; var Key: Char);
+    procedure Col(Sender: TObject; var Key: Char);
     procedure BitBtn2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     //procedure progrBarChange(Sender: TObject);
@@ -31,6 +33,12 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure proportClick(Sender: TObject);
+    procedure RowCountKeyPress(Sender: TObject; var Key: Char);
+    procedure UpDown2ChangingEx(Sender: TObject; var AllowChange: Boolean;
+      NewValue: Integer; Direction: TUpDownDirection);
+    procedure UpDown1ChangingEx(Sender: TObject; var AllowChange: Boolean;
+      NewValue: Integer; Direction: TUpDownDirection);
   private
 
     FPicture: TBitmap;
@@ -67,10 +75,14 @@ begin
 end;
 
 
-procedure TinitForm.ColCountKeyPress(Sender: TObject; var Key: Char);
+procedure TinitForm.Col(Sender: TObject; var Key: Char);
 begin
-     if (key<'0') or (key>'9') then
+  if ((key<'0') or (key>'9')) and (ord(key)<>8) then
       key:='5';
+  if colcount.Text='' then colcount.text:='5';
+
+  if proport.Checked and proport.Enabled then
+    rowcount.Text:=inttostr( getproportion(x,strtoint(colcount.Text),pictureD.FileName));
 end;
 
 procedure TinitForm.FormCreate(Sender: TObject);
@@ -96,6 +108,37 @@ begin
      initform.hide;
 end;
 
+procedure TinitForm.proportClick(Sender: TObject);
+var resol: TPoint;
+begin
+  if proport.Checked and proport.Enabled then
+    rowcount.Text:=inttostr( getproportion(x,strtoint(colcount.Text),pictureD.FileName));
+end;
+
+procedure TinitForm.RowCountKeyPress(Sender: TObject; var Key: Char);
+begin
+  if ((key<'0') or (key>'9')) and (ord(key)<>8) then
+      key:='5';
+  if rowcount.Text='' then rowcount.Text:='5';
+
+  if proport.Checked and proport.Enabled then
+    Colcount.Text:=inttostr( getproportion(Y,strtoint(rowcount.Text),pictureD.FileName));
+end;
+
+procedure TinitForm.UpDown1ChangingEx(Sender: TObject; var AllowChange: Boolean;
+  NewValue: Integer; Direction: TUpDownDirection);
+begin
+   if proport.Checked and proport.Enabled then
+    rowcount.Text:=inttostr( getproportion(x,newvalue,pictureD.FileName));
+end;
+
+procedure TinitForm.UpDown2ChangingEx(Sender: TObject; var AllowChange: Boolean;
+  NewValue: Integer; Direction: TUpDownDirection);
+begin
+    if proport.Checked and proport.Enabled then
+    Colcount.Text:=inttostr( getproportion(Y,newvalue,pictureD.FileName));
+end;
+
 procedure TinitForm.BitBtn2Click(Sender: TObject);
 begin
 begin
@@ -110,6 +153,8 @@ begin
   if pictureD.execute then
   begin
     BitBtn1.Enabled:=true;
+    proport.Enabled:=true;
+    proportClick(sender);
     if UpperCase(extractfileext(pictured.FileName))='.JPG' then
     begin
        jpeg:=Tjpegimage.Create;

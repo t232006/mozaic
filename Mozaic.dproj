@@ -115,6 +115,7 @@
         <DCCReference Include="MediaClass.pas"/>
         <DCCReference Include="..\myComponents\PaintGrid\PaintGrid.pas"/>
         <DCCReference Include="contrast.pas"/>
+        <DCCReference Include="resolution.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

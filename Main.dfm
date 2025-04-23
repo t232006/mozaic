@@ -131,14 +131,6 @@ object mosaic: Tmosaic
       OnDrawCell = pgDrawCell
       OnMouseMove = pgMouseMove
     end
-    object Edit1: TEdit
-      Left = 336
-      Top = 360
-      Width = 121
-      Height = 23
-      TabOrder = 1
-      Text = 'Edit1'
-    end
   end
   object ImageList1: TImageList
     Height = 45
@@ -4358,7 +4350,7 @@ object mosaic: Tmosaic
       OnClick = N3Click
     end
   end
-  object saveD: TSaveDialog
+  object saveD2: TSaveDialog
     Filter = #1084#1086#1079#1072#1080#1082#1072'|*.moz'
     Left = 304
     Top = 224
@@ -4387,5 +4379,10 @@ object mosaic: Tmosaic
       ImageIndex = 11
       OnClick = N6Click
     end
+  end
+  object SaveD1: TSaveDialog
+    Filter = 'JPEG|*.jpg'
+    Left = 240
+    Top = 96
   end
 end
