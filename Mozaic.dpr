@@ -1,5 +1,7 @@
 program Mozaic;
 
+{$R *.dres}
+
 uses
   Vcl.Forms,
   Main in 'Main.pas' {mosaic},
@@ -10,7 +12,8 @@ uses
   MediaClass in 'MediaClass.pas',
   PaintGrid in '..\myComponents\PaintGrid\PaintGrid.pas',
   contrast in 'contrast.pas',
-  resolution in 'resolution.pas';
+  resolution in 'resolution.pas',
+  shapebut in 'shapebut.pas' {ShapeButton: TFrame};
 
 {$R *.res}
 

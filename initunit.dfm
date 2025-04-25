@@ -17,7 +17,7 @@ object initForm: TinitForm
   OnShow = FormShow
   TextHeight = 13
   object UpDown1: TUpDown
-    Left = 214
+    Left = 217
     Top = 24
     Width = 16
     Height = 21
@@ -28,7 +28,7 @@ object initForm: TinitForm
     OnChangingEx = UpDown1ChangingEx
   end
   object UpDown2: TUpDown
-    Left = 91
+    Left = 97
     Top = 80
     Width = 16
     Height = 21

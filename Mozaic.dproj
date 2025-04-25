@@ -116,6 +116,15 @@
         <DCCReference Include="..\myComponents\PaintGrid\PaintGrid.pas"/>
         <DCCReference Include="contrast.pas"/>
         <DCCReference Include="resolution.pas"/>
+        <DCCReference Include="shapebut.pas">
+            <Form>ShapeButton</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <RcItem Include="..\experiments\painter\рисовалка\pencil.cur">
+            <ResourceType>CURSOR</ResourceType>
+            <ResourceId>Cursor_1</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -142,6 +151,12 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
+                <DeployFile LocalName="..\experiments\painter\рисовалка\pencil.cur" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\Mozaic.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Mozaic.exe</RemoteName>

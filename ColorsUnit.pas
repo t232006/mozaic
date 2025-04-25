@@ -4,12 +4,18 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections,
+  Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList;
 
 type
   TColorsForm = class(TForm)
     Dg: TDrawGrid;
     ColorDialog1: TColorDialog;
+    ToolBar1: TToolBar;
+    ToolButton1: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    ToolButton4: TToolButton;
     procedure FormActivate(Sender: TObject);
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
@@ -38,17 +44,20 @@ procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 var s:string;
 begin
-      if ACol mod 2 =0 then
-      begin
-        dg.Canvas.Brush.Color:=Fpallete[(ACol div 2)*8+ARow];
+      if FPallete.Count>0 then
+        begin
+        if ACol mod 2 =0 then
+        begin
+          dg.Canvas.Brush.Color:=Fpallete[(ACol div 2)*8+ARow];
 
-        dg.Canvas.Rectangle(Rect);
-      end else
-      begin
-        //s:=inttostr(Fpallete[(ACol div 2)*8+ARow]);
-        s:=inttostr((ACol div 2)*8+ARow);
-        dg.Canvas.Brush.Color:=dg.Color;
-        dg.Canvas.TextRect(Rect,s,[]);
+          dg.Canvas.Rectangle(Rect);
+        end else
+        begin
+          //s:=inttostr(Fpallete[(ACol div 2)*8+ARow]);
+          s:=inttostr((ACol div 2)*8+ARow);
+          dg.Canvas.Brush.Color:=dg.Color;
+          dg.Canvas.TextRect(Rect,s,[]);
+        end;
       end;
 end;
 
@@ -108,7 +117,7 @@ begin
   if dg.ColCount=0 then dg.ColCount:=2;
 
   //dg.Canvas.Rectangle(0,0,10,15);
-  for var i := 0 to (dg.ColCount div 2)-1 do
+  {for var i := 0 to (dg.ColCount div 2)-1 do
     for var j := 0 to 7 do
     try
     begin
@@ -121,7 +130,7 @@ begin
     end;
     finally
 
-    end;
+    end;  }
 end;
 
 procedure TColorsForm.FormClose(Sender: TObject; var Action: TCloseAction);

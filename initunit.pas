@@ -171,9 +171,12 @@ end;
 
 procedure TinitForm.Button2Click(Sender: TObject);
 begin
-  mosaic.N3Click(sender);
-  mosaic.Show;
-  initform.hide;
+  if mosaic.OpenD.Execute then
+  begin
+    mosaic.LoadFromFile(mosaic.OpenD.FileName);
+    mosaic.Show;
+    initform.hide;
+  end;
 end;
 
 end.
