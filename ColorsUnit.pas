@@ -24,6 +24,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure DgMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure ToolButton1Click(Sender: TObject);
   private
     Fpallete: TList<TColor>;
     {$j+}
@@ -53,8 +54,12 @@ begin
           dg.Canvas.Rectangle(Rect);
         end else
         begin
-          //s:=inttostr(Fpallete[(ACol div 2)*8+ARow]);
-          s:=inttostr((ACol div 2)*8+ARow);
+           case dg.Tag of
+           1: s:=inttostr((ACol div 2)*8+ARow);
+           2: s:=IntToHex(Fpallete[(ACol div 2)*8+ARow])
+           end;
+
+
           dg.Canvas.Brush.Color:=dg.Color;
           dg.Canvas.TextRect(Rect,s,[]);
         end;
@@ -136,6 +141,12 @@ end;
 procedure TColorsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
    if dg.Tag>-1 then mosaic.selectColor(Fpallete[dg.tag], true);
+end;
+
+procedure TColorsForm.ToolButton1Click(Sender: TObject);
+begin
+   dg.Tag:=(sender as ttoolbutton).Tag ;
+   dg.Repaint;
 end;
 
 end.

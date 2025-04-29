@@ -95,7 +95,8 @@ uses initunit;
 
 procedure Tmosaic.Button1Click(Sender: TObject);
 begin
-  pg.DrawFromMap;
+  pg.Canvas.Brush.Color:=-16777211;
+  pg.CellRect(13,70)
 end;
 
 procedure Tmosaic.Button2Click(Sender: TObject);

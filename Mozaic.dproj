@@ -121,7 +121,11 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <RcItem Include="..\experiments\painter\рисовалка\pencil.cur">
+        <RcItem Include="images\pipette.cur">
+            <ResourceType>CURSOR</ResourceType>
+            <ResourceId>Cursor_2</ResourceId>
+        </RcItem>
+        <RcItem Include="images\pencil.cur">
             <ResourceType>CURSOR</ResourceType>
             <ResourceId>Cursor_1</ResourceId>
         </RcItem>
@@ -151,15 +155,21 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
-                <DeployFile LocalName="..\experiments\painter\рисовалка\pencil.cur" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="Win32\Debug\Mozaic.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Mozaic.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="images\pencil.cur" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\Mozaic.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="images\pipette.cur" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
-                        <RemoteName>Mozaic.exe</RemoteName>
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

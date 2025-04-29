@@ -31,7 +31,7 @@ object ColorsForm: TColorsForm
     OnMouseUp = DgMouseUp
     OnSelectCell = DgSelectCell
     ExplicitWidth = 331
-    ExplicitHeight = 276
+    ExplicitHeight = 247
     RowHeights = (
       26
       24
@@ -49,33 +49,38 @@ object ColorsForm: TColorsForm
     ButtonWidth = 55
     Caption = 'ToolBar1'
     TabOrder = 1
-    ExplicitLeft = 216
-    ExplicitTop = 96
-    ExplicitWidth = 150
+    ExplicitTop = 247
+    ExplicitWidth = 331
     object ToolButton1: TToolButton
+      Tag = 1
       Left = 0
       Top = 0
       AllowAllUp = True
-      Caption = 'ToolButton1'
+      Caption = #1085#1086#1084#1077#1088#1072
       Down = True
       Grouped = True
       ImageIndex = 0
+      OnClick = ToolButton1Click
     end
     object ToolButton2: TToolButton
+      Tag = 2
       Left = 55
       Top = 0
       AllowAllUp = True
-      Caption = 'ToolButton2'
+      Caption = #1082#1086#1076#1099
       Grouped = True
       ImageIndex = 1
+      OnClick = ToolButton1Click
     end
     object ToolButton3: TToolButton
+      Tag = 3
       Left = 110
       Top = 0
       AllowAllUp = True
-      Caption = 'ToolButton3'
+      Caption = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
       Grouped = True
       ImageIndex = 2
+      OnClick = ToolButton1Click
     end
     object ToolButton4: TToolButton
       Left = 165

@@ -10,6 +10,7 @@ object mosaic: Tmosaic
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Scaled = False
   OnActivate = FormActivate
   OnClose = FormClose
   OnShow = FormShow
