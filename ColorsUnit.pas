@@ -5,17 +5,15 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections,
-  Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList;
+  Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
+  Vcl.ExtCtrls;
 
 type
   TColorsForm = class(TForm)
     Dg: TDrawGrid;
-    ColorDialog1: TColorDialog;
     ToolBar1: TToolBar;
-    ToolButton1: TToolButton;
-    ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
-    ToolButton4: TToolButton;
+    ColorDialog1: TColorDialog;
+    rgInform: TRadioGroup;
     procedure FormActivate(Sender: TObject);
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
@@ -25,6 +23,7 @@ type
     procedure DgMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure ToolButton1Click(Sender: TObject);
+    procedure rgInformClick(Sender: TObject);
   private
     Fpallete: TList<TColor>;
     {$j+}
@@ -43,27 +42,31 @@ uses main;
 
 procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
-var s:string;
+var s:string; num:word;
 begin
-      if FPallete.Count>0 then
+      num:=(ACol div 2)*8+ARow;
+      if (FPallete.Count>num) and (fpallete.Count>0) then
         begin
-        if ACol mod 2 =0 then
-        begin
-          dg.Canvas.Brush.Color:=Fpallete[(ACol div 2)*8+ARow];
+          if ACol mod 2 =0 then
+          begin
+            dg.Canvas.Brush.Color:=Fpallete[num];
 
-          dg.Canvas.Rectangle(Rect);
-        end else
-        begin
-           case dg.Tag of
-           1: s:=inttostr((ACol div 2)*8+ARow);
-           2: s:=IntToHex(Fpallete[(ACol div 2)*8+ARow])
-           end;
+            dg.Canvas.Rectangle(Rect);
+          end else
+          begin
+             case rgInform.ItemIndex of
+             0: s:=inttostr(num);
+             1: s:=copy(IntToHex(colortorgb(rgb(getbvalue(Fpallete[num]),getgvalue(Fpallete[num]),getrvalue(Fpallete[num])))),3,6) //to swap r<->b for true hex representation
+
+             end;
 
 
-          dg.Canvas.Brush.Color:=dg.Color;
-          dg.Canvas.TextRect(Rect,s,[]);
+            dg.Canvas.Brush.Color:=dg.Color;
+            //dg.Canvas.Font.Size:=12;
+            dg.Canvas.Font.Name:='Tahoma';
+            dg.Canvas.TextRect(Rect,s,[]);
+          end;
         end;
-      end;
 end;
 
 procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
@@ -118,8 +121,8 @@ procedure TColorsForm.FormActivate(Sender: TObject);
 var s:string; re:Trect;
 begin
   dg.RowCount:=8;
-  dg.ColCount:=2*Fpallete.Count div 8;
-  if dg.ColCount=0 then dg.ColCount:=2;
+  dg.ColCount:=2*(Fpallete.Count div 8);
+  if dg.ColCount mod 2 <> 0 then dg.ColCount:=dg.ColCount+1;
 
   //dg.Canvas.Rectangle(0,0,10,15);
   {for var i := 0 to (dg.ColCount div 2)-1 do
@@ -141,6 +144,11 @@ end;
 procedure TColorsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
    if dg.Tag>-1 then mosaic.selectColor(Fpallete[dg.tag], true);
+end;
+
+procedure TColorsForm.rgInformClick(Sender: TObject);
+begin
+  dg.Repaint;
 end;
 
 procedure TColorsForm.ToolButton1Click(Sender: TObject);

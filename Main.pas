@@ -119,6 +119,10 @@ end;
 
 procedure Tmosaic.Button3Click(Sender: TObject);
 begin
+    for var i := low(pg.ColorMap) to High(pg.ColorMap) do
+      for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
+        if not(l.Contains(map[i,j])) then l.Add(map[i,j]);
+
 
     colorsform.pallete:=l;
     //printnumber;
@@ -287,9 +291,7 @@ end;
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
   State: TGridDrawState);
 begin
-  if not(l.Contains(map[ARow,ACol])) then l.Add(map[ARow,ACol]);
   DrawCanvas(ACol,Arow,rect,pg.Canvas);
-
 end;
 
 procedure Tmosaic.pgMouseDown(Sender: TObject; Button: TMouseButton;
