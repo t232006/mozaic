@@ -43,6 +43,8 @@ type
     N8: TMenuItem;
     ShapeBut: TShapeButton;
     cd: TColorDialog;
+    N9: TMenuItem;
+    N10: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
@@ -74,11 +76,18 @@ type
     procedure ShapeButMouseLeave(Sender: TObject);
     procedure pgMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure N9DrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
+      Selected: Boolean);
+    procedure N10Click(Sender: TObject);
+    procedure pgMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure pgMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
   private
     map: TMap;
     l: TList<TColor>;
     procedure DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
-    function DrawMenu(num:byte): TIcon;
+    function DrawMenu(num:shortint): TIcon;
   public
     procedure SelectColor(color: TColor; unselect: boolean);
     procedure ChangeColor(newColor: TColor; oldColor: TColor);
@@ -172,6 +181,11 @@ begin
       pg.Repaint;
 end;
 
+procedure Tmosaic.N10Click(Sender: TObject);
+begin
+  PopupMenu3.Tag:=2;
+end;
+
 procedure Tmosaic.N1Click(Sender: TObject);
 var //memstream: TMemoryStream;
     filestream: TfileStream;
@@ -232,10 +246,7 @@ procedure Tmosaic.N5DrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
   Selected: Boolean);
 begin
    N6DrawItem(sender,Acanvas,Arect,Selected);
-   acanvas.Font.Size:=14;
-   acanvas.Font.Name:='Tahoma';
-   acanvas.Font.Color:=TContrast.rudeContrast(pg.currentColor);
-   acanvas.TextOut(14,Arect.Top+3,'5');
+   N9DraWItem(sender, acanvas, arect, selected);
 end;
 
 procedure Tmosaic.N6DrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
@@ -260,6 +271,17 @@ end;
 procedure Tmosaic.N8Click(Sender: TObject);
 begin
     PopupMenu3.Tag:=1;
+end;
+
+procedure Tmosaic.N9DrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
+  Selected: Boolean);
+begin
+   acanvas.Rectangle(rect(1,arect.Top,45,arect.Bottom-6 ));
+   acanvas.Font.Size:=14;
+   acanvas.Font.Name:='Tahoma';
+   acanvas.Font.Color:=TContrast.rudeContrast(pg.currentColor);
+   acanvas.TextOut(14,Arect.Top+3,'5');
+   selected:=false;
 end;
 
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
@@ -287,8 +309,8 @@ procedure Tmosaic.pgMouseEnter(Sender: TObject);
 begin
   screen.Cursors[crCross]:=LoadCursor(hInstance,'Cursor_1');
   screen.Cursors[crArrow]:=loadCursor(hinstance,'Cursor_2');
-    if PopupMenu3.Tag=0 then
-      pg.Cursor:=crCross else pg.Cursor:=crarrow;
+    if PopupMenu3.Tag=1 then
+      pg.Cursor:=crarrow else pg.Cursor:=crcross;
 end;
 
 procedure Tmosaic.pgMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -297,6 +319,22 @@ procedure Tmosaic.pgMouseMove(Sender: TObject; Shift: TShiftState; X,
   begin
  pg.MouseToCell(x,y,acol,arow);
  //edit1.Text:=inttostr(pg.ColorMap[ARow,ACol]);
+end;
+
+procedure Tmosaic.pgMouseWheelDown(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  pg.DefaultColWidth:=pg.DefaultColWidth-1;
+    pg.DefaultRowHeight:=pg.DefaultColWidth;
+    pg.Repaint;
+end;
+
+procedure Tmosaic.pgMouseWheelUp(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; var Handled: Boolean);
+begin
+ pg.DefaultColWidth:=pg.DefaultColWidth+1;
+    pg.DefaultRowHeight:=pg.DefaultColWidth;
+    pg.Repaint;
 end;
 
 procedure Tmosaic.SelectColor(color: TColor; unselect: boolean);
@@ -388,29 +426,36 @@ with WhereTo do
 
     if showcolor.Tag mod 2 = 0 then
     begin
-      Brush.Color:=pg.ColorMap[ARow, ACol];
+      if digitdisign.tag<>-1 then
+      begin
+        brush.Color:=pg.ColorMap[ARow, ACol];
+        font.Color:=TContrast.rudeContrast(brush.Color);
+      end else  font.Color:=clblack;
       Pen.Width:=1;
       Pen.Color:=clBlack;
-      if shapebut.Tag mod 2 =0 then
+      if shapebut.Tag mod 2 = 0 then  //cell shape
         Rectangle(Rect ) else ellipse(rect);
     end ;
 
     s:=inttostr(l.IndexOf(pg.ColorMap[ARow, ACol]));
     Font.Size:=5;
-    font.Color:=TContrast.rudeContrast(brush.Color);
+
     if digitdisign.tag=9 then
     begin
       brush.Color:=clwhite;
       ellipse(rect.Left+1,rect.Top+1,Rect.Right-1,rect.Bottom-1);
       font.Color:=clblack;
     end;
+
     if digitdisign.tag<>11 then
-      TextOut(rect.Left+4,rect.Top+3,s);
+      if s.Length=1 then
+        TextOut(rect.Left+6,rect.Top+3,s) else
+        TextOut(rect.Left+5,rect.Top+3,s)
     //SetBkMode(pg.Canvas.Handle, oldbkmode);
   end;
 end;
 
-function Tmosaic.DrawMenu(num: byte): TIcon;
+function Tmosaic.DrawMenu(num: shortint): TIcon;
 var pic,mask: TBitmap;  ic:TIcon;   maskcol: Tcolor;
   begin
       pic:=TBitmap.Create; ic:=TIcon.Create;
