@@ -25,11 +25,12 @@ type
     procedure ToolButton1Click(Sender: TObject);
     procedure rgInformClick(Sender: TObject);
   private
-    Fpallete: TList<TColor>;
+    Fpallete: TDictionary<TColor, word>;
+    FArPallete:TArray<TPair<TColor,word>>;
     {$j+}
     const pressed: boolean=false;
   public
-      property Pallete: TList<TColor> write Fpallete;
+      property Pallete: TDictionary<TColor, word> write Fpallete;
   end;
 
 var
@@ -42,22 +43,22 @@ uses main;
 
 procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
-var s:string; num:word;
+var s:string; num:word; curCol:Tcolor;
 begin
       num:=(ACol div 2)*8+ARow;
-      if (FPallete.Count>num) and (fpallete.Count>0) then
+      if (length(FarPallete)>num) and (length(farpallete)>0) then
         begin
+          curCol:=Farpallete[num].Key;
           if ACol mod 2 =0 then
           begin
-            dg.Canvas.Brush.Color:=Fpallete[num];
-
+            dg.Canvas.Brush.Color:=curCol;
             dg.Canvas.Rectangle(Rect);
           end else
           begin
              case rgInform.ItemIndex of
              0: s:=inttostr(num);
-             1: s:=copy(IntToHex(colortorgb(rgb(getbvalue(Fpallete[num]),getgvalue(Fpallete[num]),getrvalue(Fpallete[num])))),3,6) //to swap r<->b for true hex representation
-
+             1: s:=copy(IntToHex(colortorgb(rgb(getbvalue(curcol),getgvalue(curcol),getrvalue(curcol)))),3,6); //to swap r<->b for true hex representation
+             2: s:=inttostr(farpallete[num].Value);
              end;
 
 
@@ -119,26 +120,14 @@ end;
 
 procedure TColorsForm.FormActivate(Sender: TObject);
 var s:string; re:Trect;
+
 begin
   dg.RowCount:=8;
   dg.ColCount:=2*(Fpallete.Count div 8);
   if dg.ColCount mod 2 <> 0 then dg.ColCount:=dg.ColCount+1;
+  Farpallete:=FPallete.ToArray;
 
-  //dg.Canvas.Rectangle(0,0,10,15);
-  {for var i := 0 to (dg.ColCount div 2)-1 do
-    for var j := 0 to 7 do
-    try
-    begin
-      dg.Canvas.Brush.Color:=Fpallete[i*8+j];
 
-      dg.Canvas.Rectangle(dg.CellRect(i*2,j));
-      s:=inttostr(Fpallete[i*8+j]);
-      re:= dg.CellRect(i*2+1,j);
-      dg.Canvas.TextRect(re,s,[]);
-    end;
-    finally
-
-    end;  }
 end;
 
 procedure TColorsForm.FormClose(Sender: TObject; var Action: TCloseAction);
