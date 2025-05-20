@@ -15,24 +15,6 @@ object mosaic: Tmosaic
   OnClose = FormClose
   OnShow = FormShow
   TextHeight = 15
-  object Button2: TButton
-    Left = 120
-    Top = 376
-    Width = 75
-    Height = 25
-    Caption = 'save picture'
-    TabOrder = 0
-    OnClick = Button2Click
-  end
-  object Button3: TButton
-    Left = 216
-    Top = 376
-    Width = 75
-    Height = 25
-    Caption = 'Button3'
-    TabOrder = 1
-    OnClick = Button3Click
-  end
   object ToolBar: TToolBar
     Left = 0
     Top = 392
@@ -42,7 +24,7 @@ object mosaic: Tmosaic
     ButtonHeight = 51
     ButtonWidth = 52
     Images = ImageList1
-    TabOrder = 2
+    TabOrder = 0
     ExplicitTop = 391
     ExplicitWidth = 624
     object ToolButton1: TToolButton
@@ -141,7 +123,7 @@ object mosaic: Tmosaic
     Width = 628
     Height = 392
     Align = alClient
-    TabOrder = 3
+    TabOrder = 1
     ExplicitWidth = 624
     ExplicitHeight = 391
     object pg: TPaintGrid
@@ -4413,10 +4395,6 @@ object mosaic: Tmosaic
       ImageIndex = 11
       OnClick = N4Click
       OnDrawItem = N6DrawItem
-    end
-    object N9: TMenuItem
-      OnClick = N4Click
-      OnDrawItem = N9DrawItem
     end
   end
   object SaveD1: TSaveDialog

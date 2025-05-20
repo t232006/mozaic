@@ -41,6 +41,7 @@ type
     N8: TMenuItem;
     ShapeBut: TShapeButton;
     cd: TColorDialog;
+    N9: TMenuItem;
     N10: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -156,8 +157,7 @@ begin
       for var j := 0 to pg.ColCount-1 do
         map[i,j]:=pg.ColorMap[i,j];
   pg.DrawFromMap;
-  pg.Repaint; pg.Repaint;
-  //n4click(digitdisign);
+  pg.Repaint;
   //colorsform.Pallete:=l;
 end;
 
@@ -286,7 +286,7 @@ begin
    acanvas.Font.Name:='Tahoma';
    acanvas.Font.Color:=TContrast.rudeContrast(pg.currentColor);
    acanvas.TextOut(14,Arect.Top+3,'5');
-   //selected:=false;
+   selected:=false;
 end;
 
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
@@ -442,8 +442,11 @@ with WhereTo do
 
     if showcolor.Tag mod 2 = 0 then
     begin
-      brush.Color:=pg.ColorMap[ARow, ACol];
-      font.Color:=TContrast.rudeContrast(brush.Color);
+      if digitdisign.tag<>-1 then
+      begin
+        brush.Color:=pg.ColorMap[ARow, ACol];
+        font.Color:=TContrast.rudeContrast(brush.Color);
+      end else  font.Color:=clblack;
       Pen.Width:=1;
       Pen.Color:=clBlack;
       if shapebut.Tag mod 2 = 0 then  //cell shape
