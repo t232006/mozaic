@@ -1,5 +1,7 @@
 unit resolution;
-
+{-----------------------------------------------------
+ Calculates proportion in jpg picture by metadata
+ =======================================================}
 interface
 uses windows, sysutils;
 type XY = (x,y);

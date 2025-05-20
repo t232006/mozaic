@@ -43,6 +43,8 @@ object mosaic: Tmosaic
     ButtonWidth = 52
     Images = ImageList1
     TabOrder = 2
+    ExplicitTop = 391
+    ExplicitWidth = 624
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -55,7 +57,7 @@ object mosaic: Tmosaic
       Style = tbsDropDown
     end
     object ToolButton2: TToolButton
-      Left = 77
+      Left = 67
       Top = 0
       Hint = #1054#1082#1085#1086' '#1094#1074#1077#1090#1086#1074
       Caption = 'ToolButton2'
@@ -65,7 +67,7 @@ object mosaic: Tmosaic
       OnClick = Button3Click
     end
     object ToolButton3: TToolButton
-      Left = 129
+      Left = 119
       Top = 0
       Hint = #1050#1074#1072#1085#1090#1086#1074#1072#1085#1080#1077
       Caption = 'ToolButton3'
@@ -75,7 +77,7 @@ object mosaic: Tmosaic
       OnClick = Button4Click
     end
     object ToolButton4: TToolButton
-      Left = 181
+      Left = 171
       Top = 0
       Width = 8
       Caption = 'ToolButton4'
@@ -83,14 +85,14 @@ object mosaic: Tmosaic
       Style = tbsSeparator
     end
     object showColor: TToolButton
-      Left = 189
+      Left = 179
       Top = 0
       Caption = 'showColor'
       ImageIndex = 6
       OnClick = showColorClick
     end
     inline ShapeBut: TShapeButton
-      Left = 241
+      Left = 231
       Top = 0
       Width = 51
       Height = 51
@@ -101,7 +103,7 @@ object mosaic: Tmosaic
       OnClick = ShapeButton1Click
       OnMouseEnter = ShapeButMouseEnter
       OnMouseLeave = ShapeButMouseLeave
-      ExplicitLeft = 241
+      ExplicitLeft = 231
       ExplicitHeight = 51
       inherited Shape1: TShape
         Left = 9
@@ -117,7 +119,7 @@ object mosaic: Tmosaic
     end
     object digitdisign: TToolButton
       Tag = 11
-      Left = 292
+      Left = 282
       Top = 0
       DropdownMenu = PopupMenu2
       ImageIndex = 12
@@ -125,7 +127,7 @@ object mosaic: Tmosaic
       OnClick = N10Click
     end
     object legacy: TCheckBox
-      Left = 369
+      Left = 349
       Top = 0
       Width = 157
       Height = 51
@@ -140,8 +142,8 @@ object mosaic: Tmosaic
     Height = 392
     Align = alClient
     TabOrder = 3
-    ExplicitWidth = 618
-    ExplicitHeight = 374
+    ExplicitWidth = 624
+    ExplicitHeight = 391
     object pg: TPaintGrid
       Left = 3
       Top = 3

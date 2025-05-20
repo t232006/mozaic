@@ -85,7 +85,7 @@ type
       MousePos: TPoint; var Handled: Boolean);
   private
     map: TMap;
-    l: TList<TColor>;
+    l: TDictionary<TColor, word>;
     procedure DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
     function DrawMenu(num:shortint): TIcon;
   public
@@ -121,7 +121,8 @@ procedure Tmosaic.Button3Click(Sender: TObject);
 begin
     for var i := low(pg.ColorMap) to High(pg.ColorMap) do
       for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
-        if not(l.Contains(map[i,j])) then l.Add(map[i,j]);
+        if not(l.ContainsKey(map[i,j])) then l.Add(map[i,j],1) else
+        l.Items[map[i,j]]:=l.Items[map[i,j]]+1;
 
 
     colorsform.pallete:=l;
@@ -133,7 +134,7 @@ procedure Tmosaic.Button4Click(Sender: TObject);
 var mediana: TMediaSplit;
     //w: word;
 begin
-     l.Free; l:=TList<TColor>.Create;
+     l.Free; l:=TDictionary<TColor, word>.Create;
     if legacy.Checked then
 
       mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+2,[koef]) else
@@ -150,7 +151,7 @@ end;
 
 procedure Tmosaic.FormActivate(Sender: TObject);
 begin
-  l.Free; l:=TList<TColor>.Create;
+  l.Free; l:=TDictionary<TColor, word>.Create;
   setlength(map, pg.RowCount, pg.ColCount);
     for var i := 0 to pg.RowCount-1 do
       for var j := 0 to pg.ColCount-1 do
@@ -421,7 +422,17 @@ end;
 
 
 procedure Tmosaic.DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
-var s:string;
+var s:string; m: System.TArray<TPair<Tcolor,word>>;
+function SeekInd(Acol: tColor): word;
+begin
+  for var i := 0 to High(m) do
+    if m[i].Key=Acol then
+    begin
+      result:=i; exit;
+    end;
+
+end;
+
 begin
 with WhereTo do
   begin
@@ -438,8 +449,8 @@ with WhereTo do
       if shapebut.Tag mod 2 = 0 then  //cell shape
         Rectangle(Rect ) else ellipse(rect);
     end ;
-
-    s:=inttostr(l.IndexOf(pg.ColorMap[ARow, ACol]));
+    m:=l.ToArray;
+    s:=inttostr(seekind(pg.ColorMap[ARow, ACol]));
     Font.Size:=5;
 
     if digitdisign.tag=9 then
