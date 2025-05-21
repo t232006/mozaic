@@ -124,8 +124,6 @@ object mosaic: Tmosaic
     Height = 392
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 624
-    ExplicitHeight = 391
     object pg: TPaintGrid
       Left = 3
       Top = 3
@@ -141,7 +139,7 @@ object mosaic: Tmosaic
       OnMouseMove = pgMouseMove
       OnMouseWheelDown = pgMouseWheelDown
       OnMouseWheelUp = pgMouseWheelUp
-      currentColor = clLime
+      currentColor = clOlive
     end
   end
   object ImageList1: TImageList

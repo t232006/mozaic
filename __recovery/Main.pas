@@ -124,7 +124,7 @@ begin
         l.AddOrSetValue(map[i,j],val+1);
       end;
 
-    colorsform.pallete:=l;
+    colorsform.setpallete(l);
     //printnumber;
     colorsform.show;
 end;

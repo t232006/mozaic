@@ -9,11 +9,21 @@ uses
   Vcl.ExtCtrls;
 
 type
+  TCell = class
+    color: TColor;
+    number: byte;
+    amount: word;
+    pressed: boolean;
+    private
+    function GetHex:string;
+    public
+    property HexColor:string read GetHex;
+  end;
   TColorsForm = class(TForm)
-    Dg: TDrawGrid;
     ToolBar1: TToolBar;
     ColorDialog1: TColorDialog;
     rgInform: TRadioGroup;
+    dg: TStringGrid;
     procedure FormActivate(Sender: TObject);
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
@@ -25,12 +35,14 @@ type
     procedure ToolButton1Click(Sender: TObject);
     procedure rgInformClick(Sender: TObject);
   private
-    Fpallete: TDictionary<TColor, word>;
+    //Fpallete: TDictionary<TColor, word>;
     FArPallete:TArray<TPair<TColor,word>>;
+
     {$j+}
     const pressed: boolean=false;
   public
-      property Pallete: TDictionary<TColor, word> write Fpallete;
+      //property Pallete: TDictionary<TColor, word> write SetFpallete;
+      procedure SetPallete(pallete: TDictionary<TColor, word>);
   end;
 
 var
@@ -45,23 +57,21 @@ procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 var s:string; num:word; curCol:Tcolor;
 begin
-      num:=(ACol div 2)*8+ARow;
+      //num:=(ACol div 2)*8+ARow;
       if (length(FarPallete)>num) and (length(farpallete)>0) then
         begin
-          curCol:=Farpallete[num].Key;
+          //curCol:=Farpallete[num].Key;
           if ACol mod 2 =0 then
           begin
-            dg.Canvas.Brush.Color:=curCol;
+            dg.Canvas.Brush.Color:=(dg.Objects[aCol,arow] as TCell).color;
             dg.Canvas.Rectangle(Rect);
           end else
           begin
              case rgInform.ItemIndex of
-             0: s:=inttostr(num);
-             1: s:=copy(IntToHex(colortorgb(rgb(getbvalue(curcol),getgvalue(curcol),getrvalue(curcol)))),3,6); //to swap r<->b for true hex representation
-             2: s:=inttostr(farpallete[num].Value);
+             0: s:=inttostr((dg.Objects[aCol-1,arow] as TCell).number);
+             1: s:=(dg.Objects[aCol-1,arow] as TCell).HexColor;
+             2: s:=inttostr((dg.Objects[aCol-1,arow] as TCell).amount);
              end;
-
-
             dg.Canvas.Brush.Color:=dg.Color;
             //dg.Canvas.Font.Size:=12;
             dg.Canvas.Font.Name:='Tahoma';
@@ -102,32 +112,17 @@ var num:word; curCol: Tcolor;
 begin
     if ACol mod 2 = 0 then
     begin
-      num:=acol*4+arow;   curcol:=farpallete[num].Key;
-      if pressed and (dg.tag<>-1) then
-        if dg.tag<>num then
-        begin
-          mosaic.selectColor(Farpallete[dg.tag].Key, true);
-          mosaic.selectColor(curcol, false) ;
-        end else
-        begin
-          mosaic.selectColor(curcol, true);
-          pressed:=not(pressed);
-        end
-      else
-      begin
-        mosaic.selectColor(curcol, false) ;
-        pressed:=not(pressed);
-      end;
-      dg.tag:=num;
+      curcol:=(dg.Objects[acol, arow] as tcell).color;
+      (dg.Objects[acol, arow] as tcell).pressed:=not((dg.Objects[acol, arow] as tcell).pressed);
+      mosaic.selectColor(curcol, not((dg.Objects[acol, arow] as tcell).pressed));       //select
     end;
 end;
 
 procedure TColorsForm.FormActivate(Sender: TObject);
 begin
-  dg.RowCount:=8;
-  dg.ColCount:=2*(Fpallete.Count div 8);
-  if dg.ColCount mod 2 <> 0 then dg.ColCount:=dg.ColCount+1;
-  Farpallete:=FPallete.ToArray;
+
+
+  //Farpallete:=FPallete.ToArray;
 
 
 end;
@@ -142,10 +137,39 @@ begin
   dg.Repaint;
 end;
 
+procedure TColorsForm.SetPallete(pallete: TDictionary<TColor, word>);
+var mycell:TCell;
+begin
+     FArPallete:=pallete.ToArray;
+     //dg.RowCount:=8;
+     dg.ColCount:=2*(pallete.Count div 8);
+      if dg.ColCount mod 2 <> 0 then dg.ColCount:=dg.ColCount+1;
+     for var i := Low(farpallete) to High(farpallete) do
+
+     begin
+       mycell:=tcell.Create;
+       mycell.color:=farpallete[i].Key;
+       mycell.number:=i;
+       mycell.amount:=farpallete[i].Value;
+       mycell.pressed:=false;
+       dg.Objects[2*(i div 8), (i mod 8)]:=mycell;
+       //mycell.Destroy;
+     end;
+
+
+end;
+
 procedure TColorsForm.ToolButton1Click(Sender: TObject);
 begin
    dg.Tag:=(sender as ttoolbutton).Tag ;
    dg.Repaint;
+end;
+
+{ TCell }
+
+function TCell.GetHex: string;
+begin
+   result:= copy(IntToHex(colortorgb(rgb(getbvalue(color),getgvalue(color),getrvalue(color)))),3,6); //to swap r<->b for true hex representation
 end;
 
 end.

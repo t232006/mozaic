@@ -13,32 +13,6 @@ object ColorsForm: TColorsForm
   OnActivate = FormActivate
   OnClose = FormClose
   TextHeight = 15
-  object Dg: TDrawGrid
-    Tag = -1
-    Left = 0
-    Top = 0
-    Width = 341
-    Height = 290
-    Align = alClient
-    Color = clScrollBar
-    ColCount = 2
-    DrawingStyle = gdsClassic
-    FixedCols = 0
-    FixedRows = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goFixedColDefAlign]
-    TabOrder = 0
-    OnDrawCell = DgDrawCell
-    OnMouseUp = DgMouseUp
-    OnSelectCell = DgSelectCell
-    ExplicitWidth = 337
-    ExplicitHeight = 289
-    RowHeights = (
-      26
-      24
-      25
-      24
-      24)
-  end
   object ToolBar1: TToolBar
     Left = 0
     Top = 290
@@ -48,7 +22,7 @@ object ColorsForm: TColorsForm
     ButtonHeight = 41
     ButtonWidth = 55
     Caption = 'ToolBar1'
-    TabOrder = 1
+    TabOrder = 0
     ExplicitTop = 289
     ExplicitWidth = 337
     object rgInform: TRadioGroup
@@ -86,6 +60,26 @@ object ColorsForm: TColorsForm
       TabOrder = 0
       OnClick = rgInformClick
     end
+  end
+  object dg: TStringGrid
+    Left = 0
+    Top = 0
+    Width = 341
+    Height = 290
+    TabStop = False
+    Align = alClient
+    ColCount = 2
+    FixedCols = 0
+    RowCount = 8
+    FixedRows = 0
+    TabOrder = 1
+    OnDrawCell = DgDrawCell
+    OnMouseUp = DgMouseUp
+    OnSelectCell = DgSelectCell
+    ExplicitLeft = 104
+    ExplicitTop = 88
+    ExplicitWidth = 320
+    ExplicitHeight = 120
   end
   object ColorDialog1: TColorDialog
     Left = 104
