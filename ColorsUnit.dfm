@@ -10,7 +10,6 @@ object ColorsForm: TColorsForm
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OnActivate = FormActivate
   OnClose = FormClose
   TextHeight = 15
   object ToolBar1: TToolBar
@@ -23,8 +22,6 @@ object ColorsForm: TColorsForm
     ButtonWidth = 55
     Caption = 'ToolBar1'
     TabOrder = 0
-    ExplicitTop = 289
-    ExplicitWidth = 337
     object rgInform: TRadioGroup
       Left = 0
       Top = 0
@@ -82,6 +79,7 @@ object ColorsForm: TColorsForm
     ExplicitHeight = 120
   end
   object ColorDialog1: TColorDialog
+    Options = [cdSolidColor, cdAnyColor]
     Left = 104
     Top = 192
   end

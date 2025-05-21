@@ -24,7 +24,6 @@ type
     ColorDialog1: TColorDialog;
     rgInform: TRadioGroup;
     dg: TStringGrid;
-    procedure FormActivate(Sender: TObject);
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
     procedure DgSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -55,9 +54,9 @@ uses main;
 
 procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
-var s:string; num:word; curCol:Tcolor;
+var s:string; num:word;
 begin
-      //num:=(ACol div 2)*8+ARow;
+      num:=(ACol div 2) * 8 + ARow;
       if (length(FarPallete)>num) and (length(farpallete)>0) then
         begin
           //curCol:=Farpallete[num].Key;
@@ -81,34 +80,46 @@ begin
 end;
 
 procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-  var ce:TPoint; curcol:TColor;
+  Shift: TShiftState; X, Y: Integer);    //changes the color
+  var ce:TPoint; curcol:TColor; row, col: integer;
   const tr: boolean=true;
   begin
    if button=TMouseButton.mbRight then
    begin
      dg.MouseToCell(x,y, ce.X, ce.y);
      if ce.X mod 2 = 0 then
-     if colordialog1.Execute then
-      begin
-        curcol:=Farpallete[ce.X*8+ce.y].Key;
-        dg.Canvas.Brush.Color:=colordialog1.Color;
-        dg.Canvas.Rectangle(dg.CellRect(ce.X,ce.Y));
-        mosaic.selectColor(curcol, true); pressed:=false;
-        mosaic.ChangeColor(colordialog1.Color, curcol);
-        //curcol:=colordialog1.Color;
-        dg.Repaint;
-        mosaic.pg.Repaint;
-        //dgselectcell(sender,ce.X,ce.Y,tr);
-
-      end;
+     begin
+       colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
+       if colordialog1.Execute then
+        begin
+          //curcol:=Farpallete[ce.X*8+ce.y].Key;
+          dg.Canvas.Brush.Color:=colordialog1.Color;
+          for row := 0 to dg.RowCount-1 do
+          for col := 0 to dg.ColCount-1 do
+            with (dg.Objects[col, row] as tcell) do begin
+              if not(dg.Objects[col, row] is tcell) then break; //exit
+              if col mod 2 <> 0 then continue;
+              if pressed=false then continue;
+              curcol:=color;
+              dg.Canvas.Rectangle(dg.CellRect(col,row));
+              mosaic.selectColor(curcol, true);
+              mosaic.ChangeColor(colordialog1.Color, curcol);
+              color:=colordialog1.Color;
+              pressed:=false;
+            end;
+          //curcol:=colordialog1.Color;
+          dg.Repaint;
+          mosaic.pg.Repaint;
+          //dgselectcell(sender,ce.X,ce.Y,tr);
+        end;
+     end;
 
    end;
 end;
 
 procedure TColorsForm.DgSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
-var num:word; curCol: Tcolor;
+var curCol: Tcolor;
 begin
     if ACol mod 2 = 0 then
     begin
@@ -116,15 +127,6 @@ begin
       (dg.Objects[acol, arow] as tcell).pressed:=not((dg.Objects[acol, arow] as tcell).pressed);
       mosaic.selectColor(curcol, not((dg.Objects[acol, arow] as tcell).pressed));       //select
     end;
-end;
-
-procedure TColorsForm.FormActivate(Sender: TObject);
-begin
-
-
-  //Farpallete:=FPallete.ToArray;
-
-
 end;
 
 procedure TColorsForm.FormClose(Sender: TObject; var Action: TCloseAction);
