@@ -72,7 +72,8 @@ end;
 
 procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
-  var ce:TPoint; const tr: boolean=true;
+  var ce:TPoint; curcol:TColor;
+  const tr: boolean=true;
   begin
    if button=TMouseButton.mbRight then
    begin
@@ -80,11 +81,12 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
      if ce.X mod 2 = 0 then
      if colordialog1.Execute then
       begin
+        curcol:=Farpallete[ce.X*8+ce.y].Key;
         dg.Canvas.Brush.Color:=colordialog1.Color;
         dg.Canvas.Rectangle(dg.CellRect(ce.X,ce.Y));
-        mosaic.selectColor(Fpallete[ce.X*8+ce.y], true); pressed:=false;
-        mosaic.ChangeColor(colordialog1.Color, fpallete[ce.X*8+ce.y]);
-        fpallete[ce.X*8+ce.y]:=colordialog1.Color;
+        mosaic.selectColor(curcol, true); pressed:=false;
+        mosaic.ChangeColor(colordialog1.Color, curcol);
+        //curcol:=colordialog1.Color;
         dg.Repaint;
         mosaic.pg.Repaint;
         //dgselectcell(sender,ce.X,ce.Y,tr);
@@ -96,31 +98,31 @@ end;
 
 procedure TColorsForm.DgSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
+var num:word; curCol: Tcolor;
 begin
     if ACol mod 2 = 0 then
     begin
+      num:=acol*8+arow;   curcol:=farpallete[num].Key;
       if pressed and (dg.tag<>-1) then
-        if dg.tag<>acol*8+arow then
+        if dg.tag<>num then
         begin
-          mosaic.selectColor(Fpallete[dg.tag], true);
-          mosaic.selectColor(Fpallete[ACol*8+ARow], false) ;
+          mosaic.selectColor(Farpallete[dg.tag].Key, true);
+          mosaic.selectColor(curcol, false) ;
         end else
         begin
-          mosaic.selectColor(Fpallete[ACol*8+ARow], true);
+          mosaic.selectColor(curcol, true);
           pressed:=not(pressed);
         end
       else
       begin
-        mosaic.selectColor(Fpallete[ACol*8+ARow], false) ;
+        mosaic.selectColor(curcol, false) ;
         pressed:=not(pressed);
       end;
-      dg.tag:=acol*8+arow;
+      dg.tag:=num;
     end;
 end;
 
 procedure TColorsForm.FormActivate(Sender: TObject);
-var s:string; re:Trect;
-
 begin
   dg.RowCount:=8;
   dg.ColCount:=2*(Fpallete.Count div 8);
@@ -132,7 +134,7 @@ end;
 
 procedure TColorsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-   if dg.Tag>-1 then mosaic.selectColor(Fpallete[dg.tag], true);
+   if dg.Tag>-1 then mosaic.selectColor(Farpallete[dg.tag].Key, true);
 end;
 
 procedure TColorsForm.rgInformClick(Sender: TObject);
