@@ -109,6 +109,7 @@ begin
 end;
 
 procedure TinitForm.proportClick(Sender: TObject);
+var resol: TPoint;
 begin
   if proport.Checked and proport.Enabled then
     rowcount.Text:=inttostr( getproportion(x,strtoint(colcount.Text),pictureD.FileName));

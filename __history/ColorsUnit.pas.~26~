@@ -102,7 +102,7 @@ var num:word; curCol: Tcolor;
 begin
     if ACol mod 2 = 0 then
     begin
-      num:=acol*4+arow;   curcol:=farpallete[num].Key;
+      num:=acol*8+arow;   curcol:=farpallete[num].Key;
       if pressed and (dg.tag<>-1) then
         if dg.tag<>num then
         begin

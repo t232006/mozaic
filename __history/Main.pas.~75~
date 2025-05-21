@@ -469,7 +469,7 @@ with WhereTo do
 end;
 
 function Tmosaic.DrawMenu(num: shortint): TIcon;
-var pic: TBitmap;  ic:TIcon;   maskcol: Tcolor;
+var pic,mask: TBitmap;  ic:TIcon;   maskcol: Tcolor;
   begin
       pic:=TBitmap.Create; ic:=TIcon.Create;
       pic.Width:=48; pic.Height:=48;

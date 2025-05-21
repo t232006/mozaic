@@ -2,8 +2,8 @@ object mosaic: Tmosaic
   Left = 0
   Top = 0
   Caption = 'mosaic'
-  ClientHeight = 442
-  ClientWidth = 628
+  ClientHeight = 441
+  ClientWidth = 624
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,16 +17,14 @@ object mosaic: Tmosaic
   TextHeight = 15
   object ToolBar: TToolBar
     Left = 0
-    Top = 392
-    Width = 628
+    Top = 391
+    Width = 624
     Height = 50
     Align = alBottom
     ButtonHeight = 51
     ButtonWidth = 52
     Images = ImageList1
     TabOrder = 0
-    ExplicitTop = 391
-    ExplicitWidth = 624
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -120,12 +118,10 @@ object mosaic: Tmosaic
   object ScrollBox1: TScrollBox
     Left = 0
     Top = 0
-    Width = 628
-    Height = 392
+    Width = 624
+    Height = 391
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 624
-    ExplicitHeight = 391
     object pg: TPaintGrid
       Left = 3
       Top = 3
