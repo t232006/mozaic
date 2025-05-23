@@ -124,7 +124,11 @@ begin
         l.AddOrSetValue(map[i,j],val+1);
       end;
 
+<<<<<<< HEAD
     colorsform.pallete:=l;
+=======
+    colorsform.setpallete(m);
+>>>>>>> b1170b2 (colorsform selection)
     //printnumber;
     colorsform.show;
 end;
@@ -189,6 +193,7 @@ end;
 procedure Tmosaic.N10Click(Sender: TObject);
 begin
   PopupMenu3.Tag:=2;
+  pgMouseEnter(sender);
 end;
 
 procedure Tmosaic.N1Click(Sender: TObject);
@@ -276,6 +281,7 @@ end;
 procedure Tmosaic.N8Click(Sender: TObject);
 begin
     PopupMenu3.Tag:=1;
+    pgmouseEnter(sender);
 end;
 
 procedure Tmosaic.N9DrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect;
@@ -443,15 +449,37 @@ with WhereTo do
     if showcolor.Tag mod 2 = 0 then
     begin
       brush.Color:=pg.ColorMap[ARow, ACol];
+<<<<<<< HEAD
       font.Color:=TContrast.rudeContrast(brush.Color);
       Pen.Width:=1;
       Pen.Color:=clBlack;
       if shapebut.Tag mod 2 = 0 then  //cell shape
         Rectangle(Rect ) else ellipse(rect);
+=======
+>>>>>>> b1170b2 (colorsform selection)
     end ;
+    Pen.Width:=1;
+    Pen.Color:=clBlack;
+    if shapebut.Tag mod 2 = 0 then  //cell shape
+      Rectangle(ARect ) else
+      begin
+        pen.Color:=pg.Color;
+        rectangle(arect);
+        pen.Color:=clBlack;
+        ellipse(Arect);
+      end;
+
     m:=l.ToArray;
     s:=inttostr(seekind(pg.ColorMap[ARow, ACol]));
+<<<<<<< HEAD
     Font.Size:=5;
+=======
+    Font.Size:=pg.DefaultRowHeight div 3;
+    DrawCell(Arect, s, Awhereto);
+    //SetBkMode(pg.Canvas.Handle, oldbkmode);
+  end;
+end;
+>>>>>>> b1170b2 (colorsform selection)
 
     if digitdisign.tag=9 then
     begin

@@ -25,8 +25,6 @@ object mosaic: Tmosaic
     ButtonWidth = 52
     Images = ImageList1
     TabOrder = 0
-    ExplicitTop = 391
-    ExplicitWidth = 624
     object ToolButton1: TToolButton
       Left = 0
       Top = 0

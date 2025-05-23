@@ -25,6 +25,8 @@ object mosaic: Tmosaic
     ButtonWidth = 52
     Images = ImageList1
     TabOrder = 0
+    ExplicitTop = 391
+    ExplicitWidth = 624
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -4405,16 +4407,19 @@ object mosaic: Tmosaic
     object N7: TMenuItem
       Caption = #1074#1099#1073#1088#1072#1090#1100' '#1094#1074#1077#1090
       ImageIndex = 0
+      ShortCut = 121
       OnClick = N7Click
     end
     object N8: TMenuItem
       Caption = #1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1094#1074#1077#1090
       ImageIndex = 1
+      ShortCut = 118
       OnClick = N8Click
     end
     object N10: TMenuItem
       Caption = #1088#1080#1089#1086#1074#1072#1090#1100
       ImageIndex = 2
+      ShortCut = 114
       OnClick = N10Click
     end
   end
