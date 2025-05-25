@@ -83,8 +83,11 @@ type
   private
     map: TMap;
     l: TDictionary<TColor, word>;
+     m: System.TArray<TPair<Tcolor,word>>;
     procedure DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
-    function DrawMenu(num:shortint): TIcon;
+    procedure DrawCell(rect:TRect; s:string; Awhereto: TCanvas);
+    procedure DrawMenu(num:shortint);
+    function SeekInd(Acol: tColor): word;
   public
     procedure SelectColor(color: TColor; unselect: boolean);
     procedure ChangeColor(newColor: TColor; oldColor: TColor);
@@ -123,12 +126,8 @@ begin
         l.TryGetValue(map[i,j],val);
         l.AddOrSetValue(map[i,j],val+1);
       end;
-
-<<<<<<< HEAD
-    colorsform.pallete:=l;
-=======
     colorsform.setpallete(m);
->>>>>>> b1170b2 (colorsform selection)
+
     //printnumber;
     colorsform.show;
 end;
@@ -160,7 +159,9 @@ begin
       for var j := 0 to pg.ColCount-1 do
         map[i,j]:=pg.ColorMap[i,j];
   pg.DrawFromMap;
-  pg.Repaint; pg.Repaint;
+  digitdisign.tag:=11;
+  drawmenu(digitdisign.Tag);
+  pg.Repaint;
   //n4click(digitdisign);
   //colorsform.Pallete:=l;
 end;
@@ -363,16 +364,21 @@ begin
             Pen.Width:=2;
             Pen.Color:=pg.Color;
             Rectangle(pg.CellRect(j,i));
+            font.Color:=TContrast.rudecontrast(color);
+
             Pen.Width:=1;
             Pen.Color:=0;
+            Rectangle(pg.CellRect(j,i));
+            DrawCell(pg.CellRect(j,i),inttostr(seekind(color)),pg.Canvas);
           end
           else
           begin
             Pen.Width:=2;
             Pen.Color:=TContrast.rudeContrast(color);
+            Rectangle(pg.CellRect(j,i));
           end;
 
-          Rectangle(pg.CellRect(j,i));
+
         end;
 end;
 
@@ -428,75 +434,65 @@ begin
         end;
 end;
 
-
-
-procedure Tmosaic.DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
-var s:string; m: System.TArray<TPair<Tcolor,word>>;
-function SeekInd(Acol: tColor): word;
+function Tmosaic.SeekInd(Acol: tColor): word;
 begin
   for var i := 0 to High(m) do
     if m[i].Key=Acol then
     begin
       result:=i; exit;
     end;
-
 end;
+
+procedure Tmosaic.DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
+var s:string;
 
 begin
 with WhereTo do
   begin
-
     if showcolor.Tag mod 2 = 0 then
     begin
       brush.Color:=pg.ColorMap[ARow, ACol];
-<<<<<<< HEAD
-      font.Color:=TContrast.rudeContrast(brush.Color);
-      Pen.Width:=1;
-      Pen.Color:=clBlack;
-      if shapebut.Tag mod 2 = 0 then  //cell shape
-        Rectangle(Rect ) else ellipse(rect);
-=======
->>>>>>> b1170b2 (colorsform selection)
+      font.Color:=TContrast.rudecontrast(brush.Color);
     end ;
     Pen.Width:=1;
     Pen.Color:=clBlack;
     if shapebut.Tag mod 2 = 0 then  //cell shape
-      Rectangle(ARect ) else
+      Rectangle(Rect ) else
       begin
         pen.Color:=pg.Color;
-        rectangle(arect);
+        rectangle(rect);
         pen.Color:=clBlack;
-        ellipse(Arect);
+        ellipse(rect);
       end;
-
     m:=l.ToArray;
     s:=inttostr(seekind(pg.ColorMap[ARow, ACol]));
-<<<<<<< HEAD
-    Font.Size:=5;
-=======
     Font.Size:=pg.DefaultRowHeight div 3;
-    DrawCell(Arect, s, Awhereto);
+    DrawCell(rect, s, whereto);
     //SetBkMode(pg.Canvas.Handle, oldbkmode);
   end;
 end;
->>>>>>> b1170b2 (colorsform selection)
 
-    if digitdisign.tag=9 then
+procedure Tmosaic.DrawCell(rect:TRect; s:string; Awhereto: TCanvas);
+begin
+    with pg.Canvas do
     begin
-      brush.Color:=clwhite;
-      ellipse(rect.Left+1,rect.Top+1,Rect.Right-1,rect.Bottom-1);
-      font.Color:=clblack;
-    end;
+      if digitdisign.tag=9 then
+      begin
+        brush.Color:=clwhite;
+        ellipse(rect.Left+1,rect.Top+1,Rect.Right-1,rect.Bottom-1);
+        font.Color:=clblack;
+      end;
 
-    if digitdisign.tag<>11 then
-      if s.Length=1 then
-        TextOut(rect.Left+6,rect.Top+3,s) else
-        TextOut(rect.Left+5,rect.Top+3,s)
+      if digitdisign.tag<>11 then
+        if s.Length=1 then
+          TextOut(rect.Left+6,rect.Top+3,s) else
+          TextOut(rect.Left+5,rect.Top+3,s)
+    end;
     //SetBkMode(pg.Canvas.Handle, oldbkmode);
-  end;
 end;
 
-function Tmosaic.DrawMenu(num: shortint): TIcon;
+
+procedure Tmosaic.DrawMenu(num: shortint);
 var pic: TBitmap;  ic:TIcon;   maskcol: Tcolor;
   begin
       pic:=TBitmap.Create; ic:=TIcon.Create;

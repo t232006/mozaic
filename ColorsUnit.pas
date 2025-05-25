@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, contrast;
 
 type
   TCell = class
@@ -33,20 +33,21 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure ToolButton1Click(Sender: TObject);
     procedure rgInformClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
-    //Fpallete: TDictionary<TColor, word>;
-    FArPallete:TArray<TPair<TColor,word>>;
 
+    FArPallete:TArray<TPair<TColor,word>>;
+    procedure printText(Acol, arow: integer);
     {$j+}
     const pressed: boolean=false;
   public
       //property Pallete: TDictionary<TColor, word> write SetFpallete;
-      //procedure SetPallete(pallete: TDictionary<TColor, word>);
-      procedure SetPallete(arpallete:TArray<TPair<TColor,word>> );
+       procedure SetPallete(arpallete:TArray<TPair<TColor,word>> );
   end;
 
 var
   ColorsForm: TColorsForm;
+  arrow: Tbitmap;
 
 implementation
 uses main;
@@ -55,39 +56,31 @@ uses main;
 
 procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
-<<<<<<< HEAD
-var s:string; num:word;
-=======
-var  num:word;  curcol: TColor;  //t:TTextformat;
->>>>>>> b1170b2 (colorsform selection)
+var s:string; num:word;  curcol: TColor;  //t:TTextformat;
 begin
       num:=(ACol div 2) * 8 + ARow;
       if (length(FarPallete)>num) and (length(farpallete)>0) then
-        begin
+        with dg.Canvas do begin
           //curCol:=Farpallete[num].Key;
           if ACol mod 2 =0 then
           begin
-            dg.Canvas.Brush.Color:=(dg.Objects[aCol,arow] as TCell).color;
-            dg.Canvas.Rectangle(Rect);
+            curcol:=(dg.Objects[aCol,arow] as TCell).color;
+            Brush.Color:=curcol;
+            //selection
+
+            //Pen.Color:=curcol;
+            //Pen.Width:=5;
+            Rectangle(Rect);
+            //selection
           end else
-          begin
-             case rgInform.ItemIndex of
-             0: s:=inttostr((dg.Objects[aCol-1,arow] as TCell).number);
-             1: s:=(dg.Objects[aCol-1,arow] as TCell).HexColor;
-             2: s:=inttostr((dg.Objects[aCol-1,arow] as TCell).amount);
-             end;
-            dg.Canvas.Brush.Color:=dg.Color;
-            //dg.Canvas.Font.Size:=12;
-            dg.Canvas.Font.Name:='Tahoma';
-            dg.Canvas.TextRect(Rect,s,[]);
-          end;
+          printtext(acol,arow);
         end;
 end;
 
 procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);    //changes the color
   var ce:TPoint; curcol:TColor; row, col: integer;
-  const tr: boolean=true;
+  //const tr: boolean=true;
   begin
    if button=TMouseButton.mbRight then
    begin
@@ -102,8 +95,9 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
           for row := 0 to dg.RowCount-1 do
           for col := 0 to dg.ColCount-1 do
             with (dg.Objects[col, row] as tcell) do begin
-              if not(dg.Objects[col, row] is tcell) then break; //exit
               if col mod 2 <> 0 then continue;
+              if not(dg.Objects[col, row] is tcell) then break; //exit
+
               if pressed=false then continue;
               curcol:=color;
               dg.Canvas.Rectangle(dg.CellRect(col,row));
@@ -128,9 +122,15 @@ var curCol: Tcolor;
 begin
     if ACol mod 2 = 0 then
     begin
+    if (not(dg.Objects[acol, arow] as tcell).pressed) then
+               dg.Canvas.draw(dg.CellRect(acol+1,arow).Left+15, dg.CellRect(acol+1,arow).Top,arrow)
+    else
+      printtext(acol+1,arow);
       curcol:=(dg.Objects[acol, arow] as tcell).color;
       (dg.Objects[acol, arow] as tcell).pressed:=not((dg.Objects[acol, arow] as tcell).pressed);
-      mosaic.selectColor(curcol, not((dg.Objects[acol, arow] as tcell).pressed));       //select
+      mosaic.selectColor(curcol, not((dg.Objects[acol, arow] as tcell).pressed));
+
+
     end;
 end;
 
@@ -139,8 +139,6 @@ begin
    if dg.Tag>-1 then mosaic.selectColor(Farpallete[dg.tag].Key, true);
 end;
 
-<<<<<<< HEAD
-=======
 procedure TColorsForm.FormCreate(Sender: TObject);
 begin
   arrow:=TBitmap.Create;
@@ -148,7 +146,7 @@ begin
 end;
 
 procedure TColorsForm.printText(Acol, arow: integer);
-var s:string; re:trect;
+var s:string; re:trect; t:TTextformat;
 begin
   case rgInform.ItemIndex of
              0: s:=inttostr((dg.Objects[aCol-1,arow] as TCell).number);
@@ -162,7 +160,6 @@ begin
     dg.Canvas.TextRect(re,re.Left,re.Top,s);
 end;
 
->>>>>>> b1170b2 (colorsform selection)
 procedure TColorsForm.rgInformClick(Sender: TObject);
 begin
   dg.Repaint;
@@ -173,13 +170,9 @@ var mycell:TCell;
 begin
      FArPallete:=arpallete;
      //dg.RowCount:=8;
-<<<<<<< HEAD
-     dg.ColCount:=2*(pallete.Count div 8);
-=======
      dg.ColCount:=2*(length(arpallete) div 8);
      if (length(farpallete) mod 8 <> 0) then dg.ColCount:=dg.ColCount+2;
 
->>>>>>> b1170b2 (colorsform selection)
       if dg.ColCount mod 2 <> 0 then dg.ColCount:=dg.ColCount+1;
      for var i := Low(farpallete) to High(farpallete) do
 

@@ -11,6 +11,7 @@ object ColorsForm: TColorsForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   OnClose = FormClose
+  OnCreate = FormCreate
   TextHeight = 15
   object ToolBar1: TToolBar
     Left = 0
@@ -73,10 +74,6 @@ object ColorsForm: TColorsForm
     OnDrawCell = DgDrawCell
     OnMouseUp = DgMouseUp
     OnSelectCell = DgSelectCell
-    ExplicitLeft = 104
-    ExplicitTop = 88
-    ExplicitWidth = 320
-    ExplicitHeight = 120
   end
   object ColorDialog1: TColorDialog
     Options = [cdSolidColor, cdAnyColor]
