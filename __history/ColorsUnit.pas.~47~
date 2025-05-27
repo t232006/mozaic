@@ -37,7 +37,7 @@ type
        procedure SetPallete(arpallete:TArray<TPair<TColor,word>> );
        procedure Accomodation;
   end;
-const RCOUNT:byte=16; COLWIDTH=50;
+const RCOUNT:byte=16; COLWIDTH=75;
 var
   ColorsForm: TColorsForm;
   arrow: Tbitmap;
@@ -51,8 +51,6 @@ procedure TColorsForm.Accomodation;
 var mycell:TCell;
 begin
     dg.ColCount:=length(Farpallete) div RCOUNT;
-    dg.RowCount:=RCOUNT;
-    dg.DefaultColWidth:=width div dg.ColCount;
      if (length(farpallete) mod RCOUNT <> 0) and (dg.ColCount>1)
       then dg.ColCount:=dg.ColCount+1;
 
@@ -158,7 +156,7 @@ end;
 
 procedure TColorsForm.FormResize(Sender: TObject);
 begin
-  rcount:=(dg.Height-75) div dg.DefaultRowHeight;
+  rcount:=dg.Height div dg.DefaultRowHeight;
   accomodation;
 end;
 
@@ -176,8 +174,7 @@ begin
              4: s:=inttostr((dg.Objects[acol, arow] as TCell).SimRAL);
   end;
     dg.Canvas.Brush.Color:=dg.Color;
-    if length(s)<=20 then dg.Canvas.Font.Size:=12 else
-    dg.Canvas.Font.Size:=round(19-8/23*length(s));
+    dg.Canvas.Font.Size:=12;
     dg.Canvas.Font.Name:='Tahoma';
     r:=dg.CellRect(acol,arow) ;
     re:=rect(r.Left+COLWIDTH+10,r.Top,r.Right,r.Bottom);

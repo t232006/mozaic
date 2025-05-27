@@ -70,10 +70,9 @@ begin
     SQL.Text:=Format('update colors set s=(%d-r)*(%d-r)+(%d-g)*(%d-g)+(%d-b)*(%d-b)',[r,r,g,g,b,b]);
     ExecSQL;
     SQL.Clear;
-    SQL.Add('select * from colors where s=(select min(s) from colors ');
+    SQL.Add('select * from colors where s=(select min(s) from colors)');
     if RAL=true then
-    SQL.Add('where RAL is not null') else SQL.Add('where RAL is null');
-    SQL.add(')');
+    SQL.Add('and RAL is not null') else SQL.Add('and RAL is null');
     Open;
     FSimilar:=RGB(fields[3].AsInteger,fields[4].AsInteger,fields[5].AsInteger);
     FSimName:=fields[2].AsString;
