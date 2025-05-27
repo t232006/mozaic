@@ -127,7 +127,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="auxilary\auxilaryClasses.pas"/>
+        <DCCReference Include="auxilaryClasses.pas"/>
         <RcItem Include="images\pipette.cur">
             <ResourceType>CURSOR</ResourceType>
             <ResourceId>Cursor_2</ResourceId>

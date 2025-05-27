@@ -12,6 +12,7 @@ object ColorsForm: TColorsForm
   Font.Style = []
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   TextHeight = 15
   object dg: TStringGrid
     Left = 0
@@ -21,7 +22,7 @@ object ColorsForm: TColorsForm
     TabStop = False
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
-    ColCount = 2
+    ColCount = 1
     DefaultColWidth = 164
     DefaultRowHeight = 30
     FixedCols = 0

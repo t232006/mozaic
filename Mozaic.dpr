@@ -14,7 +14,7 @@ uses
   contrast in 'contrast.pas',
   resolution in 'resolution.pas',
   shapebut in 'shapebut.pas' {ShapeButton: TFrame},
-  auxilaryClasses in 'auxilary\auxilaryClasses.pas';
+  auxilaryClasses in 'auxilaryClasses.pas';
 
 {$R *.res}
 

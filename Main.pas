@@ -126,6 +126,7 @@ begin
         l.TryGetValue(map[i,j],val);
         l.AddOrSetValue(map[i,j],val+1);
       end;
+    m:=l.ToArray;
     colorsform.setpallete(m);
 
     //printnumber;
