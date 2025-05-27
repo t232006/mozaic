@@ -298,7 +298,6 @@ end;
 
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
   State: TGridDrawState);
-  var val: word;
 begin
   if not(l.ContainsKey(map[ARow,ACol])) then l.Add(map[ARow,Acol],0) ;
 

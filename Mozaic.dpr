@@ -13,7 +13,8 @@ uses
   PaintGrid in '..\myComponents\PaintGrid\PaintGrid.pas',
   contrast in 'contrast.pas',
   resolution in 'resolution.pas',
-  shapebut in 'shapebut.pas' {ShapeButton: TFrame};
+  shapebut in 'shapebut.pas' {ShapeButton: TFrame},
+  auxilaryClasses in 'auxilary\auxilaryClasses.pas';
 
 {$R *.res}
 

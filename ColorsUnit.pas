@@ -6,24 +6,14 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
-  Vcl.ExtCtrls, contrast;
+  Vcl.ExtCtrls, contrast, auxilaryClasses;
 
 type
-  TCell = class
-    color: TColor;
-    number: byte;
-    amount: word;
-    pressed: boolean;
-    private
-    function GetHex:string;
-    public
-    property HexColor:string read GetHex;
-  end;
   TColorsForm = class(TForm)
-    ToolBar1: TToolBar;
     ColorDialog1: TColorDialog;
-    rgInform: TRadioGroup;
     dg: TStringGrid;
+    rgInform: TRadioGroup;
+    selector: TComboBox;
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
     procedure DgSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -34,6 +24,7 @@ type
     procedure ToolButton1Click(Sender: TObject);
     procedure rgInformClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure selectorCloseUp(Sender: TObject);
   private
 
     FArPallete:TArray<TPair<TColor,word>>;
@@ -44,7 +35,7 @@ type
       //property Pallete: TDictionary<TColor, word> write SetFpallete;
        procedure SetPallete(arpallete:TArray<TPair<TColor,word>> );
   end;
-
+const RCOUNT=16;
 var
   ColorsForm: TColorsForm;
   arrow: Tbitmap;
@@ -58,7 +49,7 @@ procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 var s:string; num:word;  curcol: TColor;  //t:TTextformat;
 begin
-      num:=(ACol div 2) * 8 + ARow;
+      num:=(ACol div 2) * RCOUNT + ARow;
       if (length(FarPallete)>num) and (length(farpallete)>0) then
         with dg.Canvas do begin
           //curCol:=Farpallete[num].Key;
@@ -90,7 +81,7 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
        colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
        if colordialog1.Execute then
         begin
-          //curcol:=Farpallete[ce.X*8+ce.y].Key;
+          //curcol:=Farpallete[ce.X*RCOUNT+ce.y].Key;
           dg.Canvas.Brush.Color:=colordialog1.Color;
           for row := 0 to dg.RowCount-1 do
           for col := 0 to dg.ColCount-1 do
@@ -150,11 +141,16 @@ var s:string; re:trect; t:TTextformat;
 begin
   case rgInform.ItemIndex of
              0: s:=inttostr((dg.Objects[aCol-1,arow] as TCell).number);
-             1: s:=(dg.Objects[aCol-1,arow] as TCell).HexColor;
+             1: if selector.ItemIndex=0 then
+                 s:=(dg.Objects[aCol-1,arow] as TCell).HexColor
+                 else
+                 s:=(dg.Objects[acol-1,arow] as TCell).SimHex;
              2: s:=inttostr((dg.Objects[aCol-1,arow] as TCell).amount);
+             3: s:=(dg.Objects[acol-1, arow] as TCell).SimName;
+             4: s:=inttostr((dg.Objects[acol-1, arow] as TCell).SimRAL);
   end;
     dg.Canvas.Brush.Color:=dg.Color;
-    //dg.Canvas.Font.Size:=12;
+    dg.Canvas.Font.Size:=12;
     dg.Canvas.Font.Name:='Tahoma';
     re:=dg.CellRect(acol,arow) ;
     dg.Canvas.TextRect(re,re.Left,re.Top,s);
@@ -165,13 +161,29 @@ begin
   dg.Repaint;
 end;
 
+procedure TColorsForm.selectorCloseUp(Sender: TObject);
+begin
+  with rginform do
+  begin
+    Items.Clear;
+    items.Add('номера');items.Add('цвета');items.Add('количество');
+    case selector.itemindex of
+    1: begin
+      items.Add('названия');
+      items.Add('RAL');
+    end;
+    2: items.Add('названия');
+    end;
+  end;
+end;
+
 procedure TColorsForm.SetPallete(arpallete:TArray<TPair<TColor,word>> );
 var mycell:TCell;
 begin
      FArPallete:=arpallete;
-     //dg.RowCount:=8;
-     dg.ColCount:=2*(length(arpallete) div 8);
-     if (length(farpallete) mod 8 <> 0) then dg.ColCount:=dg.ColCount+2;
+     //dg.RowCount:=RCOUNT;
+     dg.ColCount:=2*(length(arpallete) div RCOUNT);
+     if (length(farpallete) mod RCOUNT <> 0) then dg.ColCount:=dg.ColCount+2;
 
       if dg.ColCount mod 2 <> 0 then dg.ColCount:=dg.ColCount+1;
      for var i := Low(farpallete) to High(farpallete) do
@@ -182,7 +194,7 @@ begin
        mycell.number:=i;
        mycell.amount:=farpallete[i].Value;
        mycell.pressed:=false;
-       dg.Objects[2*(i div 8), (i mod 8)]:=mycell;
+       dg.Objects[2*(i div RCOUNT), (i mod RCOUNT)]:=mycell;
        //mycell.Destroy;
      end;
 
@@ -195,11 +207,5 @@ begin
    dg.Repaint;
 end;
 
-{ TCell }
-
-function TCell.GetHex: string;
-begin
-   result:= copy(IntToHex(colortorgb(rgb(getbvalue(color),getgvalue(color),getrvalue(color)))),3,6); //to swap r<->b for true hex representation
-end;
 
 end.

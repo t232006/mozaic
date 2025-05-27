@@ -1,0 +1,94 @@
+unit auxilaryClasses;
+
+interface
+uses windows, sysutils, graphics, FireDAC.Comp.Client;
+type
+TCell = class
+
+    number: byte;
+    amount: word;
+    pressed: boolean;
+    {Similair: TColor;
+    SimName: string;}
+    private
+    Fcolor: TColor;
+    FSimName: string;
+    FConnection: TfdConnection;
+    Fquery: TfdQuery;
+    FSimilar: TColor;
+    FRAL: boolean;
+    FSimHex: string;
+    FSimRAL: word;
+    function GetHex:string;
+    procedure SetColor(const Value: TColor);
+    function GetSim(RAL: boolean): TColor;
+    procedure SetRAL(const Value: boolean);
+    public
+    property RAL:boolean read FRAL write SetRAL;
+    property Color:TColor read FColor write SetColor;
+    property HexColor:string read GetHex;
+    property Similar:TColor read FSimilar;
+    property SimName: string read FSimName;
+    property SimHex: string read FSimHex;
+    property SimRAL: word read FSimRAL;
+
+    constructor Create;
+  end;
+implementation
+
+
+{ TCell }
+
+
+
+constructor TCell.Create;
+begin
+    with fconnection do
+    begin
+      fconnection:=tfdconnection.Create(nil);
+      DriverName:='SQLite';
+      Params.Database:='ListOfColors.db';
+      LoginPrompt:=false;
+    end;
+    fquery:=tfdquery.Create(nil);
+    Fquery.Connection:=FConnection ;
+
+    //FTable.Active:=true;
+
+end;
+
+function TCell.GetHex: string;
+begin
+   result:= copy(IntToHex(colortorgb(rgb(getbvalue(color),getgvalue(color),getrvalue(color)))),3,6); //to swap r<->b for true hex representation
+end;
+
+procedure TCell.SetColor(const Value: TColor);
+var r,g,b: integer;
+begin
+  FColor := Value;
+  r:=GetRValue(FColor);
+  g:=GetGValue(FColor);
+  b:=GetBValue(FColor);
+  with fquery do
+  begin
+    SQL.Text:=Format('update colors set s=(%d-r)*(%d-r)+(%d-g)*(%d-g)+(%d-b)*(%d-b)',[r,r,g,g,b,b]);
+    ExecSQL;
+    SQL.Clear;
+    SQL.Add('select * from colors where s=(select min(s) from colors)');
+    if RAL=true then
+    SQL.Add('and RAL is not null') else SQL.Add('and RAL is null');
+    Open;
+    FSimilar:=RGB(fields[3].AsInteger,fields[4].AsInteger,fields[5].AsInteger);
+    FSimName:=fields[2].AsString;
+    FSimRAL:=fields[1].AsInteger;
+    FSimhex:=fields[0].AsString;
+  end;
+end;
+
+procedure TCell.SetRAL(const Value: boolean);
+begin
+  FRAL := Value;
+  SetColor(Fcolor);
+end;
+
+end.

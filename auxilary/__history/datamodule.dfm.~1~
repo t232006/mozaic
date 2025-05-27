@@ -1,0 +1,17 @@
+object DataModule1: TDataModule1
+  OnCreate = DataModuleCreate
+  Height = 94
+  Width = 227
+  object FDConnection: TFDConnection
+    Params.Strings = (
+      'DriverID=SQLite')
+    LoginPrompt = False
+    Left = 136
+    Top = 8
+  end
+  object FDQuery1: TFDQuery
+    Connection = FDConnection
+    Left = 56
+    Top = 24
+  end
+end

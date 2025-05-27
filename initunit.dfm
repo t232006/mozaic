@@ -35,7 +35,7 @@ object initForm: TinitForm
     Associate = RowCount
     Increment = 5
     Position = 30
-    TabOrder = 1
+    TabOrder = 8
     OnChangingEx = UpDown2ChangingEx
   end
   object ColCount: TLabeledEdit
@@ -46,7 +46,7 @@ object initForm: TinitForm
     EditLabel.Width = 42
     EditLabel.Height = 13
     EditLabel.Caption = #1082#1086#1083#1086#1085#1086#1082
-    TabOrder = 2
+    TabOrder = 4
     Text = '45'
     OnKeyPress = Col
   end
@@ -58,7 +58,7 @@ object initForm: TinitForm
     EditLabel.Width = 29
     EditLabel.Height = 13
     EditLabel.Caption = #1089#1090#1088#1086#1082
-    TabOrder = 3
+    TabOrder = 5
     Text = '30'
     OnKeyPress = RowCountKeyPress
   end
@@ -70,7 +70,7 @@ object initForm: TinitForm
     Enabled = False
     Kind = bkOK
     NumGlyphs = 2
-    TabOrder = 5
+    TabOrder = 6
     OnClick = BitBtn1Click
   end
   object BitBtn2: TBitBtn
@@ -80,7 +80,7 @@ object initForm: TinitForm
     Height = 25
     Kind = bkCancel
     NumGlyphs = 2
-    TabOrder = 6
+    TabOrder = 7
     OnClick = BitBtn2Click
   end
   object Button1: TButton
@@ -93,7 +93,7 @@ object initForm: TinitForm
     Images = ImageList1
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 4
+    TabOrder = 1
     OnClick = Button1Click
   end
   object progrBar: TProgressBar
@@ -102,7 +102,7 @@ object initForm: TinitForm
     Width = 266
     Height = 17
     Align = alBottom
-    TabOrder = 7
+    TabOrder = 9
   end
   object ColorCount: TComboBox
     Left = 32
@@ -111,7 +111,7 @@ object initForm: TinitForm
     Height = 21
     DropDownCount = 5
     ItemIndex = 1
-    TabOrder = 8
+    TabOrder = 3
     Text = '8'
     Items.Strings = (
       '4'
@@ -130,7 +130,7 @@ object initForm: TinitForm
     Images = ImageList1
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 9
+    TabOrder = 2
     OnClick = Button2Click
   end
   object proport: TCheckBox
