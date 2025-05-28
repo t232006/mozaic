@@ -30,8 +30,10 @@ type
 
     FArPallete:TArray<TPair<TColor,word>>;
     procedure printText(Acol, arow: integer);
+    procedure printColor(Color: TColor);
+    procedure RepaintBySim(origin: boolean; RAL: boolean);
     {$j+}
-    const pressed: boolean=false;
+    //const pressed: boolean=false;
   public
       //property Pallete: TDictionary<TColor, word> write SetFpallete;
        procedure SetPallete(arpallete:TArray<TPair<TColor,word>> );
@@ -72,22 +74,34 @@ end;
 
 procedure TColorsForm.DgDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
-var s:string; num:word;  curcol: TColor;  //t:TTextformat;
+var s:string; num:word;  c:TCell;
 begin
       num:=ACol * RCOUNT + ARow;
       if (length(FarPallete)>num) and (length(farpallete)>0) then
+
         with dg.Canvas do
         begin
-            curcol:=(dg.Objects[aCol,arow] as TCell).color;
-            Brush.Color:=curcol;
-            Rectangle(System.Classes.Rect(Rect.left,rect.Top,rect.Left+COLWIDTH,rect.Bottom));
-            if (dg.Objects[acol, arow] as tcell).pressed then
-            begin
-               printtext(acol,arow);
-               dg.Canvas.draw(dg.CellRect(acol,arow).Left+COLWIDTH+30, dg.CellRect(acol,arow).Top+10,arrow);
-            end
-            else
-                printtext(acol,arow);
+          c:=dg.Objects[aCol,arow] as TCell;
+          case selector.ItemIndex of
+          0: Brush.Color:=c.color;
+          1: begin
+             c.RAL:=true;
+             Brush.Color:=c.Similar
+            end;
+          2: begin
+              c.RAL:=false;
+              Brush.Color:=c.Similar;
+            end;
+          end;
+
+          Rectangle(System.Classes.Rect(Rect.left,rect.Top,rect.Left+COLWIDTH,rect.Bottom));
+          if (dg.Objects[acol, arow] as tcell).pressed then
+          begin
+             printtext(acol,arow);
+             dg.Canvas.draw(dg.CellRect(acol,arow).Left+COLWIDTH+30, dg.CellRect(acol,arow).Top+10,arrow);
+          end
+          else
+              printtext(acol,arow);
             //printtext(acol,arow);
         end;
 
@@ -101,32 +115,11 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
    if button=TMouseButton.mbRight then
    begin
      dg.MouseToCell(x,y, ce.X, ce.y);
-
-       colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
-       if colordialog1.Execute then
-        begin
-          //curcol:=Farpallete[ce.X*RCOUNT+ce.y].Key;
-          dg.Canvas.Brush.Color:=colordialog1.Color;
-          for row := 0 to dg.RowCount-1 do
-          for col := 0 to dg.ColCount-1 do
-            with (dg.Objects[col, row] as tcell) do begin
-              //if col mod 2 <> 0 then continue;
-              if not(dg.Objects[col, row] is tcell) then break; //exit
-
-              if pressed=false then continue;
-              curcol:=color;
-              dg.Canvas.Rectangle(dg.CellRect(col,row));
-              mosaic.selectColor(curcol, true);
-              mosaic.ChangeColor(colordialog1.Color, curcol);
-              color:=colordialog1.Color;
-              pressed:=false;
-            end;
-          //curcol:=colordialog1.Color;
-          dg.Repaint;
-          mosaic.pg.Repaint;
-          //dgselectcell(sender,ce.X,ce.Y,tr);
-     end;
-
+     colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
+     if colordialog1.Execute then
+      begin
+          printcolor(colordialog1.Color);
+      end;
    end;
 end;
 
@@ -162,18 +155,42 @@ begin
   accomodation;
 end;
 
-procedure TColorsForm.printText(Acol, arow: integer);
-var s:string; re,r:trect; t:TTextformat;
+procedure TColorsForm.printColor(color: TColor);//changes color for selected cells in mainForm
+var row, col: integer; c: TCell;
 begin
+          //dg.Canvas.Brush.Color:=Color;
+      for col := 0 to dg.ColCount-1 do
+      for row := 0 to dg.RowCount-1 do
+      begin
+        if not(dg.Objects[col, row] is tcell) then break; //exit
+        c:=dg.Objects[col, row] as tcell;
+        if c.pressed=false then continue;
+        //dg.Canvas.Rectangle(dg.CellRect(col,row));
+        mosaic.selectColor(c.Color, true);  //unselect
+        if color<>c.Color then
+          mosaic.ChangeColor(Color, c.Color) //new color, old color
+        else
+          mosaic.ChangeColor(Color, c.Similar);
+        //color:=colordialog1.Color;
+        c.pressed:=false;
+      end;
+      dg.Repaint;
+      mosaic.pg.Repaint;
+end;
+
+procedure TColorsForm.printText(Acol, arow: integer);
+var s:string; re,r:trect; t:TTextformat;  c:TCell;
+begin
+  c:=dg.Objects[aCol,arow] as TCell;
   case rgInform.ItemIndex of
-             0: s:=inttostr((dg.Objects[aCol,arow] as TCell).number);
+             0: s:=inttostr(c.number);
              1: if selector.ItemIndex=0 then
-                 s:=(dg.Objects[aCol,arow] as TCell).HexColor
+                 s:=c.HexColor
                  else
-                 s:=(dg.Objects[acol,arow] as TCell).SimHex;
-             2: s:=inttostr((dg.Objects[aCol,arow] as TCell).amount);
-             3: s:=(dg.Objects[acol, arow] as TCell).SimName;
-             4: s:=inttostr((dg.Objects[acol, arow] as TCell).SimRAL);
+                 s:=c.SimHex;
+             2: s:=inttostr(c.amount);
+             3: s:=c.SimName;
+             4: s:=inttostr(c.SimRAL);
   end;
     dg.Canvas.Brush.Color:=dg.Color;
     if length(s)<=20 then dg.Canvas.Font.Size:=12 else
@@ -184,25 +201,50 @@ begin
     dg.Canvas.TextRect(re,re.Left,re.Top,s);
 end;
 
+procedure TColorsForm.RepaintBySim(origin: boolean; RAL: boolean); //repaints mainForm origins of similar colors
+var row, col: integer; c: TCell;
+begin
+    for col := 0 to dg.ColCount-1 do
+    for row := 0 to dg.RowCount-1 do
+      begin
+        if not(dg.Objects[col,row] is tcell) then break;
+        c:=dg.Objects[col,row] as tcell;
+        c.RAL:=ral;
+        c.pressed:=true;
+        if origin then printcolor(c.Color) else
+        printColor(c.Similar);
+      end;
+
+end;
+
 procedure TColorsForm.rgInformClick(Sender: TObject);
 begin
   dg.Repaint;
 end;
 
 procedure TColorsForm.selectorCloseUp(Sender: TObject);
+var it: byte;
 begin
   with rginform do
   begin
+    it:=itemindex;
     Items.Clear;
     items.Add('номера');items.Add('цвета');items.Add('количество');
     case selector.itemindex of
     1: begin
       items.Add('названия');
       items.Add('RAL');
+      repaintbysim(false, true);
     end;
-    2: items.Add('названия');
+    2: begin
+      items.Add('названия');
+      repaintbysim(false, false);
     end;
+    else repaintbysim(true, false);
+    end;
+    itemindex:=it;
   end;
+  //dg.Repaint;
 end;
 
 procedure TColorsForm.SetPallete(arpallete:TArray<TPair<TColor,word>> );
