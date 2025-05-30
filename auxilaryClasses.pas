@@ -21,20 +21,22 @@ TCell = class
     FConn: TfdConnection;
     Fquery: TfdQuery;
     FSimilar: TColor;
-    FRAL: boolean;
+    FStandart: string;
     FSimHex: string;
-    FSimRAL: word;
+    FSimStand: string;
+    FStandNum: string;
     function GetHex:string;
     procedure SetColor(const Value: TColor);
-    procedure SetRAL(const Value: boolean);
+    procedure SetStandart(const Value: string);
     public
-    property RAL:boolean read FRAL write SetRAL;
+    property Standart:string read FStandart write SetStandart;
     property Color:TColor read FColor write SetColor;
     property HexColor:string read GetHex;
     property Similar:TColor read FSimilar;
     property SimName: string read FSimName;
     property SimHex: string read FSimHex;
-    property SimRAL: word read FSimRAL;
+    property SimStand: string read FSimStand;
+    property SimStandartNumber: string read FStandNum;
 
     constructor Create;
   end;
@@ -51,6 +53,7 @@ begin
   Fconn.Connected:=true;
   fquery:=tfdquery.Create(application);
   fquery.Connection:=fconn;
+  standart:='Classic';
 end;
 
 function TCell.GetHex: string;
@@ -59,7 +62,7 @@ begin
 end;
 
 procedure TCell.SetColor(const Value: TColor);
-var r,g,b: integer;
+var r,g,b: integer; s:string;
 begin
   FColor := Value;
   r:=GetRValue(FColor);
@@ -67,24 +70,26 @@ begin
   b:=GetBValue(FColor);
   with FQuery do
   begin
+    s:='where standart='''+standart+''' ';
     SQL.Text:=Format('update colors set s=(%d-r)*(%d-r)+(%d-g)*(%d-g)+(%d-b)*(%d-b)',[r,r,g,g,b,b]);
+    SQL.Add(s);
     ExecSQL;
     SQL.Clear;
-    SQL.Add('select * from colors where s=(select min(s) from colors ');
-    if RAL=true then
-    SQL.Add('where RAL is not null') else SQL.Add('where RAL is null');
+    SQL.Add('select * from colors '+s+ 'and s=(select min(s) from colors ');
+    SQL.Add(s);
     SQL.add(')');
     Open;
-    FSimilar:=RGB(fields[3].AsInteger,fields[4].AsInteger,fields[5].AsInteger);
-    FSimName:=fields[2].AsString;
-    FSimRAL:=fields[1].AsInteger;
-    FSimhex:=fields[0].AsString;
+    FSimilar:=RGB(fields[4].AsInteger,fields[5].AsInteger,fields[6].AsInteger);
+    FSimName:=fields[3].AsString;
+    FSimStand:=fields[0].AsString;
+    FSimhex:=fields[1].AsString;
+    FStandNum:=fields[2].AsString;
   end;
 end;
 
-procedure TCell.SetRAL(const Value: boolean);
+procedure TCell.SetStandart(const Value: string);
 begin
-  FRAL := Value;
+  FStandart := Value;
   SetColor(Fcolor);
 end;
 

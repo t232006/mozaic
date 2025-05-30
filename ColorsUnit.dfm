@@ -2,8 +2,8 @@ object ColorsForm: TColorsForm
   Left = 0
   Top = 0
   Caption = 'ColorsForm'
-  ClientHeight = 513
-  ClientWidth = 659
+  ClientHeight = 334
+  ClientWidth = 580
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,34 +11,34 @@ object ColorsForm: TColorsForm
   Font.Name = 'Segoe UI'
   Font.Style = []
   OnClose = FormClose
-  OnCreate = FormCreate
   OnResize = FormResize
   TextHeight = 15
   object dg: TStringGrid
     Left = 0
     Top = 0
-    Width = 659
-    Height = 449
+    Width = 580
+    Height = 270
     TabStop = False
     Align = alTop
     Anchors = [akLeft, akTop, akRight, akBottom]
     ColCount = 1
     DefaultColWidth = 300
     DefaultRowHeight = 30
+    DoubleBuffered = True
     FixedCols = 0
     RowCount = 16
     FixedRows = 0
+    ParentDoubleBuffered = False
     TabOrder = 0
     OnDrawCell = DgDrawCell
     OnMouseUp = DgMouseUp
     OnSelectCell = DgSelectCell
-    ExplicitWidth = 548
   end
   object rgInform: TRadioGroup
     Left = 0
-    Top = 449
-    Width = 547
-    Height = 64
+    Top = 270
+    Width = 468
+    Height = 47
     ParentCustomHint = False
     Align = alClient
     BiDiMode = bdLeftToRight
@@ -68,26 +68,32 @@ object ColorsForm: TColorsForm
     ShowHint = False
     TabOrder = 1
     OnClick = rgInformClick
-    ExplicitTop = 464
-    ExplicitWidth = 362
-    ExplicitHeight = 49
   end
   object selector: TComboBox
-    Left = 547
-    Top = 449
+    Left = 468
+    Top = 270
     Width = 112
     Height = 23
     Align = alRight
     ItemIndex = 0
     TabOrder = 2
     Text = #1086#1088#1080#1075#1080#1085#1072#1083#1100#1085#1099#1077
-    OnCloseUp = selectorCloseUp
+    OnChange = selectorCloseUp
     Items.Strings = (
       #1086#1088#1080#1075#1080#1085#1072#1083#1100#1085#1099#1077
-      'RAL classic'
-      #1090#1088#1072#1076#1080#1094#1080#1086#1085#1085#1099#1077)
-    ExplicitLeft = 474
-    ExplicitTop = 305
+      'RAL'
+      'Classic'
+      'DMC')
+  end
+  object PG: TProgressBar
+    Left = 0
+    Top = 317
+    Width = 580
+    Height = 17
+    Align = alBottom
+    MarqueeInterval = 1
+    Step = 1
+    TabOrder = 3
   end
   object ColorDialog1: TColorDialog
     Options = [cdSolidColor, cdAnyColor]
