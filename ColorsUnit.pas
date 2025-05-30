@@ -94,8 +94,9 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
      colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
      if colordialog1.Execute then
       begin
-          (dg.Objects[ce.X, ce.y] as tcell).color:=colordialog1.Color;
           printcolor(colordialog1.Color);
+          (dg.Objects[ce.X, ce.y] as tcell).color:=colordialog1.Color;
+          dg.Repaint;
       end;
    end;
 end;
