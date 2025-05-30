@@ -4394,7 +4394,7 @@ object mosaic: Tmosaic
     end
   end
   object SaveD1: TSaveDialog
-    Filter = 'JPEG|*.jpg'
+    Filter = 'BMP|*.bmp'
     Left = 240
     Top = 96
   end

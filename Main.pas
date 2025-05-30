@@ -85,7 +85,7 @@ type
     l: TDictionary<TColor, word>;
      m: System.TArray<TPair<Tcolor,word>>;
     procedure DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
-    procedure DrawCell(rect:TRect; s:string; Awhereto: TCanvas);
+    procedure DrawCell(rect:TRect; s:string; whereTo: TCanvas);
     procedure DrawMenu(num:shortint);
     function SeekInd(Acol: tColor): word;
   public
@@ -224,7 +224,7 @@ begin
     for var i := 0 to pg.RowCount-1 do
       for var j := 0 to pg.ColCount-1 do
         DrawCanvas(j,i,pg.CellRect(j,i),saver.Canvas);
-    saver.SaveToFile(SaveD1.FileName+'.jpg');
+    saver.SaveToFile(SaveD1.FileName+'.bmp');
   end;
 end;
 
@@ -369,7 +369,7 @@ begin
             Pen.Width:=1;
             Pen.Color:=0;
             Rectangle(pg.CellRect(j,i));
-            DrawCell(pg.CellRect(j,i),inttostr(seekind(color)),pg.Canvas);
+            DrawCell(pg.CellRect(j,i),inttostr(seekind(color)), pg.Canvas);
           end
           else
           begin
@@ -472,9 +472,9 @@ with WhereTo do
   end;
 end;
 
-procedure Tmosaic.DrawCell(rect:TRect; s:string; Awhereto: TCanvas);
+procedure Tmosaic.DrawCell(rect:TRect; s:string; whereto: TCanvas);
 begin
-    with pg.Canvas do
+    with whereto do
     begin
       if digitdisign.tag=9 then
       begin
