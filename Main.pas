@@ -225,6 +225,7 @@ begin
       for var j := 0 to pg.ColCount-1 do
         DrawCanvas(j,i,pg.CellRect(j,i),saver.Canvas);
     saver.SaveToFile(SaveD1.FileName+'.bmp');
+    saver.Destroy;
   end;
 end;
 

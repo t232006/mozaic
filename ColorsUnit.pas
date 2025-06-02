@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
-  Vcl.ExtCtrls, contrast, auxilaryClasses;
+  Vcl.ExtCtrls, contrast, auxilaryClasses, Vcl.Buttons;
 
 type
   TColorsForm = class(TForm)
@@ -15,6 +15,9 @@ type
     rgInform: TRadioGroup;
     selector: TComboBox;
     PG: TProgressBar;
+    SpeedButton1: TSpeedButton;
+    SaveDialog1: TSaveDialog;
+    ImageList1: TImageList;
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
     procedure DgSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -26,6 +29,7 @@ type
     procedure rgInformClick(Sender: TObject);
     procedure selectorCloseUp(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
 
     FArPallete:TArray<TPair<TColor,word>>;
@@ -206,6 +210,7 @@ begin
         printColor(c.Similar);
         pg.StepIt;
       end;
+    pg.Position:=0;
 
 end;
 
@@ -245,6 +250,20 @@ procedure TColorsForm.SetPallete(arpallete:TArray<TPair<TColor,word>> );
 begin
      FArPallete:=arpallete;
      //Accomodation;
+end;
+
+procedure TColorsForm.SpeedButton1Click(Sender: TObject);
+var saver: TBitmap; r:TRect;
+begin
+  if SaveDialog1.Execute then
+  begin
+    saver:=TBitmap.Create;
+    saver.Height:=dg.Height; saver.Width:=dg.Width;
+    r:=rect(0,0,dg.Width-10, dg.Height-10);
+    saver.Canvas.CopyRect(r, dg.Canvas,r);
+    saver.SaveToFile(savedialog1.FileName+'.bmp');
+
+  end;
 end;
 
 procedure TColorsForm.ToolButton1Click(Sender: TObject);
