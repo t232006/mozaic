@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
-  Vcl.ExtCtrls, contrast, auxilaryClasses, Vcl.Buttons;
+  Vcl.ExtCtrls, contrast, auxilaryClasses, Vcl.Buttons, altPopup;
 
 type
   TColorsForm = class(TForm)
@@ -88,20 +88,28 @@ end;
 
 procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);    //changes the color
-  var ce:TPoint;   r: TRect;
+  var ce:TPoint; alterpop: TPopupForm;  //r: TRect;
   //const tr: boolean=true;
   begin
+   dg.MouseToCell(x,y, ce.X, ce.y);
    if button=TMouseButton.mbRight then
-   begin
-     dg.MouseToCell(x,y, ce.X, ce.y);
-     r:=dg.CellRect(ce.x,ce.Y);
-     colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
-     if colordialog1.Execute then
-      begin
-          printcolor(colordialog1.Color);
-          (dg.Objects[ce.X, ce.y] as tcell).color:=colordialog1.Color;
-          dg.Repaint;
-      end;
+   case selector.itemindex of
+   0:
+     begin
+       //r:=dg.CellRect(ce.x,ce.Y);
+       colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
+       if colordialog1.Execute then
+        begin
+            printcolor(colordialog1.Color);
+            (dg.Objects[ce.X, ce.y] as tcell).color:=colordialog1.Color;
+            dg.Repaint;
+        end;
+     end;
+   1,2,3:
+     begin
+         alterpop:=TPopupForm.Create(Application,dg.object[ce.x,ce.y] as Tcell);
+         alterpop.show;
+     end;
    end;
 end;
 

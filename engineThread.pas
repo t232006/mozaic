@@ -14,12 +14,12 @@ TMap=array of array of TColor;
   private
     fColCount, fRowCount, fColorCount: integer;
     fPicture: TBitmap;
-    fPicImage: array of array of TColor;
+    //fPicImage: array of array of TColor;
     fMap: TMap;
     fbar: TProgressBar;
     FColCont: TList<TColor>;
     Fpool: 0..proc;
-    FFinish: boolean;
+    //FFinish: boolean;
     FOnFinish: TNotifyEvent;
     //fMediana: TMediaSplit;
     procedure startMap;

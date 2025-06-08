@@ -8,28 +8,57 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
   FireDAC.Phys, FireDAC.VCLUI.Wait, Data.FMTBcd, Data.SqlExpr,
-  FireDAC.Comp.Client, ColorsUnit;
+  FireDAC.Comp.Client, auxilaryClasses, Vcl.StdCtrls, Vcl.DBCtrls,
+  Vcl.ExtCtrls, Vcl.DBCGrids;
 
 type
-  TForm2 = class(TForm)
-    DBGrid1: TDBGrid;
+  TPopupForm = class(TForm)
     DataSource: TDataSource;
+    DBCtrlGrid1: TDBCtrlGrid;
+    Shape1: TShape;
+    DBText1: TDBText;
+    constructor Create(owner: Tcomponent; cell: TCell);
+    procedure DBCtrlGrid1PaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
+    procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
+
+    FCell: TCell;
   public
-    procedure Envoke(Cell:TCell);
   end;
 
 var
-  Form2: TForm2;
+  PopupForm: TPopupForm;
 
 implementation
+uses ColorsUnit;
 
 {$R *.dfm}
 
-procedure TForm2.Envoke(Cell: TCell);
+
+constructor TPopupForm.Create(owner: Tcomponent; cell: TCell);
 begin
-  DataSource.dataset:=Cell.Query;
+    FCell:=cell;
+end;
+
+procedure TPopupForm.DBCtrlGrid1PaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
+var r,g,b: byte;
+begin
+  with datasource.dataset do
+  begin
+    r:=fieldbyname('r').asInteger;
+    g:=fieldbyname('g').asInteger;
+    b:=fieldbyname('b').asInteger;
+    shape1.brush.color:=rgb(r,g,b);
+  end;
+end;
+
+
+
+procedure TPopupForm.FormCreate(Sender: TObject);
+begin
+  Fcell.state:=smany;
+  DataSource.dataset:=Fcell.query;
+  dbtext1.DataField:='name';
 end;
 
 end.

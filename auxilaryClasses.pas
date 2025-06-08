@@ -8,6 +8,7 @@ uses windows, sysutils, graphics, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
   FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.VCLUI.Wait;
 type
+TState = (sMany, sOne);
 TCell = class
 
     number: byte;
@@ -25,9 +26,12 @@ TCell = class
     FSimHex: string;
     FSimStand: string;
     FStandNum: string;
+    FState: TState;
     function GetHex:string;
     procedure SetColor(const Value: TColor);
     procedure SetStandart(const Value: string);
+    procedure SetState(const Value: TState);
+
     public
     property Standart:string read FStandart write SetStandart;
     property Color:TColor read FColor write SetColor;
@@ -37,7 +41,8 @@ TCell = class
     property SimHex: string read FSimHex;
     property SimStand: string read FSimStand;
     property SimStandartNumber: string read FStandNum;
-
+    property State: TState write SetState;
+    property Query: TFdQuery read FQuery;
     constructor Create;
   end;
 implementation
@@ -62,7 +67,7 @@ begin
 end;
 
 procedure TCell.SetColor(const Value: TColor);
-var r,g,b: integer; s:string;
+var r,g,b: integer;  s:string;
 begin
   FColor := Value;
   r:=GetRValue(FColor);
@@ -74,11 +79,7 @@ begin
     SQL.Text:=Format('update colors set s=(%d-r)*(%d-r)+(%d-g)*(%d-g)+(%d-b)*(%d-b)',[r,r,g,g,b,b]);
     SQL.Add(s);
     ExecSQL;
-    SQL.Clear;
-    SQL.Add('select * from colors '+s+ 'and s=(select min(s) from colors ');
-    SQL.Add(s);
-    SQL.add(')');
-    Open;
+    SetState(sOne);
     FSimilar:=RGB(fields[4].AsInteger,fields[5].AsInteger,fields[6].AsInteger);
     FSimName:=fields[3].AsString;
     FSimStand:=fields[0].AsString;
@@ -91,6 +92,25 @@ procedure TCell.SetStandart(const Value: string);
 begin
   FStandart := Value;
   SetColor(Fcolor);
+end;
+
+procedure TCell.SetState(const Value: TState);
+var s:string;
+begin
+  FState:=value;
+  s:='where standart='''+standart+''' ';
+  with FQuery do
+  begin
+    SQL.Clear;
+    if value=sOne then
+    begin
+      SQL.Add('select * from colors '+s+ 'and s=(select min(s) from colors ');
+      SQL.Add(s);
+      SQL.add(')');
+    end else
+      SQL.Add('select * from colors '+s);
+    Open;
+  end;
 end;
 
 end.

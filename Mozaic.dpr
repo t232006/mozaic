@@ -10,11 +10,11 @@ uses
   ColorsUnit in 'ColorsUnit.pas' {ColorsForm},
   MiniThread in 'MiniThread.pas',
   MediaClass in 'MediaClass.pas',
-  PaintGrid in '..\myComponents\PaintGrid\PaintGrid.pas',
   contrast in 'contrast.pas',
   resolution in 'resolution.pas',
   shapebut in 'shapebut.pas' {ShapeButton: TFrame},
-  auxilaryClasses in 'auxilaryClasses.pas';
+  auxilaryClasses in 'auxilaryClasses.pas',
+  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas';
 
 {$R *.res}
 

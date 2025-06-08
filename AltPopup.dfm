@@ -1,8 +1,8 @@
-object Form2: TForm2
+object PopupForm: TPopupForm
   Left = 0
   Top = 0
-  Caption = 'Form2'
-  ClientHeight = 396
+  Caption = 'PopupForm'
+  ClientHeight = 477
   ClientWidth = 736
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -10,19 +10,37 @@ object Form2: TForm2
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnCreate = FormCreate
   TextHeight = 15
-  object DBGrid1: TDBGrid
+  object DBCtrlGrid1: TDBCtrlGrid
     Left = 0
-    Top = 0
+    Top = 81
     Width = 736
     Height = 396
-    Align = alClient
+    Align = alBottom
+    PanelHeight = 66
+    PanelWidth = 719
     TabOrder = 0
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -12
-    TitleFont.Name = 'Segoe UI'
-    TitleFont.Style = []
+    RowCount = 6
+    OnPaintPanel = DBCtrlGrid1PaintPanel
+    object Shape1: TShape
+      Left = 15
+      Top = 4
+      Width = 97
+      Height = 57
+    end
+    object DBText1: TDBText
+      Left = 320
+      Top = 16
+      Width = 329
+      Height = 33
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
   end
   object DataSource: TDataSource
     Left = 592
