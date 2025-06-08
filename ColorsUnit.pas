@@ -107,7 +107,7 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
      end;
    1,2,3:
      begin
-         alterpop:=TPopupForm.Create(Application,dg.object[ce.x,ce.y] as Tcell);
+         alterpop:=TPopupForm.Create(Application,dg.objects[ce.x,ce.y] as Tcell);
          alterpop.show;
      end;
    end;

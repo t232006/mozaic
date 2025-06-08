@@ -4,7 +4,7 @@
         <ProjectVersion>20.1</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -128,6 +128,10 @@
         </DCCReference>
         <DCCReference Include="auxilaryClasses.pas"/>
         <DCCReference Include="..\My components\PaintGrid\PaintGrid.pas"/>
+        <DCCReference Include="AltPopup.pas">
+            <Form>PopupForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <RcItem Include="images\pipette.cur">
             <ResourceType>CURSOR</ResourceType>
             <ResourceId>Cursor_2</ResourceId>

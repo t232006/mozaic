@@ -14,7 +14,8 @@ uses
   resolution in 'resolution.pas',
   shapebut in 'shapebut.pas' {ShapeButton: TFrame},
   auxilaryClasses in 'auxilaryClasses.pas',
-  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas';
+  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas',
+  AltPopup in 'AltPopup.pas' {PopupForm};
 
 {$R *.res}
 
@@ -24,5 +25,6 @@ begin
   Application.CreateForm(TinitForm, initForm);
   Application.CreateForm(Tmosaic, mosaic);
   Application.CreateForm(TColorsForm, ColorsForm);
+  //Application.CreateForm(TPopupForm, PopupForm);
   Application.Run;
 end.

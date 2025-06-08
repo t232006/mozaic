@@ -17,7 +17,7 @@ type
     DBCtrlGrid1: TDBCtrlGrid;
     Shape1: TShape;
     DBText1: TDBText;
-    constructor Create(owner: Tcomponent; cell: TCell);
+    constructor Create(owner: Tcomponent; cell: TCell);  overload;
     procedure DBCtrlGrid1PaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
     procedure FormCreate(Sender: TObject);
   private
@@ -37,6 +37,7 @@ uses ColorsUnit;
 
 constructor TPopupForm.Create(owner: Tcomponent; cell: TCell);
 begin
+    inherited Create(owner);
     FCell:=cell;
 end;
 
