@@ -9,7 +9,9 @@ uses
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
   FireDAC.Phys, FireDAC.VCLUI.Wait, Data.FMTBcd, Data.SqlExpr,
   FireDAC.Comp.Client, auxilaryClasses, Vcl.StdCtrls, Vcl.DBCtrls,
-  Vcl.ExtCtrls, Vcl.DBCGrids;
+  Vcl.ExtCtrls, Vcl.DBCGrids, FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
+  FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.Comp.DataSet;
 
 type
   TPopupForm = class(TForm)
@@ -17,9 +19,19 @@ type
     DBCtrlGrid1: TDBCtrlGrid;
     Shape1: TShape;
     DBText1: TDBText;
+    DBText2: TDBText;
+    DBText3: TDBText;
+    DBText4: TDBText;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Shape2: TShape;
+    Shape3: TShape;
+    DBText5: TDBText;
     constructor Create(owner: Tcomponent; cell: TCell);  overload;
     procedure DBCtrlGrid1PaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
     procedure FormCreate(Sender: TObject);
+    procedure DBCtrlGrid1Click(Sender: TObject);
   private
 
     FCell: TCell;
@@ -39,9 +51,10 @@ constructor TPopupForm.Create(owner: Tcomponent; cell: TCell);
 begin
     inherited Create(owner);
     FCell:=cell;
+    shape2.Brush.Color:=fcell.Color;
 end;
 
-procedure TPopupForm.DBCtrlGrid1PaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
+procedure TPopupForm.DBCtrlGrid1Click(Sender: TObject);
 var r,g,b: byte;
 begin
   with datasource.dataset do
@@ -49,7 +62,21 @@ begin
     r:=fieldbyname('r').asInteger;
     g:=fieldbyname('g').asInteger;
     b:=fieldbyname('b').asInteger;
+    shape3.brush.color:=rgb(r,g,b);
+  end;
+end;
+
+procedure TPopupForm.DBCtrlGrid1PaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
+var r,g,b: byte; dist:variant;
+begin
+  with datasource.dataset do
+  begin
+    r:=fieldbyname('r').asInteger;
+    g:=fieldbyname('g').asInteger;
+    b:=fieldbyname('b').asInteger;
     shape1.brush.color:=rgb(r,g,b);
+    {dist:=datasource.DataSet.FieldByName('s').AsVariant;
+    label4.Caption:=floattostr(sqrt(dist));}
   end;
 end;
 
@@ -60,6 +87,11 @@ begin
   Fcell.state:=smany;
   DataSource.dataset:=Fcell.query;
   dbtext1.DataField:='name';
+  dbtext2.DataField:='r';
+  dbtext3.DataField:='g';
+  dbtext4.DataField:='b';
+  dbtext5.DataField:='s';
+
 end;
 
 end.

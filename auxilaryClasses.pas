@@ -56,9 +56,12 @@ begin
   Fconn.Params.Add('Database='+ ExtractFilePath(ParamStr(0)) + 'listofColorsExt.db');
   FConn.Params.Add('DriverID=SQLite');
   Fconn.Connected:=true;
+
   fquery:=tfdquery.Create(application);
   fquery.Connection:=fconn;
   standart:='Classic';
+
+
 end;
 
 function TCell.GetHex: string;
@@ -67,24 +70,22 @@ begin
 end;
 
 procedure TCell.SetColor(const Value: TColor);
-var r,g,b: integer;  s:string;
+//var   s:string;
 begin
   FColor := Value;
-  r:=GetRValue(FColor);
-  g:=GetGValue(FColor);
-  b:=GetBValue(FColor);
+
   with FQuery do
   begin
-    s:='where standart='''+standart+''' ';
-    SQL.Text:=Format('update colors set s=(%d-r)*(%d-r)+(%d-g)*(%d-g)+(%d-b)*(%d-b)',[r,r,g,g,b,b]);
-    SQL.Add(s);
-    ExecSQL;
+    //SQL.Text:= Format('update colors set s=',[r,r,g,g,b,b]);
+    //SQL.Add(s);
+    //ExecSQL;
     SetState(sOne);
-    FSimilar:=RGB(fields[4].AsInteger,fields[5].AsInteger,fields[6].AsInteger);
-    FSimName:=fields[3].AsString;
-    FSimStand:=fields[0].AsString;
-    FSimhex:=fields[1].AsString;
-    FStandNum:=fields[2].AsString;
+    FSimilar:=RGB(fieldbyname('r').AsInteger,fieldbyname('g').AsInteger,fieldbyname('b').AsInteger);
+    FSimName:=fieldbyname('name').AsString;
+    FSimStand:=fieldbyname('standart').AsString;
+    FSimhex:=fieldbyname('hex').AsString;
+    FStandNum:=fieldbyname('standartnumber').AsString;
+    active:=false;
   end;
 end;
 
@@ -95,22 +96,30 @@ begin
 end;
 
 procedure TCell.SetState(const Value: TState);
-var s:string;
+var s,ss:string;
+    r,g,b: integer;
 begin
   FState:=value;
-  s:='where standart='''+standart+''' ';
-  with FQuery do
+  r:=GetRValue(FColor);
+  g:=GetGValue(FColor);
+  b:=GetBValue(FColor);
+  s:=' where standart='''+standart+'''';
+  with FQuery.sql do
   begin
-    SQL.Clear;
-    if value=sOne then
-    begin
-      SQL.Add('select * from colors '+s+ 'and s=(select min(s) from colors ');
-      SQL.Add(s);
-      SQL.add(')');
-    end else
-      SQL.Add('select * from colors '+s);
-    Open;
+    //close;
+    Clear;
+    Add('with dist as');
+    ss:=Format('(select *, (%d-r)*(%d-r)+(%d-g)*(%d-g)+(%d-b)*(%d-b) as s from colors',[r,r,g,g,b,b]);
+    Add(ss+s +')');
+
+    if value=sMany then
+    Add('select s , name,r,g,b, hex,standart,standartnumber from dist order by s')
+    else
+    Add('select min(s)as ms , name,r,g,b, hex,standart,standartnumber from dist');
+
   end;
+    FQuery.Open;
+
 end;
 
 end.
