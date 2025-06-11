@@ -27,12 +27,14 @@ TCell = class
     FSimStand: string;
     FStandNum: string;
     FState: TState;
+    //FChanged: Boolean;
     function GetHex:string;
     procedure SetColor(const Value: TColor);
     procedure SetStandart(const Value: string);
     procedure SetState(const Value: TState);
 
     public
+    procedure SetSimilar(SimColor: Tcolor; SimName, SimStand, SimHex, StandNum:string);
     property Standart:string read FStandart write SetStandart;
     property Color:TColor read FColor write SetColor;
     property HexColor:string read GetHex;
@@ -60,7 +62,7 @@ begin
   fquery:=tfdquery.Create(application);
   fquery.Connection:=fconn;
   standart:='Classic';
-
+  //fchanged:=false;
 
 end;
 
@@ -85,8 +87,18 @@ begin
     FSimStand:=fieldbyname('standart').AsString;
     FSimhex:=fieldbyname('hex').AsString;
     FStandNum:=fieldbyname('standartnumber').AsString;
-    active:=false;
+    //active:=false;
   end;
+end;
+
+procedure TCell.SetSimilar(SimColor: Tcolor; SimName, SimStand, SimHex,
+  StandNum: string);
+begin
+  FSimilar:=SimColor;
+  FSimName:=SimName;
+  FSimStand:=SimStand;
+  FSimHex:=SimHex;
+  FStandNum:=StandNum;
 end;
 
 procedure TCell.SetStandart(const Value: string);

@@ -11,7 +11,8 @@ uses
   FireDAC.Comp.Client, auxilaryClasses, Vcl.StdCtrls, Vcl.DBCtrls,
   Vcl.ExtCtrls, Vcl.DBCGrids, FireDAC.Stan.Param, FireDAC.DatS,
   FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
-  FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.Comp.DataSet;
+  FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.Comp.DataSet,
+  Vcl.Buttons;
 
 type
   TPopupForm = class(TForm)
@@ -28,14 +29,27 @@ type
     Shape2: TShape;
     Shape3: TShape;
     DBText5: TDBText;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
     constructor Create(owner: Tcomponent; cell: TCell);  overload;
     procedure DBCtrlGrid1PaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
     procedure FormCreate(Sender: TObject);
     procedure DBCtrlGrid1Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
   private
-
+    FSimilar:Tcolor;
+    FSimName:String;
+    FSimStand:String;
+    FSimHex:String;
+    FStandNum:String;
     FCell: TCell;
   public
+    property Similar: Tcolor read FSimilar;
+    property SimName: String read FSimName;
+    property SimStand:String read FSimStand;
+    property SimHex:String read FSimHex;
+    property StandNum:String read FStandNum;
   end;
 
 var
@@ -46,6 +60,28 @@ uses ColorsUnit;
 
 {$R *.dfm}
 
+
+procedure TPopupForm.BitBtn1Click(Sender: TObject);
+begin
+   with datasource.DataSet do
+   begin
+      FSimilar:=shape3.Brush.Color;
+      FSimname:=fieldbyname('name').AsString;
+      FsimStand:=fieldbyname('standart').AsString;
+      FsimHex:=fieldbyname('hex').AsString;
+      fstandNum:=fieldbyname('standartNumber').AsString;
+   end;
+   ModalResult:=mrOK;
+   FCell.Query.Close;
+   Hide;
+end;
+
+procedure TPopupForm.BitBtn2Click(Sender: TObject);
+begin
+  ModalResult:=mrCancel;
+  FCell.Query.Close;
+  Hide;
+end;
 
 constructor TPopupForm.Create(owner: Tcomponent; cell: TCell);
 begin
@@ -67,7 +103,7 @@ begin
 end;
 
 procedure TPopupForm.DBCtrlGrid1PaintPanel(DBCtrlGrid: TDBCtrlGrid; Index: Integer);
-var r,g,b: byte; dist:variant;
+var r,g,b: byte; //dist:variant;
 begin
   with datasource.dataset do
   begin

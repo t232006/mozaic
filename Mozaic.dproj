@@ -131,6 +131,10 @@
         <DCCReference Include="AltPopup.pas">
             <Form>PopupForm</Form>
         </DCCReference>
+        <DCCReference Include="c:\program files (x86)\embarcadero\studio\23.0\ObjRepos\EN\DelphiWin32\OKCANCL1.PAS">
+            <Form>OKBottomDlg</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <RcItem Include="images\pipette.cur">
             <ResourceType>CURSOR</ResourceType>
             <ResourceId>Cursor_2</ResourceId>

@@ -89,28 +89,45 @@ end;
 procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);    //changes the color
   var ce:TPoint; alterpop: TPopupForm;  //r: TRect;
+  c:TCell;
   //const tr: boolean=true;
   begin
    dg.MouseToCell(x,y, ce.X, ce.y);
+   c:=dg.Objects[ce.x, ce.y] as tcell;
+
    if button=TMouseButton.mbRight then
-   case selector.itemindex of
-   0:
-     begin
-       //r:=dg.CellRect(ce.x,ce.Y);
-       colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
-       if colordialog1.Execute then
-        begin
-            printcolor(colordialog1.Color);
-            (dg.Objects[ce.X, ce.y] as tcell).color:=colordialog1.Color;
-            dg.Repaint;
-        end;
-     end;
-   1,2,3:
-     begin
-         alterpop:=TPopupForm.Create(Application,dg.objects[ce.x,ce.y] as Tcell);
-         alterpop.show;
+   begin
+     c.pressed:=true;   //always select
+     case selector.itemindex of
+     0:
+       begin
+         //r:=dg.CellRect(ce.x,ce.Y);
+         colordialog1.Color:=c.color;
+         if colordialog1.Execute then
+          begin
+              printcolor(colordialog1.Color);
+              c.color:=colordialog1.Color;
+
+          end;
+       end;
+     1,2,3:
+       begin
+           alterpop:=TPopupForm.Create(Application,dg.objects[ce.x,ce.y] as Tcell);
+           with alterpop do
+           begin
+              showModal;
+              if ModalResult=mrOk then //changing SimilarColor by our color
+              begin
+                c.SetSimilar(Similar,simname,simstand,simhex,standNum);
+                destroy;
+                repaintbysim(false,selector.Text);
+                //printcolor(c.Color);
+              end;
+           end;
+       end;
      end;
    end;
+   dg.Repaint;
 end;
 
 procedure TColorsForm.DgSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -168,19 +185,22 @@ begin
         if c.pressed=false then continue;
         //dg.Canvas.Rectangle(dg.CellRect(col,row));
         mosaic.selectColor(c.Color, true);  //unselect
-        if color<>c.Color then
-          mosaic.ChangeColor(Color, c.Color) //new color, old color
+        if color<>c.Color then //
+        begin
+          mosaic.ChangeColor(Color, c.Color); //new color, old color
+          c.Color:=color; //new color for dg
+        end
         else
-          mosaic.ChangeColor(Color, c.Similar);
+          mosaic.ChangeColor(Color, c.Similar);//returns from similar to origin color
         //color:=colordialog1.Color;
         c.pressed:=false;
       end;
-      dg.Repaint;
+
       mosaic.pg.Repaint;
 end;
 
 procedure TColorsForm.printText(Acol, arow: integer);
-var s:string; re,r:trect; t:TTextformat;  c:TCell;
+var s:string; re,r:trect;  c:TCell;
 begin
   c:=dg.Objects[aCol,arow] as TCell;
   case rgInform.ItemIndex of

@@ -1,7 +1,8 @@
 object PopupForm: TPopupForm
   Left = 0
   Top = 0
-  Caption = 'PopupForm'
+  BorderStyle = bsDialog
+  Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081' '#1094#1074#1077#1090
   ClientHeight = 477
   ClientWidth = 736
   Color = clBtnFace
@@ -149,8 +150,28 @@ object PopupForm: TPopupForm
       ParentFont = False
     end
   end
+  object BitBtn1: TBitBtn
+    Left = 424
+    Top = 24
+    Width = 75
+    Height = 25
+    Kind = bkOK
+    NumGlyphs = 2
+    TabOrder = 1
+    OnClick = BitBtn1Click
+  end
+  object BitBtn2: TBitBtn
+    Left = 568
+    Top = 24
+    Width = 75
+    Height = 25
+    Kind = bkCancel
+    NumGlyphs = 2
+    TabOrder = 2
+    OnClick = BitBtn2Click
+  end
   object DataSource: TDataSource
-    Left = 592
-    Top = 8
+    Left = 288
+    Top = 24
   end
 end
