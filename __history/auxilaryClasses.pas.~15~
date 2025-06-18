@@ -35,7 +35,7 @@ TCell = class
     procedure SetState(const Value: TState);
 
     public
-    //procedure ResetSim;
+    procedure ResetSim;
     procedure SetSimilar(SimColor: Tcolor; SimName, SimStand, SimHex, StandNum:string);
     property Standart:string read FStandart write SetStandart;
     property Color:TColor read FColor write SetColor;
@@ -74,11 +74,11 @@ begin
    result:= copy(IntToHex(colortorgb(rgb(getbvalue(color),getgvalue(color),getrvalue(color)))),3,6); //to swap r<->b for true hex representation
 end;
 
-{procedure TCell.ResetSim;
+procedure TCell.ResetSim;
 begin
   FSimChanged:=false;
   SetColor(Fcolor);
-end;}
+end;
 
 procedure TCell.SetColor(const Value: TColor);
 //var   s:string;
@@ -115,7 +115,6 @@ end;
 procedure TCell.SetStandart(const Value: string);
 begin
   FStandart := Value;
-  FSimChanged:=false;
   SetColor(Fcolor);
 end;
 

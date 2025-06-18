@@ -27,7 +27,6 @@ TCell = class
     FSimStand: string;
     FStandNum: string;
     FState: TState;
-    FSimChanged: boolean;
     //FChanged: Boolean;
     function GetHex:string;
     procedure SetColor(const Value: TColor);
@@ -35,7 +34,6 @@ TCell = class
     procedure SetState(const Value: TState);
 
     public
-    //procedure ResetSim;
     procedure SetSimilar(SimColor: Tcolor; SimName, SimStand, SimHex, StandNum:string);
     property Standart:string read FStandart write SetStandart;
     property Color:TColor read FColor write SetColor;
@@ -64,7 +62,6 @@ begin
   fquery:=tfdquery.Create(application);
   fquery.Connection:=fconn;
   standart:='Classic';
-  fsimChanged:=false;
   //fchanged:=false;
 
 end;
@@ -73,12 +70,6 @@ function TCell.GetHex: string;
 begin
    result:= copy(IntToHex(colortorgb(rgb(getbvalue(color),getgvalue(color),getrvalue(color)))),3,6); //to swap r<->b for true hex representation
 end;
-
-{procedure TCell.ResetSim;
-begin
-  FSimChanged:=false;
-  SetColor(Fcolor);
-end;}
 
 procedure TCell.SetColor(const Value: TColor);
 //var   s:string;
@@ -91,8 +82,7 @@ begin
     //SQL.Add(s);
     //ExecSQL;
     SetState(sOne);
-    if FSimChanged=false then
-      FSimilar:=RGB(fieldbyname('r').AsInteger,fieldbyname('g').AsInteger,fieldbyname('b').AsInteger);
+    FSimilar:=RGB(fieldbyname('r').AsInteger,fieldbyname('g').AsInteger,fieldbyname('b').AsInteger);
     FSimName:=fieldbyname('name').AsString;
     FSimStand:=fieldbyname('standart').AsString;
     FSimhex:=fieldbyname('hex').AsString;
@@ -109,13 +99,11 @@ begin
   FSimStand:=SimStand;
   FSimHex:=SimHex;
   FStandNum:=StandNum;
-  FSimChanged:=true;
 end;
 
 procedure TCell.SetStandart(const Value: string);
 begin
   FStandart := Value;
-  FSimChanged:=false;
   SetColor(Fcolor);
 end;
 

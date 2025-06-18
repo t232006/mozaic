@@ -30,11 +30,12 @@ type
     procedure selectorCloseUp(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure selectorDropDown(Sender: TObject);
   private
 
     FArPallete:TArray<TPair<TColor,word>>;
     procedure printText(Acol, arow: integer);
-    procedure printColor(Color: TColor);
+    procedure printColor(changeOrigin:boolean; color: TColor);
     procedure RepaintBySim(origin: boolean; standart: string);
     {$j+}
     //const pressed: boolean=false;
@@ -67,7 +68,7 @@ begin
           0: Brush.Color:=c.color;
           1,2,3:
             begin
-             c.Standart:=selector.Text;
+             //c.Standart:=selector.Text;
              Brush.Color:=c.Similar
             end;
           end;
@@ -90,6 +91,7 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);    //changes the color
   var ce:TPoint; alterpop: TPopupForm;  //r: TRect;
   c:TCell;
+  oldSim: Tcolor;
   //const tr: boolean=true;
   begin
    dg.MouseToCell(x,y, ce.X, ce.y);
@@ -105,7 +107,7 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
          colordialog1.Color:=c.color;
          if colordialog1.Execute then
           begin
-              printcolor(colordialog1.Color);
+              printcolor(true, colordialog1.Color);
               c.color:=colordialog1.Color;
 
           end;
@@ -118,9 +120,13 @@ procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
               showModal;
               if ModalResult=mrOk then //changing SimilarColor by our color
               begin
+                OldSim:=c.Similar;
                 c.SetSimilar(Similar,simname,simstand,simhex,standNum);
                 destroy;
-                repaintbysim(false,selector.Text);
+                mosaic.SelectColor(OldSim,true);
+                mosaic.ChangeColor(Similar,OldSim);
+                mosaic.pg.Repaint;
+                //repaintbysim(false,selector.Text);
                 //printcolor(c.Color);
               end;
            end;
@@ -173,7 +179,7 @@ begin
      end;
 end;
 
-procedure TColorsForm.printColor(color: TColor);//changes color for selected cells in mainForm
+procedure TColorsForm.printColor(changeOrigin:boolean; color: TColor);//changes color for selected cells in mainForm
 var row, col: integer; c: TCell;
 begin
           //dg.Canvas.Brush.Color:=Color;
@@ -185,10 +191,11 @@ begin
         if c.pressed=false then continue;
         //dg.Canvas.Rectangle(dg.CellRect(col,row));
         mosaic.selectColor(c.Color, true);  //unselect
-        if color<>c.Color then //
+
+        if color<>c.Color then //покрасить в новый основной цвет
         begin
           mosaic.ChangeColor(Color, c.Color); //new color, old color
-          c.Color:=color; //new color for dg
+          if changeorigin then c.Color:=color; //new color for dg
         end
         else
           mosaic.ChangeColor(Color, c.Similar);//returns from similar to origin color
@@ -231,11 +238,11 @@ begin
       begin
         if not(dg.Objects[col,row] is tcell) then break;
         c:=dg.Objects[col,row] as tcell;
-        if not(origin) then
-          c.Standart:=standart;
+        {if not(origin) then
+          c.Standart:=standart;  }
         c.pressed:=true;
-        if origin then printcolor(c.Color) else
-        printColor(c.Similar);
+        if origin then printcolor(false, c.Color) else
+        printColor(false, c.Similar);
         pg.StepIt;
       end;
     pg.Position:=0;
@@ -250,6 +257,15 @@ end;
 procedure TColorsForm.selectorCloseUp(Sender: TObject);
 var it: byte;
 begin
+  if selector.ItemIndex>0 then //not to assign for origin
+    for var col := 0 to dg.ColCount-1 do
+    for var row := 0 to dg.rowcount-1 do
+        begin                      //set standart Similar
+          if not(dg.Objects[col,row] is TCell) then break;
+          //(dg.Objects[col,row] as TCell).ResetSim;
+          (dg.Objects[col,row] as TCell).Standart:=selector.Items[selector.ItemIndex];
+        end;
+
   with rginform do
   begin
     it:=itemindex;
@@ -266,11 +282,29 @@ begin
       items.Add('названия');
       repaintbysim(false, selector.Text);
     end;
-    else repaintbysim(true, selector.Text);
+    else   repaintbysim(true, selector.Text);
     end;
     itemindex:=it;
   end;
+
+
   //dg.Repaint;
+end;
+
+procedure TColorsForm.selectorDropDown(Sender: TObject);
+begin
+  if selector.ItemIndex>0 then
+  begin
+    selector.Items.Clear;
+    selector.Items.Add('Оригинальные');
+  end else
+  begin
+    selector.Items.Clear;
+    selector.Items.Add('Оригинальные');
+    selector.Items.Add('RAL');
+    selector.Items.Add('Classic');
+    selector.Items.Add('DMC');
+  end;
 end;
 
 procedure TColorsForm.SetPallete(arpallete:TArray<TPair<TColor,word>> );

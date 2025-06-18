@@ -15,8 +15,7 @@ uses
   shapebut in 'shapebut.pas' {ShapeButton: TFrame},
   auxilaryClasses in 'auxilaryClasses.pas',
   PaintGrid in '..\My components\PaintGrid\PaintGrid.pas',
-  AltPopup in 'AltPopup.pas' {PopupForm},
-  OKCANCL1 in 'c:\program files (x86)\embarcadero\studio\23.0\ObjRepos\EN\DelphiWin32\OKCANCL1.PAS' {OKBottomDlg};
+  AltPopup in 'AltPopup.pas' {PopupForm};
 
 {$R *.res}
 
@@ -25,7 +24,7 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TinitForm, initForm);
   Application.CreateForm(Tmosaic, mosaic);
-  Application.CreateForm(TColorsForm, ColorsForm);
+  //Application.CreateForm(TColorsForm, ColorsForm);
   //Application.CreateForm(TPopupForm, PopupForm);
   Application.Run;
 end.

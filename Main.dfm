@@ -138,6 +138,7 @@ object mosaic: Tmosaic
       OnMouseWheelDown = pgMouseWheelDown
       OnMouseWheelUp = pgMouseWheelUp
       currentColor = clLime
+      Shape = ARectangle
     end
   end
   object ImageList1: TImageList

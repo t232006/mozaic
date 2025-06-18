@@ -92,9 +92,11 @@ object ColorsForm: TColorsForm
     TabOrder = 2
     Text = #1086#1088#1080#1075#1080#1085#1072#1083#1100#1085#1099#1077
     OnChange = selectorCloseUp
-    OnDropDown = selectorDropDown
     Items.Strings = (
-      #1086#1088#1080#1075#1080#1085#1072#1083#1100#1085#1099#1077)
+      #1086#1088#1080#1075#1080#1085#1072#1083#1100#1085#1099#1077
+      'RAL'
+      'Classic'
+      'DMC')
   end
   object PG: TProgressBar
     Left = 0

@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
-  Vcl.ExtCtrls, contrast, auxilaryClasses, Vcl.Buttons;
+  Vcl.ExtCtrls, contrast, auxilaryClasses, Vcl.Buttons, altPopup;
 
 type
   TColorsForm = class(TForm)
@@ -34,7 +34,7 @@ type
 
     FArPallete:TArray<TPair<TColor,word>>;
     procedure printText(Acol, arow: integer);
-    procedure printColor(Color: TColor);
+    procedure printColor(changeOrigin:boolean; color: TColor);
     procedure RepaintBySim(origin: boolean; standart: string);
     {$j+}
     //const pressed: boolean=false;
@@ -67,7 +67,7 @@ begin
           0: Brush.Color:=c.color;
           1,2,3:
             begin
-             c.Standart:=selector.Text;
+             //c.Standart:=selector.Text;
              Brush.Color:=c.Similar
             end;
           end;
@@ -88,21 +88,51 @@ end;
 
 procedure TColorsForm.DgMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);    //changes the color
-  var ce:TPoint;   r: TRect;
+  var ce:TPoint; alterpop: TPopupForm;  //r: TRect;
+  c:TCell;
+  oldSim: Tcolor;
   //const tr: boolean=true;
   begin
+   dg.MouseToCell(x,y, ce.X, ce.y);
+   c:=dg.Objects[ce.x, ce.y] as tcell;
+
    if button=TMouseButton.mbRight then
    begin
-     dg.MouseToCell(x,y, ce.X, ce.y);
-     r:=dg.CellRect(ce.x,ce.Y);
-     colordialog1.Color:=(dg.Objects[ce.X, ce.y] as tcell).color;
-     if colordialog1.Execute then
-      begin
-          printcolor(colordialog1.Color);
-          (dg.Objects[ce.X, ce.y] as tcell).color:=colordialog1.Color;
-          dg.Repaint;
-      end;
+     c.pressed:=true;   //always select
+     case selector.itemindex of
+     0:
+       begin
+         //r:=dg.CellRect(ce.x,ce.Y);
+         colordialog1.Color:=c.color;
+         if colordialog1.Execute then
+          begin
+              printcolor(true, colordialog1.Color);
+              c.color:=colordialog1.Color;
+
+          end;
+       end;
+     1,2,3:
+       begin
+           alterpop:=TPopupForm.Create(Application,dg.objects[ce.x,ce.y] as Tcell);
+           with alterpop do
+           begin
+              showModal;
+              if ModalResult=mrOk then //changing SimilarColor by our color
+              begin
+                OldSim:=c.Similar;
+                c.SetSimilar(Similar,simname,simstand,simhex,standNum);
+                destroy;
+                mosaic.SelectColor(OldSim,true);
+                mosaic.ChangeColor(Similar,OldSim);
+                mosaic.pg.Repaint;
+                //repaintbysim(false,selector.Text);
+                //printcolor(c.Color);
+              end;
+           end;
+       end;
+     end;
    end;
+   dg.Repaint;
 end;
 
 procedure TColorsForm.DgSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -148,7 +178,7 @@ begin
      end;
 end;
 
-procedure TColorsForm.printColor(color: TColor);//changes color for selected cells in mainForm
+procedure TColorsForm.printColor(changeOrigin:boolean; color: TColor);//changes color for selected cells in mainForm
 var row, col: integer; c: TCell;
 begin
           //dg.Canvas.Brush.Color:=Color;
@@ -160,19 +190,23 @@ begin
         if c.pressed=false then continue;
         //dg.Canvas.Rectangle(dg.CellRect(col,row));
         mosaic.selectColor(c.Color, true);  //unselect
-        if color<>c.Color then
-          mosaic.ChangeColor(Color, c.Color) //new color, old color
+
+        if color<>c.Color then //покрасить в новый основной цвет
+        begin
+          mosaic.ChangeColor(Color, c.Color); //new color, old color
+          if changeorigin then c.Color:=color; //new color for dg
+        end
         else
-          mosaic.ChangeColor(Color, c.Similar);
+          mosaic.ChangeColor(Color, c.Similar);//returns from similar to origin color
         //color:=colordialog1.Color;
         c.pressed:=false;
       end;
-      dg.Repaint;
+
       mosaic.pg.Repaint;
 end;
 
 procedure TColorsForm.printText(Acol, arow: integer);
-var s:string; re,r:trect; t:TTextformat;  c:TCell;
+var s:string; re,r:trect;  c:TCell;
 begin
   c:=dg.Objects[aCol,arow] as TCell;
   case rgInform.ItemIndex of
@@ -203,11 +237,11 @@ begin
       begin
         if not(dg.Objects[col,row] is tcell) then break;
         c:=dg.Objects[col,row] as tcell;
-        if not(origin) then
-          c.Standart:=standart;
+        {if not(origin) then
+          c.Standart:=standart;  }
         c.pressed:=true;
-        if origin then printcolor(c.Color) else
-        printColor(c.Similar);
+        if origin then printcolor(false, c.Color) else
+        printColor(false, c.Similar);
         pg.StepIt;
       end;
     pg.Position:=0;
@@ -222,6 +256,15 @@ end;
 procedure TColorsForm.selectorCloseUp(Sender: TObject);
 var it: byte;
 begin
+  if selector.ItemIndex>0 then //not to assign for origin
+    for var col := 0 to dg.ColCount-1 do
+    for var row := 0 to dg.rowcount-1 do
+        begin                      //set standart Similar
+          if not(dg.Objects[col,row] is TCell) then break;
+          //(dg.Objects[col,row] as TCell).ResetSim;
+          (dg.Objects[col,row] as TCell).Standart:=selector.Items[selector.ItemIndex];
+        end;
+
   with rginform do
   begin
     it:=itemindex;
@@ -242,6 +285,8 @@ begin
     end;
     itemindex:=it;
   end;
+
+
   //dg.Repaint;
 end;
 
