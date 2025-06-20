@@ -61,11 +61,6 @@ begin
      //cl:=false;
      mosaic.pg.ColCount:=strtoint(ColCount.Text);
      mosaic.pg.RowCount:=strtoint(RowCount.Text);
-     //form1.ColorCount:=strtoint(ColorCount.Text);
-//     form1.FPicture.LoadFromFile()
-     //form1.Show;
-     //initform.hide;
-     //for var i := 1 to 4 do
      th:=Tengine.create(fPicture,
                           strtoint(ColCount.Text),
                           strtoint(RowCount.Text),
@@ -104,6 +99,7 @@ end;
 procedure TinitForm.PassMap(Sender: TObject);
 begin
     TMap(mosaic.pg.ColorMap):=th.map;
+     mosaic.Origin:=th.Map;
      mosaic.Show;
      initform.hide;
 end;

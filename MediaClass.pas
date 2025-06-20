@@ -1,9 +1,9 @@
 unit MediaClass;
 
 interface
-uses  Graphics, winapi.Windows;
+uses  Graphics, winapi.Windows, engineThread;
 type
-TMap = array of array of TColor;
+//TMap = array of array of TColor;
 Tcell = packed record
 R,G,B,I,J: Byte;
 end;

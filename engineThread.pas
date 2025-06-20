@@ -3,7 +3,7 @@ unit engineThread;
 interface
 
 uses Windows, Graphics, classes, math, dialogs,
-System.Generics.Collections, comctrls, winapi.Messages, MediaClass;
+System.Generics.Collections, comctrls, winapi.Messages;
 
 const PROC=1;
 //nst wmaddproc=wm_user+123+$10;
@@ -38,7 +38,7 @@ TMap=array of array of TColor;
   end;
 
 implementation
-uses Initunit, MiniThread;
+uses Initunit, MiniThread, MediaClass;
 var
 miniTh: array [1..PROC] of TMiniTh;
     k:byte;

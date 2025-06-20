@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid, contrast,
   Vcl.StdCtrls, colorsUnit, mediaClass, System.Generics.Collections, math,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.Menus,
-  Vcl.ExtCtrls, shapebut;
+  Vcl.ExtCtrls, shapebut, engineThread, auxilaryClasses, Vcl.WinXCtrls;
 
 const TOLER = 40;
 
@@ -16,10 +16,8 @@ type
     ToolBar: TToolBar;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
     ScrollBox1: TScrollBox;
     ImageList1: TImageList;
-    legacy: TCheckBox;
     pg: TPaintGrid;
     PopupMenu1: TPopupMenu;
     N1: TMenuItem;
@@ -42,11 +40,11 @@ type
     ShapeBut: TShapeButton;
     cd: TColorDialog;
     N10: TMenuItem;
+    togSW: TToggleSwitch;
     procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
@@ -80,15 +78,18 @@ type
       MousePos: TPoint; var Handled: Boolean);
     procedure pgMouseWheelUp(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; var Handled: Boolean);
+    procedure togSwClick(Sender: TObject);
   private
-    map: TMap;
+    mapMain,mapOrigin: TMap;
     l: TDictionary<TColor, word>;
      m: System.TArray<TPair<Tcolor,word>>;
     procedure DrawCanvas(ACol, ARow: integer; Rect:TRect; WhereTo: TCanvas);
     procedure DrawCell(rect:TRect; s:string; whereTo: TCanvas);
     procedure DrawMenu(num:shortint);
     function SeekInd(Acol: tColor): word;
+    procedure SetmapOrigin(const Value: TMap);
   public
+    property Origin: TMap write SetmapOrigin;
     procedure SelectColor(color: TColor; unselect: boolean);
     procedure ChangeColor(newColor: TColor; oldColor: TColor);
     procedure LoadFromFile(filename: string);
@@ -97,6 +98,7 @@ type
 var
   mosaic: Tmosaic;
   oldbkmode: integer;
+  mediana: TMediaSplit;
 
 implementation
 uses initunit;
@@ -117,14 +119,14 @@ begin
 
 end;
 
-procedure Tmosaic.Button3Click(Sender: TObject);
+procedure Tmosaic.Button3Click(Sender: TObject);  //quantor
 var val:word;
 begin
     for var i := low(pg.ColorMap) to High(pg.ColorMap) do
       for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
       begin
-        l.TryGetValue(map[i,j],val);
-        l.AddOrSetValue(map[i,j],val+1);
+        l.TryGetValue(pg.colorMap[i,j],val);
+        l.AddOrSetValue(pg.colorMap[i,j],val+1);
       end;
     m:=l.ToArray;
     colorsform:=TColorsForm.Create(Application);
@@ -134,32 +136,11 @@ begin
     colorsform.show;
 end;
 
-procedure Tmosaic.Button4Click(Sender: TObject);
-var mediana: TMediaSplit;
-    //w: word;
-begin
-     l.Free; l:=TDictionary<TColor, word>.Create;
-    if legacy.Checked then
-
-      mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+2,[koef]) else
-      mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+2,[]);
-    for var i := 0 to pg.RowCount-1 do
-      for var j := 0 to pg.ColCount-1 do
-        pg.ColorMap[i,j]:=mediana.map[i,j];
-    //initForm.th.Quantor;
-
-    pg.DrawFromMap;
-    pg.Repaint;
-    mediana.Destroy;
-end;
-
 procedure Tmosaic.FormActivate(Sender: TObject);
 begin
   l.Free; l:=TDictionary<TColor, word>.Create;
-  setlength(map, pg.RowCount, pg.ColCount);
-    for var i := 0 to pg.RowCount-1 do
-      for var j := 0 to pg.ColCount-1 do
-        map[i,j]:=pg.ColorMap[i,j];
+  setlength(mapMain, pg.RowCount, pg.ColCount);
+    
   pg.DrawFromMap;
   digitdisign.tag:=11;
   drawmenu(digitdisign.Tag);
@@ -180,16 +161,17 @@ begin
 end;
 
 procedure Tmosaic.LoadFromFile(filename: string);
-var filestream: TFileStream;
-    buf:integer;
 begin
-      filestream:=TFileStream.Create(opend.FileName,fmOpenRead);
+      {filestream:=TFileStream.Create(opend.FileName,fmOpenRead);
       filestream.ReadBuffer(buf,4);  pg.ColCount:=buf;
       filestream.ReadBuffer(buf,4);  pg.RowCount:=buf;
       for var i := Low(pg.ColorMap) to High(pg.ColorMap) do
       for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
        filestream.ReadBuffer(pg.ColorMap[i,j],sizeof(TColor));
-      filestream.Free;
+      filestream.Free; }
+      TMapSaver.opener(filename,mapmain,mapOrigin);
+      pg.RowCount:=length(mapMain); pg.ColCount:=length(mapMain[0]);
+      TMap(pg.ColorMap):=mapMain;
       pg.Repaint;
 end;
 
@@ -200,18 +182,20 @@ begin
 end;
 
 procedure Tmosaic.N1Click(Sender: TObject);
-var //memstream: TMemoryStream;
-    filestream: TfileStream;
+var fnwithoutext: string;
 begin
   if saved2.Execute then
   begin
-      filestream:=TFileStream.Create(saved2.FileName+'.moz',fmcreate);
+      fnwithoutext:=ChangeFileExt(ExpandFileName(saved2.FileName), '');
+      TMapSaver.saver(fnwithoutext,TMap(pg.ColorMap),mapOrigin);
+      //TMapSaver.saver(saved2.FileName,TMap(pg.ColorMap),mapOrigin);
+      {filestream:=TFileStream.Create(saved2.FileName+'.moz',fmcreate);
       filestream.Write(pg.ColCount,sizeof(integer));
       filestream.Write(pg.RowCount,sizeof(integer));
       for var i := Low(pg.ColorMap) to High(pg.ColorMap) do
       for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
        filestream.Write(pg.ColorMap[i,j],sizeof(TColor));
-      filestream.Free;
+      filestream.Free; }
   end;
 end;
 
@@ -233,7 +217,10 @@ end;
 procedure Tmosaic.N3Click(Sender: TObject);
     begin
     if opend.Execute() then
-    loadFromFile(opend.FileName);
+    begin
+      loadFromFile(opend.FileName);
+      togsw.State:=tssoff;
+    end;
   end;
 
 
@@ -302,7 +289,7 @@ end;
 procedure Tmosaic.pgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
   State: TGridDrawState);
 begin
-  if not(l.ContainsKey(map[ARow,ACol])) then l.Add(map[ARow,Acol],0) ;
+  if not(l.ContainsKey(pg.colorMap[ARow,ACol])) then l.Add(pg.colorMap[ARow,Acol],0) ;
 
   DrawCanvas(ACol,Arow,rect,pg.Canvas);
 end;
@@ -384,6 +371,13 @@ begin
         end;
 end;
 
+procedure Tmosaic.SetmapOrigin(const Value: TMap);
+begin
+  setlength(mapOrigin,length(value),length(value[0]));
+  for var i := low(mapOrigin) to high(mapOrigin)  do
+    mapOrigin[i]:=copy(value[i],0,length(value[0]))
+end;
+
 procedure Tmosaic.ShapeButMouseEnter(Sender: TObject);
 begin
   shapebut.Color:=toolbar.HotTrackColor;
@@ -423,6 +417,41 @@ begin
   if showcolor.tag mod 2 = 0 then showcolor.ImageIndex:=6 else
   showcolor.ImageIndex:=-1;
   pg.Repaint;
+end;
+
+procedure Tmosaic.togSwClick(Sender: TObject);
+var
+    i,j:word;
+begin
+    if togSW.state=tssOff then
+      begin
+        if mediana=nil then  //pressing first time
+        begin
+
+         l.Free; l:=TDictionary<TColor, word>.Create;
+          //MapReload;
+          //if legacy.Checked then
+          //mediana:=TMediaSplit.create(map,initform.ColorCount.ItemIndex+2,[koef]) else
+          mediana:=TMediaSplit.create(TMap(pg.ColorMap),initform.ColorCount.ItemIndex+2,[]);
+          for i := 0 to pg.RowCount-1 do
+            for j := 0 to pg.ColCount-1 do
+              pg.ColorMap[i,j]:=mediana.map[i,j];
+          pg.DrawFromMap;
+          mapMain:=TMap(pg.ColorMap);
+        end else
+        begin
+          TMap(pg.ColorMap):=mapMain;
+          pg.Repaint;
+        end;
+      end
+      else
+      begin
+        mapMain:=TMap(pg.colorMap);
+        TMap(pg.ColorMap):=mapOrigin;
+        pg.Repaint;
+      end;
+
+
 end;
 
 procedure Tmosaic.ChangeColor(newColor, oldColor: TColor);

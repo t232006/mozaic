@@ -6,11 +6,16 @@ uses windows, sysutils, graphics, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB, Forms,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
-  FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.VCLUI.Wait;
+  FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.VCLUI.Wait,
+  classes, engineThread;
 type
+//TMap = array of array of TColor;
 TState = (sMany, sOne);
+TmapSaver = class
+  class procedure saver(filename:string; MainMap, OriginMap:Tmap);
+  class procedure opener(filename:string; var MainMap, OriginMap:Tmap);
+end;
 TCell = class
-
     number: byte;
     amount: word;
     pressed: boolean;
@@ -143,6 +148,46 @@ begin
 
   end;
     FQuery.Open;
+
+end;
+
+{ TmapSaver }
+
+class procedure TmapSaver.opener(filename: string; var MainMap,
+  OriginMap: Tmap);
+var filestream: TFileStream;
+    buf, m,n:integer;
+begin
+      filestream:=TFileStream.Create(FileName,fmOpenRead);
+      filestream.ReadBuffer(buf,4);  m:=buf;
+      filestream.ReadBuffer(buf,4);  n:=buf;
+      setlength(MainMap,m,n); setLength(OriginMap,m,n);
+      for var i := 0 to m-1 do
+      for var j := 0 to n-1 do
+      begin
+       filestream.ReadBuffer(MainMap[i,j],sizeof(TColor));
+       filestream.ReadBuffer(OriginMap[i,j],sizeof(TColor));
+      end;
+      filestream.Free;
+end;
+
+class procedure TmapSaver.saver(filename: string; MainMap, OriginMap: Tmap);
+var //memstream: TMemoryStream;
+    filestream: TfileStream;
+    m,n:integer;
+begin
+      filestream:=TFileStream.Create(FileName+'.moz',fmcreate);
+      m:=length(MainMap); n:=length(mainMap[0]);
+      filestream.Write(m,sizeof(integer));
+      filestream.Write(n,sizeof(integer));
+      for var i := 0 to m-1 do
+      for var j := 0 to n-1 do
+      begin
+       filestream.Write(MainMap[i,j],sizeof(TColor));
+       filestream.Write(OriginMap[i,j],sizeof(TColor));
+      end;
+      filestream.Free;
+
 
 end;
 
