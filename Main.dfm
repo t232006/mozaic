@@ -176,6 +176,7 @@ object mosaic: Tmosaic
       Top = 0
       Hint = #1054#1082#1085#1086' '#1094#1074#1077#1090#1086#1074
       Caption = 'ToolButton2'
+      Enabled = False
       ImageIndex = 1
       ParentShowHint = False
       ShowHint = True
@@ -192,8 +193,11 @@ object mosaic: Tmosaic
     object showColor: TToolButton
       Left = 127
       Top = 0
+      Hint = #1054#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1094#1074#1077#1090#1072
       Caption = 'showColor'
       ImageIndex = 6
+      ParentShowHint = False
+      ShowHint = True
       OnClick = showColorClick
     end
     inline ShapeBut: TShapeButton
@@ -215,6 +219,9 @@ object mosaic: Tmosaic
         Top = 10
         Width = 32
         Height = 32
+        Hint = #1060#1086#1088#1084#1072' '#1103#1095#1077#1081#1082#1080
+        ParentShowHint = False
+        ShowHint = True
         OnMouseUp = ShapeButShape1MouseUp
         ExplicitLeft = 9
         ExplicitTop = 10
@@ -226,8 +233,11 @@ object mosaic: Tmosaic
       Tag = 11
       Left = 230
       Top = 0
+      Hint = #1058#1080#1087' '#1103#1095#1077#1081#1082#1080
       DropdownMenu = PopupMenu2
       ImageIndex = 12
+      ParentShowHint = False
+      ShowHint = True
       Style = tbsDropDown
       OnClick = N10Click
     end

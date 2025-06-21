@@ -158,6 +158,7 @@ procedure Tmosaic.FormShow(Sender: TObject);
 begin
     drawmenu(1);
     shapebut.Shape1.Brush.Color:=pg.currentColor;
+    togSw.State:=tsson;
 end;
 
 procedure Tmosaic.LoadFromFile(filename: string);
@@ -443,11 +444,13 @@ begin
           TMap(pg.ColorMap):=mapMain;
           pg.Repaint;
         end;
+        toolbutton2.Enabled:=true;
       end
       else
       begin
         mapMain:=TMap(pg.colorMap);
         TMap(pg.ColorMap):=mapOrigin;
+        toolbutton2.Enabled:=false;
         pg.Repaint;
       end;
 

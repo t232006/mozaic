@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.975,Z:\Программирование\repos\TPaintGrid.dproj=Z:\Программирование\repos\My components\PaintGrid\TPaintGrid.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.541,=xmlrtl.dcp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.214,=Z:\Программирование\repos\My components\PaintGrid\PaintGrid.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.926,=rtl.dcp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.395,=vclactnband.dcp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.292,=designide.dcp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.490,=vclx.dcp</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.343,=vcl.dcp</Transaction>
+  </Transactions>
+</BorlandProject>
