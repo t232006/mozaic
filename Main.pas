@@ -151,6 +151,7 @@ end;
 
 procedure Tmosaic.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  if mediana<>nil then freeandnil(mediana);
   initform.show;
 end;
 
@@ -163,13 +164,6 @@ end;
 
 procedure Tmosaic.LoadFromFile(filename: string);
 begin
-      {filestream:=TFileStream.Create(opend.FileName,fmOpenRead);
-      filestream.ReadBuffer(buf,4);  pg.ColCount:=buf;
-      filestream.ReadBuffer(buf,4);  pg.RowCount:=buf;
-      for var i := Low(pg.ColorMap) to High(pg.ColorMap) do
-      for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
-       filestream.ReadBuffer(pg.ColorMap[i,j],sizeof(TColor));
-      filestream.Free; }
       TMapSaver.opener(filename,mapmain,mapOrigin);
       pg.RowCount:=length(mapMain); pg.ColCount:=length(mapMain[0]);
       TMap(pg.ColorMap):=mapMain;
@@ -189,14 +183,6 @@ begin
   begin
       fnwithoutext:=ChangeFileExt(ExpandFileName(saved2.FileName), '');
       TMapSaver.saver(fnwithoutext,TMap(pg.ColorMap),mapOrigin);
-      //TMapSaver.saver(saved2.FileName,TMap(pg.ColorMap),mapOrigin);
-      {filestream:=TFileStream.Create(saved2.FileName+'.moz',fmcreate);
-      filestream.Write(pg.ColCount,sizeof(integer));
-      filestream.Write(pg.RowCount,sizeof(integer));
-      for var i := Low(pg.ColorMap) to High(pg.ColorMap) do
-      for var j := Low(pg.ColorMap[i]) to High(pg.ColorMap[i]) do
-       filestream.Write(pg.ColorMap[i,j],sizeof(TColor));
-      filestream.Free; }
   end;
 end;
 
