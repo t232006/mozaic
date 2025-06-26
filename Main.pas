@@ -4,10 +4,11 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, PaintGrid, contrast,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, contrast,
   Vcl.StdCtrls, colorsUnit, mediaClass, System.Generics.Collections, math,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.Menus,
-  Vcl.ExtCtrls, shapebut, engineThread, auxilaryClasses, Vcl.WinXCtrls;
+  Vcl.ExtCtrls, shapebut, engineThread, auxilaryClasses, Vcl.WinXCtrls,
+  PaintGrid;
 
 const TOLER = 40;
 

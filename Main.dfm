@@ -271,8 +271,6 @@ object mosaic: Tmosaic
       Height = 102
       DefaultColWidth = 18
       DefaultRowHeight = 18
-      FixedCols = 0
-      FixedRows = 0
       PopupMenu = PopupMenu3
       TabOrder = 0
       OnDrawCell = pgDrawCell
@@ -282,7 +280,6 @@ object mosaic: Tmosaic
       OnMouseWheelDown = pgMouseWheelDown
       OnMouseWheelUp = pgMouseWheelUp
       currentColor = clLime
-      Shape = ARectangle
     end
   end
   object ImageList1: TImageList

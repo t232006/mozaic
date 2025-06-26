@@ -14,8 +14,8 @@ uses
   resolution in 'resolution.pas',
   shapebut in 'shapebut.pas' {ShapeButton: TFrame},
   auxilaryClasses in 'auxilaryClasses.pas',
-  PaintGrid in '..\My components\PaintGrid\PaintGrid.pas',
-  AltPopup in 'AltPopup.pas' {PopupForm};
+  AltPopup in 'AltPopup.pas' {PopupForm},
+  PaintGrid in 'PaintGrid\PaintGrid.pas';
 
 {$R *.res}
 
