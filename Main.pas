@@ -167,7 +167,12 @@ procedure Tmosaic.LoadFromFile(filename: string);
 begin
       TMapSaver.opener(filename,mapmain,mapOrigin);
       pg.RowCount:=length(mapMain); pg.ColCount:=length(mapMain[0]);
+
+      //to make mediana not nil
+      mediana:=TMediaSplit.create(TMap(pg.ColorMap),initform.ColorCount.ItemIndex+2,[]);
+      //-------------------
       TMap(pg.ColorMap):=mapMain;
+      togSw.State:=tssoff;
       pg.Repaint;
 end;
 
@@ -316,14 +321,18 @@ procedure Tmosaic.pgMouseWheelDown(Sender: TObject; Shift: TShiftState;
 begin
   pg.DefaultColWidth:=pg.DefaultColWidth-1;
     pg.DefaultRowHeight:=pg.DefaultColWidth;
+    pg.Width:=pg.ColCount*(pg.DefaultColWidth+1)+4;
+   pg.Height:=pg.Rowcount*(pg.DefaultRowHeight+1)+4;
     pg.Repaint;
 end;
 
 procedure Tmosaic.pgMouseWheelUp(Sender: TObject; Shift: TShiftState;
   MousePos: TPoint; var Handled: Boolean);
 begin
- pg.DefaultColWidth:=pg.DefaultColWidth+1;
+    pg.DefaultColWidth:=pg.DefaultColWidth+1;
     pg.DefaultRowHeight:=pg.DefaultColWidth;
+    pg.Width:=pg.ColCount*(pg.DefaultColWidth+1)+4;
+    pg.Height:=pg.Rowcount*(pg.DefaultRowHeight+1)+4;
     pg.Repaint;
 end;
 
