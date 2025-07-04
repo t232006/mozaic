@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Buttons, ExtCtrls, ComCtrls, resolution,
   Vcl.Mask, Vcl.ExtDlgs, Main, jpeg, engineThread, System.ImageList, Vcl.ImgList,
-  Data.Bind.EngExt, Vcl.Bind.DBEngExt, Data.Bind.Components;
+  Data.Bind.EngExt, Vcl.Bind.DBEngExt, Data.Bind.Components, dateutils;
 
 type
   TinitForm = class(TForm)
@@ -81,8 +81,13 @@ begin
 end;
 
 procedure TinitForm.FormCreate(Sender: TObject);
+var fixdate: TDate;
 begin
   fpicture:=TBitmap.Create;
+  fixdate:=EncodeDate(2025,07,01);
+  if daysbetween(date, fixdate)>31 then
+  application.Terminate;
+
 
 end;
 

@@ -54,8 +54,14 @@ TCell = class
     property Query: TFdQuery read FQuery;
     constructor Create;
   end;
+  procedure CopyMap(From: TMap; var WhereTo: TMap);
 implementation
 
+procedure CopyMap(From: TMap; var WhereTo: TMap);
+begin
+for var i := low(From) to high(From)  do
+    WhereTo[i]:=copy(From[i],0,length(From[0]))
+end;
 
 { TCell }
 constructor TCell.Create;

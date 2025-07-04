@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, System.Generics.Collections,
   Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
-  Vcl.ExtCtrls, contrast, auxilaryClasses, Vcl.Buttons, altPopup;
+  Vcl.ExtCtrls, contrast, auxilaryClasses, Vcl.Buttons, altPopup,
+  System.Actions, Vcl.ActnList;
 
 type
   TColorsForm = class(TForm)
@@ -18,6 +19,7 @@ type
     SpeedButton1: TSpeedButton;
     SaveDialog1: TSaveDialog;
     ImageList1: TImageList;
+    SpeedButton2: TSpeedButton;
     procedure DgDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
     procedure DgSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -200,6 +202,7 @@ begin
         else
           mosaic.ChangeColor(Color, c.Similar);//returns from similar to origin color
         //color:=colordialog1.Color;
+
         c.pressed:=false;
       end;
 
