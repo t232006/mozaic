@@ -110,16 +110,16 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Main.pas">
+        <DCCReference Include="..\Новая папка\Main.pas">
             <Form>mosaic</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="initunit.pas">
+        <DCCReference Include="..\Новая папка\initunit.pas">
             <Form>initForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="engineThread.pas"/>
-        <DCCReference Include="ColorsUnit.pas">
+        <DCCReference Include="..\Новая папка\ColorsUnit.pas">
             <Form>ColorsForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>

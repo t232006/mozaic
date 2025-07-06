@@ -4,10 +4,10 @@ program Mozaic;
 
 uses
   Vcl.Forms,
-  Main in 'Main.pas' {mosaic},
-  initunit in 'initunit.pas' {initForm},
+  Main in '..\Новая папка\Main.pas' {mosaic},
+  initunit in '..\Новая папка\initunit.pas' {initForm},
   engineThread in 'engineThread.pas',
-  ColorsUnit in 'ColorsUnit.pas' {ColorsForm},
+  ColorsUnit in '..\Новая папка\ColorsUnit.pas' {ColorsForm},
   MiniThread in 'MiniThread.pas',
   MediaClass in 'MediaClass.pas',
   contrast in 'contrast.pas',
