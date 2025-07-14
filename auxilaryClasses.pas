@@ -7,7 +7,7 @@ uses windows, sysutils, graphics, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
   FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.VCLUI.Wait,
-  classes, engineThread;
+  classes, engineThread, System.Generics.Collections;
 type
 //TMap = array of array of TColor;
 TState = (sMany, sOne);
@@ -15,6 +15,7 @@ TmapSaver = class
   class procedure saver(filename:string; MainMap, OriginMap:Tmap);
   class procedure opener(filename:string; var MainMap, OriginMap:Tmap);
 end;
+
 TCell = class
     number: byte;
     amount: word;
@@ -54,10 +55,39 @@ TCell = class
     property Query: TFdQuery read FQuery;
     constructor Create;
   end;
-  procedure CopyMap(From: TMap; var WhereTo: TMap);
+TUnCell=record
+  MasterColor: Tcolor;
+  Similar: Tcolor;
+  SimName: string;
+  SimHex: String;
+  SimStandartNumber: string;
+end;
+
+TPalette=class
+  private
+  FArPalette:TArray<TCell>;
+  //FUndo: array[0..0] of TArray<TCell>;
+  //FArPalLen: byte;
+  FUndo: TStack<TUnCell>; //position, oldColor
+  protected
+  function SeekNumberByColor(color: Tcolor):byte;
+  public
+  selector: byte;
+  constructor Create;
+  procedure SetPalette(arpallete:TArray<TPair<TColor,word>> ); //color, amount
+  procedure SaveUndo(pos: byte);
+  procedure LoadFromUndo;
+  function ArPalLen: byte;
+  property ArPalette:TArray<tCell> read FArPalette;
+end;
+
+
+
+procedure CopyMap(const From: TMap; var WhereTo: TMap);
+
 implementation
 
-procedure CopyMap(From: TMap; var WhereTo: TMap);
+procedure CopyMap(const From: TMap; var WhereTo: TMap);
 begin
 for var i := low(From) to high(From)  do
     WhereTo[i]:=copy(From[i],0,length(From[0]))
@@ -147,9 +177,9 @@ begin
     ss:=Format('(select *, (%d-r)*(%d-r)+(%d-g)*(%d-g)+(%d-b)*(%d-b) as s from colors',[r,r,g,g,b,b]);
     Add(ss+s +')');
 
-    if value=sMany then
+    if value=sMany then //list of colors remoted from you and ordered
     Add('select s , name,r,g,b, hex,standart,standartnumber from dist order by s')
-    else
+    else  //the nearest=similair initially
     Add('select min(s)as ms , name,r,g,b, hex,standart,standartnumber from dist');
 
   end;
@@ -194,6 +224,93 @@ begin
       end;
       filestream.Free;
 
+
+end;
+
+{ TPalette }
+
+function TPalette.ArPalLen: byte;
+begin
+  result:=length(FArPalette);
+end;
+
+constructor TPalette.Create;
+begin
+   FUndo:=TStack<TUnCell>.create;
+end;
+
+procedure TPalette.LoadFromUndo;
+var foo: TUncell;
+begin
+  //FArpalette:=copy(FUndo[0],0,length(FUndo[0]));
+  if not(fundo.IsEmpty) then
+  
+  foo:=FUndo.Pop;
+  FArpalette[seeknumberbycolor(foo.MasterColor)].SetSimilar(foo.Similar, foo.SimName, farpalette[0].Standart, foo.SimHex, foo.SimStandartNumber);
+end;
+
+procedure TPalette.SaveUndo(pos: byte);
+var foo: TUnCell;
+begin
+  //Fundo[0]:=copy(FArpalette,0,length(farpalette));
+  foo.MasterColor:=farpalette[pos].Color;
+  foo.Similar:=FArpalette[pos].Similar;
+  foo.SimName:=FArpalette[pos].SimName;
+  foo.SimHex:=FArpalette[pos].SimHex;
+  foo.SimStandartNumber:=FArpalette[pos].SimStandartNumber;
+  FUndo.Push(foo);
+end;
+
+function TPalette.SeekNumberByColor(color: Tcolor): byte;
+begin
+  for var i := Low(farpalette) to High(farpalette) do
+    if FArPalette[i].Color=color then
+    begin
+      result:=i; break;
+    end;
+end;
+
+procedure TPalette.SetPalette(arpallete:TArray<TPair<TColor,word>> );
+var buf: TCell; m:byte;
+begin
+     if selector=0 then
+      begin
+        setlength(FArPalette,length(arpallete));
+        for var i := Low(arpallete) to High(arpallete) do
+         begin
+           FArPalette[i]:=tcell.Create;
+           FArPalette[i].color:=arpallete[i].Key;
+           FArPalette[i].number:=i;
+           FArPalette[i].amount:=arpallete[i].Value;
+           //if selector.ItemIndex<>0 then mycell.Standart:=selector.Text;
+           FArPalette[i].pressed:=false;
+           //dg.Objects[(i div RCOUNT), (i mod RCOUNT)]:=FArPalette[i];
+           //mycell.Destroy;
+         end;
+         //arrlength:=length(arpallete);
+      end
+
+      else
+      begin
+       for var k := Low(arpallete) to High(arpallete) do
+         begin
+              for m := k to High(FArPalette) do
+                //c:=dg.Objects[i,j] as TCell;
+                if FArPalette[m].Similar=arpallete[k].Key then
+                begin
+                  buf:=FArPalette[m];
+                  FArPalette[m]:=FArPalette[k];
+                  FArPalette[k]:=buf;
+                  FArPalette[k].number:=k; FArPalette[m].number:=m;
+                  break //continue
+                end;
+
+         end;
+       for m := high(arpallete)+1 to High(FArPalette) do
+             FArPalette[m]:=nil;
+       setlength(FArPalette,length(arpallete));
+       //Resize;
+      end;
 
 end;
 
